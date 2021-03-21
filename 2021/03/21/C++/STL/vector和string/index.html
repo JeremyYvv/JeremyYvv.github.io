@@ -3,8 +3,8 @@
 <![endif]-->
 <link rel="stylesheet" href="/css/iconfont.css">
 
-<link rel="stylesheet" href="/css/index.css?v=202103212312.css">
-<link rel="stylesheet" href="/css/info.css?v=202103212312.css">
+<link rel="stylesheet" href="/css/index.css?v=202103212320.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212320.css">
 <link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
 </head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">vector和string</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">STL</a></li><li class="timer">时间：2021-03-21 20:01:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E5%BA%93/" target="_blank">C++库</a><a href="/tags/%E8%AF%AD%E6%B3%95/" target="_blank">语法</a></div><div class="news_con"><h2 id="条款13-vector和string优先于动态分配的数组"><a href="#条款13-vector和string优先于动态分配的数组" class="headerlink" title="条款13.vector和string优先于动态分配的数组"></a>条款13.vector和string优先于动态分配的数组</h2><p>使用new来动态分配内存后有三项需要承担的责任，<strong>在使用完资源后通过delete释放内存，并与new的形式配对（delete or delete[]），以及确保只delete了一次</strong>。<br>或是出于开发效率或是出于其他原因，vector和string可以使你不必承担这些责任，<strong>vector和string会自己管理内存（RAII方法，详见Effective C++条款13）</strong>，当他们被析构时，会自动析构容器中元素的内存。<br>而且<strong>vector和string是功能完全的STL序列容器</strong>，有很多的成员方法、迭代器及<algorithm>中的算法都可以使用。</p>
 <hr>
@@ -52,6 +52,6 @@ gitalk.render('comment_container')</script></div></div></div></main><aside class
 <script src="/js/scrollreveal.js"></script>
 <script src="/js/hc-sticky.js"></script>
 <script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="/js/common.js?v=202103212312.js"></script>
-<script src="/js/index.js?v=202103212312.js"></script>
+<script src="/js/common.js?v=202103212320.js"></script>
+<script src="/js/index.js?v=202103212320.js"></script>
 </body></html>
