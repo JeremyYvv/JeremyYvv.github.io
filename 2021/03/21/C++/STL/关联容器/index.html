@@ -3,8 +3,8 @@
 <![endif]-->
 <link rel="stylesheet" href="/css/iconfont.css">
 
-<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
-<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/index.css?v=202103212254.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212254.css">
 <link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
 </head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">关联容器</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">STL</a></li><li class="timer">时间：2021-03-21 20:02:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E5%BA%93/" target="_blank">C++库</a><a href="/tags/%E8%AF%AD%E6%B3%95/" target="_blank">语法</a></div><div class="news_con"><h2 id="条款19-理解相等-equality-和等价-equivalence-的区别"><a href="#条款19-理解相等-equality-和等价-equivalence-的区别" class="headerlink" title="条款19.理解相等(equality)和等价(equivalence)的区别"></a>条款19.理解相等(equality)和等价(equivalence)的区别</h2><p>标准关联容器需要保持有序，所以每个容器<strong>必须有一个定义了怎么保持东西有序的比较函数</strong>(默认是<code>less</code>)。<br>以set举例，**<code>set&lt;string*&gt; ssp</code>** 是 <strong><code>set&lt;string*, less&lt;string*&gt;, allocator&lt;string*&gt; &gt; ssp </code><strong>的简写。<br>第三个参数分配器不是这章讨论的问题。我们看第二个参数</strong><code>less&lt;string*&gt;</code></strong>,这是一个<strong>仿函数</strong>（通过重载类的()运算符，模仿函数的调用），是<strong>用于判断set中元素是否等价的比较函数</strong>。<br><strong>等价不同于相等</strong>，是关联容器所引入的概念，即<strong>在排序顺序上，如果两个元素各自都不应该排在另一个的前面，则这两个元素是等价的</strong>。</p>
 <p>在set类中，将比较函数<strong>typedef为<code>key_compare</code></strong>.<br><strong>判断是否等价的判别式</strong>为**<code>!c.key_compare()(x, y) &amp;&amp; !c.key_compare()(y, x)</code><strong>.<br>当<code>keycompare()</code>为<code>less&lt;&gt;</code>时，<code>key_compare()(x,y)</code>只有在x不小于y时返回false，<code>key_compare()(y,x)</code>只有在y不小于x时返回false.<br>所以只有x和y相等时</strong>该判别式为true，视该两元素等价<strong>，</strong>关联容器中不会保存两个等价的元素**。</p>
@@ -69,6 +69,6 @@ gitalk.render('comment_container')</script></div></div></div></main><aside class
 <script src="/js/scrollreveal.js"></script>
 <script src="/js/hc-sticky.js"></script>
 <script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="/js/common.js?v=202103212058.js"></script>
-<script src="/js/index.js?v=202103212058.js"></script>
+<script src="/js/common.js?v=202103212254.js"></script>
+<script src="/js/index.js?v=202103212254.js"></script>
 </body></html>
