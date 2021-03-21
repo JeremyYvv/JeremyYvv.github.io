@@ -1,282 +1,725 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>默认构造函数</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
-<script src="/js/modernizr.js"></script>
-<![endif]-->
-<link rel="stylesheet" href="/css/iconfont.css">
 
-<link rel="stylesheet" href="/css/index.css?v=202103212320.css">
-<link rel="stylesheet" href="/css/info.css?v=202103212320.css">
-<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
-</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">默认构造函数</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">C++</a></li><li class="timer">时间：2021-03-21 20:11:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E8%AF%AD%E6%B3%95/" target="_blank">C++语法</a><a href="/tags/C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/" target="_blank">C++对象模型</a></div><div class="news_con"><p><a target="_blank" rel="noopener" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1804.pdf">C++05标准文档</a> 中 Section 12.1.5 关于默认构造函数的说明</p>
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>默认构造函数 - JeremyYv&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="TriDiamond Obsidian,"> 
+    <meta name="description" content="个人,C++05标准文档 中 Section 12.1.5 关于默认构造函数的说明
+
+A default constructor for a class X is a constructor of cla,"> 
+    <meta name="author" content="JeremyYv"> 
+    <link rel="alternative" href="atom.xml" title="JeremyYv&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1429596_nzgqgvnmkjb.css">
+
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.7.2/animate.min.css">
+
+    
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/codemirror/5.48.4/codemirror.min.css">
+
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/codemirror/5.48.4/theme/dracula.css">
+
+    
+<link rel="stylesheet" href="/css/obsidian.css">
+
+    
+<link rel="stylesheet" href="/css/ball-atom.min.css">
+
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="loading">
+    <div class="loader">
+        <div class="la-ball-atom la-2x">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <span id="config-title" style="display:none">JeremyYv&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div class="scrollbar gradient-bg-rev"></div>
+<div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <div class="navigation animated fadeIn fast delay-1s">
+        <img id="home-icon" class="icon-home" src="/img/favicon.png" alt="" data-url="https://JeremyYvv.github.io">
+        <div id="play-icon" title="Play/Pause" class="iconfont icon-play"></div>
+        <h3 class="subtitle">默认构造函数</h3>
+        <div class="social">
+            <!--        <div class="like-icon">-->
+            <!--            <a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+            <!--        </div>-->
+            <div>
+                <div class="share">
+                    
+                        <a href="javascript:;" class="iconfont icon-share1"></a>
+                        <div class="share-component-cc" data-disabled="facebook,douban,linkedin,diandian,tencent,google"></div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="section">
+        <div class=article-header-wrapper>
+    <div class="article-header">
+        <div class="article-cover animated fadeIn" style="
+            animation-delay: 600ms;
+            animation-duration: 1.2s;
+            background-image: 
+                radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+                url(/img/cover.jpg) ">
+        </div>
+        <div class="else">
+            <p class="animated fadeInDown">
+                
+                <a href="/categories/C++"><b>「
+                    </b>C++<b> 」</b></a>
+                
+                三月 21, 2021
+            </p>
+            <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/C++/ObjectModel/default-constructor/" title="默认构造函数" class="">默认构造函数</a>
+            </h3>
+            
+            <p class="post-count animated fadeInDown">
+                
+                <span>
+                    <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                    27k
+                </span>
+                
+                
+                <span>
+                    <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                    24 mins.
+                </span>
+                
+                
+                
+                <span id="busuanzi_container_page_pv">
+                    <b class="iconfont icon-read"></b> <i>阅读次数</i>
+                    <span id="busuanzi_value_page_pv">0</span>
+                </span>
+                
+            </p>
+            
+            
+            <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/" rel="tag">C++对象模型</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C-%E8%AF%AD%E6%B3%95/" rel="tag">C++语法</a></li></ul>
+            
+        </div>
+    </div>
+</div>
+
+<div class="screen-gradient-after">
+    <div class="screen-gradient-content">
+        <div class="screen-gradient-content-inside">
+            <div class="bold-underline-links screen-gradient-sponsor">
+                <p>
+                    <span class="animated fadeIn delay-1s"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="article">
+    <div class='main'>
+        <div class="content markdown animated fadeIn">
+            <p><a target="_blank" rel="noopener" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1804.pdf">C++05标准文档</a> 中 Section 12.1.5 关于默认构造函数的说明</p>
 <blockquote>
-<p>A default constructor for a class X is a constructor of class X that can be called without an argument. If there is no user- declared constructor for class X, a default constructor is implicitly declared<br>类X的默认构造函数是一个无参构造函数，在类X中没有用户声明的构造函数时，被隐式声明。</p>
+<p>A default constructor for a class X is a constructor of class X that can be called without an argument. If there is no user- declared constructor for class X, a default constructor is implicitly declared<br />
+类X的默认构造函数是一个无参构造函数，在类X中没有用户声明的构造函数时，被隐式声明。</p>
 </blockquote>
-<hr>
-<h2 id="Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？"><a href="#Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？" class="headerlink" title="Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？"></a>Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？</h2><h2 id="A1：不一定。"><a href="#A1：不一定。" class="headerlink" title="A1：不一定。"></a>A1：不一定。</h2><p>在上一段Section 12.1.5 的说明后，还有一段额外的说明</p>
+<hr />
+<h2 id="q1用户未定义构造函数时默认构造函数一定会被生成吗"><a class="markdownIt-Anchor" href="#q1用户未定义构造函数时默认构造函数一定会被生成吗"></a> Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？</h2>
+<h2 id="a1不一定"><a class="markdownIt-Anchor" href="#a1不一定"></a> A1：不一定。</h2>
+<p>在上一段Section 12.1.5 的说明后，还有一段额外的说明</p>
 <blockquote>
-<p>A default constructor is trivial if it is implicitly-declared and if:<br>its class has no virtual functions and no virtual base classes, and<br>all the direct base classes of its class have trivial default constructors, and<br>for all the non-static data members of its class that are of class type (or array thereof), each such class has a trivial default constructor.<br>一个隐式声明的默认构造函数将是无价值（trivial）的，如果<br>类里没有虚函数和虚基类，并且<br>类的直接基类都有无价值的默认构造函数，并且<br>类中所有非静态成员变量都有无价值的默认构造函数<br>可见，即使是默认构造函数，也被分为了有价值（non-trivial）和无价值（trivial）两种。<br>而对于无价值的默认构造函数，实际上并不会被生成。</p>
+<p>A default constructor is trivial if it is implicitly-declared and if:<br />
+its class has no virtual functions and no virtual base classes, and<br />
+all the direct base classes of its class have trivial default constructors, and<br />
+for all the non-static data members of its class that are of class type (or array thereof), each such class has a trivial default constructor.<br />
+一个隐式声明的默认构造函数将是无价值（trivial）的，如果<br />
+类里没有虚函数和虚基类，并且<br />
+类的直接基类都有无价值的默认构造函数，并且<br />
+类中所有非静态成员变量都有无价值的默认构造函数<br />
+可见，即使是默认构造函数，也被分为了有价值（non-trivial）和无价值（trivial）两种。<br />
+而对于无价值的默认构造函数，实际上并不会被生成。</p>
 </blockquote>
-<h3 id="求证"><a href="#求证" class="headerlink" title="求证"></a>求证</h3><p>通过反汇编，对比用户定义无参构造和默认构造，查看在类的实例过程中是否被调用。</p>
-<h3 id="1-类内定义无参构造函数"><a href="#1-类内定义无参构造函数" class="headerlink" title="1. 类内定义无参构造函数"></a>1. 类内定义无参构造函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<h3 id="求证"><a class="markdownIt-Anchor" href="#求证"></a> 求证</h3>
+<p>通过反汇编，对比用户定义无参构造和默认构造，查看在类的实例过程中是否被调用。</p>
+<h3 id="1-类内定义无参构造函数"><a class="markdownIt-Anchor" href="#1-类内定义无参构造函数"></a> 1. 类内定义无参构造函数</h3>
+<pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    Demo()&#123;&#125;
+&#125;;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    Demo a<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+    Demo a;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+</code></pre>
 <p>编译完成后查看反汇编（截取text段中相关的一段）:</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token number">400546</span><span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
-  <span class="token number">400547</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
-  <span class="token number">40054</span>a<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">83</span> ec <span class="token number">10</span>             sub    $<span class="token number">0x10</span><span class="token punctuation">,</span><span class="token operator">%</span>rsp
-  <span class="token number">40054</span>e<span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">04</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    mov    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
-  <span class="token number">400555</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
-  <span class="token number">400557</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">45</span> f8             mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
-  <span class="token number">40055</span>b<span class="token operator">:</span>   <span class="token number">31</span> c0                   <span class="token operator">xor</span>    <span class="token operator">%</span>eax<span class="token punctuation">,</span><span class="token operator">%</span>eax
-    Demo a<span class="token punctuation">;</span> 
-  <span class="token number">40055</span>d<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>d <span class="token number">45</span> f7             lea    <span class="token operator">-</span><span class="token number">0x9</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
-  <span class="token number">400561</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
-  <span class="token number">400564</span><span class="token operator">:</span>   e8 <span class="token number">1</span>b <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          callq  <span class="token number">400584</span> <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  <span class="token number">400569</span><span class="token operator">:</span>   b8 <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          mov    $<span class="token number">0x0</span><span class="token punctuation">,</span><span class="token operator">%</span>eax
-<span class="token punctuation">&#125;</span>
-  <span class="token number">40056</span>e<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">55</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
-  <span class="token number">400572</span><span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">33</span> <span class="token number">14</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    <span class="token operator">xor</span>    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
-  <span class="token number">400579</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
-  <span class="token number">40057</span>b<span class="token operator">:</span>   <span class="token number">74</span> <span class="token number">05</span>                   je     <span class="token number">400582</span> <span class="token operator">&lt;</span>main<span class="token operator">+</span><span class="token number">0x3c</span><span class="token operator">></span>
-  <span class="token number">40057</span>d<span class="token operator">:</span>   e8 <span class="token number">9</span>e fe ff ff          callq  <span class="token number">400420</span> <span class="token operator">&lt;</span>__stack_chk_fail@plt<span class="token operator">></span>
-  <span class="token number">400582</span><span class="token operator">:</span>   c9                      leaveq
-  <span class="token number">400583</span><span class="token operator">:</span>   c3                      retq
+<pre class="highlight"><code class="cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+  <span class="hljs-number">400546</span>:   <span class="hljs-number">55</span>                      push   %rbp
+  <span class="hljs-number">400547</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp
+  <span class="hljs-number">40054</span>a:   <span class="hljs-number">48</span> <span class="hljs-number">83</span> ec <span class="hljs-number">10</span>             sub    $<span class="hljs-number">0x10</span>,%rsp
+  <span class="hljs-number">40054</span>e:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">04</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    mov    %fs:<span class="hljs-number">0x28</span>,%rax
+  <span class="hljs-number">400555</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span> 
+  <span class="hljs-number">400557</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">45</span> f8             mov    %rax,<span class="hljs-number">-0x8</span>(%rbp)
+  <span class="hljs-number">40055b</span>:   <span class="hljs-number">31</span> c0                   <span class="hljs-keyword">xor</span>    %eax,%eax
+    Demo a; 
+  <span class="hljs-number">40055</span>d:   <span class="hljs-number">48</span> <span class="hljs-number">8</span>d <span class="hljs-number">45</span> f7             lea    <span class="hljs-number">-0x9</span>(%rbp),%rax
+  <span class="hljs-number">400561</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi
+  <span class="hljs-number">400564</span>:   e8 <span class="hljs-number">1b</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          callq  <span class="hljs-number">400584</span> &lt;_ZN4DemoC1Ev&gt;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+  <span class="hljs-number">400569</span>:   b8 <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x0</span>,%eax
+&#125;
+  <span class="hljs-number">40056</span>e:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">55</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rdx
+  <span class="hljs-number">400572</span>:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">33</span> <span class="hljs-number">14</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    <span class="hljs-keyword">xor</span>    %fs:<span class="hljs-number">0x28</span>,%rdx
+  <span class="hljs-number">400579</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span> 
+  <span class="hljs-number">40057b</span>:   <span class="hljs-number">74</span> <span class="hljs-number">05</span>                   je     <span class="hljs-number">400582</span> &lt;main+<span class="hljs-number">0x3c</span>&gt;
+  <span class="hljs-number">40057</span>d:   e8 <span class="hljs-number">9</span>e fe ff ff          callq  <span class="hljs-number">400420</span> &lt;__stack_chk_fail@plt&gt;
+  <span class="hljs-number">400582</span>:   c9                      leaveq
+  <span class="hljs-number">400583</span>:   c3                      retq
 
-<span class="token number">0000000000400584</span> <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span><span class="token operator">:</span>
-<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-  <span class="token number">400584</span><span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
-  <span class="token number">400585</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
-  <span class="token number">400588</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
-  <span class="token number">40058</span>c<span class="token operator">:</span>   <span class="token number">90</span>                      nop
-  <span class="token number">40058</span>d<span class="token operator">:</span>   <span class="token number">5</span>d                      pop    <span class="token operator">%</span>rbp
-  <span class="token number">40058</span>e<span class="token operator">:</span>   c3                      retq
-  <span class="token number">40058f</span><span class="token operator">:</span>   <span class="token number">90</span>                      nop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<span class="hljs-number">0000000000400584</span> &lt;_ZN4DemoC1Ev&gt;:
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    Demo()&#123;&#125;
+  <span class="hljs-number">400584</span>:   <span class="hljs-number">55</span>                      push   %rbp
+  <span class="hljs-number">400585</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp
+  <span class="hljs-number">400588</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)
+  <span class="hljs-number">40058</span>c:   <span class="hljs-number">90</span>                      nop
+  <span class="hljs-number">40058</span>d:   <span class="hljs-number">5</span>d                      pop    %rbp
+  <span class="hljs-number">40058</span>e:   c3                      retq
+  <span class="hljs-number">40058f</span>:   <span class="hljs-number">90</span>                      nop
+</code></pre>
 <p>Line13 main函数中，<strong>Demo a;</strong> 调用了Demo类的无参构造函数 <strong>_ZN4DemoC1Ev</strong>.</p>
-<h3 id="2-类内不定义无参构造函数，查看是否会调用默认构造函数"><a href="#2-类内不定义无参构造函数，查看是否会调用默认构造函数" class="headerlink" title="2. 类内不定义无参构造函数，查看是否会调用默认构造函数"></a>2. 类内不定义无参构造函数，查看是否会调用默认构造函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Derived</span> <span class="token punctuation">&#123;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<h3 id="2-类内不定义无参构造函数查看是否会调用默认构造函数"><a class="markdownIt-Anchor" href="#2-类内不定义无参构造函数查看是否会调用默认构造函数"></a> 2. 类内不定义无参构造函数，查看是否会调用默认构造函数</h3>
+<pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Derived</span> &#123;</span>
+&#125;;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    Derived a<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-编译完成后查看反汇编（截取text段中相关的一段）<span class="token operator">:</span>
-<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+    Derived a;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+编译完成后查看反汇编（截取text段中相关的一段）:
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>
+&#125;;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token number">4004</span>d6<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
-  <span class="token number">4004</span>d7<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
-    Demo a<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  <span class="token number">4004</span>da<span class="token operator">:</span>   b8 <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          mov    $<span class="token number">0x0</span><span class="token punctuation">,</span><span class="token operator">%</span>eax
-<span class="token punctuation">&#125;</span>
-  <span class="token number">4004</span>df<span class="token operator">:</span>   <span class="token number">5</span>d                      pop    <span class="token operator">%</span>rbp
-  <span class="token number">4004e0</span><span class="token operator">:</span>   c3                      retq   
-  <span class="token number">4004e1</span><span class="token operator">:</span>   <span class="token number">66</span> <span class="token number">2</span>e <span class="token number">0f</span> <span class="token number">1f</span> <span class="token number">84</span> <span class="token number">00</span> <span class="token number">00</span>    nopw   <span class="token operator">%</span>cs<span class="token operator">:</span><span class="token number">0x0</span><span class="token punctuation">(</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
-  <span class="token number">4004e8</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> 
-  <span class="token number">4004</span>eb<span class="token operator">:</span>   <span class="token number">0f</span> <span class="token number">1f</span> <span class="token number">44</span> <span class="token number">00</span> <span class="token number">00</span>          nopl   <span class="token number">0x0</span><span class="token punctuation">(</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+  <span class="hljs-number">4004</span>d6:   <span class="hljs-number">55</span>                      push   %rbp
+  <span class="hljs-number">4004</span>d7:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp
+    Demo a;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+  <span class="hljs-number">4004</span>da:   b8 <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x0</span>,%eax
+&#125;
+  <span class="hljs-number">4004</span>df:   <span class="hljs-number">5</span>d                      pop    %rbp
+  <span class="hljs-number">4004e0</span>:   c3                      retq   
+  <span class="hljs-number">4004e1</span>:   <span class="hljs-number">66</span> <span class="hljs-number">2</span>e <span class="hljs-number">0f</span> <span class="hljs-number">1f</span> <span class="hljs-number">84</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>    nopw   %cs:<span class="hljs-number">0x0</span>(%rax,%rax,<span class="hljs-number">1</span>)
+  <span class="hljs-number">4004e8</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> 
+  <span class="hljs-number">4004</span>eb:   <span class="hljs-number">0f</span> <span class="hljs-number">1f</span> <span class="hljs-number">44</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          nopl   <span class="hljs-number">0x0</span>(%rax,%rax,<span class="hljs-number">1</span>)
 
-<span class="token number">00000000004004f</span>0 <span class="token operator">&lt;</span>__libc_csu_init<span class="token operator">></span><span class="token operator">:</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="hljs-number">00000000004004f</span>0 &lt;__libc_csu_init&gt;:
+</code></pre>
 <p>可见，并没有生成或调用默认构造函数，因为类Demo中没有虚函数/虚基类，且所有成员变量和直接基类都没有non-trivial默认构造或用户声明构造函数。</p>
-<h3 id="3-作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数"><a href="#3-作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数" class="headerlink" title="3. 作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数"></a>3. 作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<h3 id="3-作为对比只在空类中写个虚函数看看是否会按照标准中说的那样生成一个有价值的默认构造函数"><a class="markdownIt-Anchor" href="#3-作为对比只在空类中写个虚函数看看是否会按照标准中说的那样生成一个有价值的默认构造函数"></a> 3. 作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数</h3>
+<pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;&#125;
+&#125;;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    Demo a<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+    Demo a;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
 编译完成后查看反汇编：
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token number">400676</span><span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
-  <span class="token number">400677</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
-  <span class="token number">40067</span>a<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">83</span> ec <span class="token number">10</span>             sub    $<span class="token number">0x10</span><span class="token punctuation">,</span><span class="token operator">%</span>rsp
-  <span class="token number">40067</span>e<span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">04</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    mov    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
-  <span class="token number">400685</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
-  <span class="token number">400687</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">45</span> f8             mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
-  <span class="token number">40068</span>b<span class="token operator">:</span>   <span class="token number">31</span> c0                   <span class="token operator">xor</span>    <span class="token operator">%</span>eax<span class="token punctuation">,</span><span class="token operator">%</span>eax
-    Demo a<span class="token punctuation">;</span> 
-  <span class="token number">40068</span>d<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>d <span class="token number">45</span> f0             lea    <span class="token operator">-</span><span class="token number">0x10</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
-  <span class="token number">400691</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
-  <span class="token number">400694</span><span class="token operator">:</span>   e8 <span class="token number">27</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          callq  <span class="token number">4006</span>c0 <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  <span class="token number">400699</span><span class="token operator">:</span>   b8 <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          mov    $<span class="token number">0x0</span><span class="token punctuation">,</span><span class="token operator">%</span>eax
-<span class="token punctuation">&#125;</span>
-  <span class="token number">40069</span>e<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">55</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
-  <span class="token number">4006</span>a2<span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">33</span> <span class="token number">14</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    <span class="token operator">xor</span>    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
-  <span class="token number">4006</span>a9<span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
-  <span class="token number">4006</span>ab<span class="token operator">:</span>   <span class="token number">74</span> <span class="token number">05</span>                   je     <span class="token number">4006</span>b2 <span class="token operator">&lt;</span>main<span class="token operator">+</span><span class="token number">0x3c</span><span class="token operator">></span>
-  <span class="token number">4006</span>ad<span class="token operator">:</span>   e8 ae fe ff ff          callq  <span class="token number">400560</span> <span class="token operator">&lt;</span>__stack_chk_fail@plt<span class="token operator">></span>
-  <span class="token number">4006</span>b2<span class="token operator">:</span>   c9                      leaveq 
-  <span class="token number">4006</span>b3<span class="token operator">:</span>   c3                      retq   
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+  <span class="hljs-number">400676</span>:   <span class="hljs-number">55</span>                      push   %rbp
+  <span class="hljs-number">400677</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp
+  <span class="hljs-number">40067</span>a:   <span class="hljs-number">48</span> <span class="hljs-number">83</span> ec <span class="hljs-number">10</span>             sub    $<span class="hljs-number">0x10</span>,%rsp
+  <span class="hljs-number">40067</span>e:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">04</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    mov    %fs:<span class="hljs-number">0x28</span>,%rax
+  <span class="hljs-number">400685</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span> 
+  <span class="hljs-number">400687</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">45</span> f8             mov    %rax,<span class="hljs-number">-0x8</span>(%rbp)
+  <span class="hljs-number">40068b</span>:   <span class="hljs-number">31</span> c0                   <span class="hljs-keyword">xor</span>    %eax,%eax
+    Demo a; 
+  <span class="hljs-number">40068</span>d:   <span class="hljs-number">48</span> <span class="hljs-number">8</span>d <span class="hljs-number">45</span> f0             lea    <span class="hljs-number">-0x10</span>(%rbp),%rax
+  <span class="hljs-number">400691</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi
+  <span class="hljs-number">400694</span>:   e8 <span class="hljs-number">27</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          callq  <span class="hljs-number">4006</span>c0 &lt;_ZN4DemoC1Ev&gt;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+  <span class="hljs-number">400699</span>:   b8 <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x0</span>,%eax
+&#125;
+  <span class="hljs-number">40069</span>e:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">55</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rdx
+  <span class="hljs-number">4006</span>a2:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">33</span> <span class="hljs-number">14</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    <span class="hljs-keyword">xor</span>    %fs:<span class="hljs-number">0x28</span>,%rdx
+  <span class="hljs-number">4006</span>a9:   <span class="hljs-number">00</span> <span class="hljs-number">00</span> 
+  <span class="hljs-number">4006</span>ab:   <span class="hljs-number">74</span> <span class="hljs-number">05</span>                   je     <span class="hljs-number">4006b</span>2 &lt;main+<span class="hljs-number">0x3c</span>&gt;
+  <span class="hljs-number">4006</span>ad:   e8 ae fe ff ff          callq  <span class="hljs-number">400560</span> &lt;__stack_chk_fail@plt&gt;
+  <span class="hljs-number">4006b</span>2:   c9                      leaveq 
+  <span class="hljs-number">4006b</span>3:   c3                      retq   
 
-<span class="token number">00000000004006</span>b4 <span class="token operator">&lt;</span>_ZN4Demo4funcEv<span class="token operator">></span><span class="token operator">:</span>
-<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-  <span class="token number">4006</span>b4<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
-  <span class="token number">4006</span>b5<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
-  <span class="token number">4006</span>b8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
-  <span class="token number">4006</span>bc<span class="token operator">:</span>   <span class="token number">90</span>                      nop
-  <span class="token number">4006</span>bd<span class="token operator">:</span>   <span class="token number">5</span>d                      pop    <span class="token operator">%</span>rbp
-  <span class="token number">4006</span>be<span class="token operator">:</span>   c3                      retq   
-  <span class="token number">4006</span>bf<span class="token operator">:</span>   <span class="token number">90</span>                      nop
+<span class="hljs-number">00000000004006b</span>4 &lt;_ZN4Demo4funcEv&gt;:
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;&#125;
+  <span class="hljs-number">4006b</span>4:   <span class="hljs-number">55</span>                      push   %rbp
+  <span class="hljs-number">4006b</span>5:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp
+  <span class="hljs-number">4006b</span>8:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)
+  <span class="hljs-number">4006b</span>c:   <span class="hljs-number">90</span>                      nop
+  <span class="hljs-number">4006b</span>d:   <span class="hljs-number">5</span>d                      pop    %rbp
+  <span class="hljs-number">4006b</span>e:   c3                      retq   
+  <span class="hljs-number">4006b</span>f:   <span class="hljs-number">90</span>                      nop
 
-<span class="token number">00000000004006</span>c0 <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span><span class="token operator">:</span>
-<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
-  <span class="token number">4006</span>c0<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
-  <span class="token number">4006</span>c1<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
-  <span class="token number">4006</span>c4<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
-  <span class="token number">4006</span>c8<span class="token operator">:</span>   ba <span class="token number">78</span> <span class="token number">07</span> <span class="token number">40</span> <span class="token number">00</span>          mov    $<span class="token number">0x400778</span><span class="token punctuation">,</span><span class="token operator">%</span>edx
-  <span class="token number">4006</span>cd<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">45</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>可见，在类中有虚函数的时候，的确会生成默认构造函数并在<strong>main中Line 13</strong>进行了调用。<br>至于其他几种情况，如类有虚基类、非静态成员变量或直接基类生成了构造函数，才会生成默认构造函数。</p>
-<hr>
-<h2 id="Q2：默认构造函数会初始化成员变量吗？"><a href="#Q2：默认构造函数会初始化成员变量吗？" class="headerlink" title="Q2：默认构造函数会初始化成员变量吗？"></a>Q2：默认构造函数会初始化成员变量吗？</h2><h2 id="A2：不一定"><a href="#A2：不一定" class="headerlink" title="A2：不一定"></a>A2：不一定</h2><p>在C++05标准文档 Section 12.1.8 中有说明</p>
+<span class="hljs-number">00000000004006</span>c0 &lt;_ZN4DemoC1Ev&gt;:
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>
+  <span class="hljs-number">4006</span>c0:   <span class="hljs-number">55</span>                      push   %rbp
+  <span class="hljs-number">4006</span>c1:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp
+  <span class="hljs-number">4006</span>c4:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)
+  <span class="hljs-number">4006</span>c8:   ba <span class="hljs-number">78</span> <span class="hljs-number">07</span> <span class="hljs-number">40</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x400778</span>,%edx
+  <span class="hljs-number">4006</span>cd:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">45</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rax
+</code></pre>
+<p>可见，在类中有虚函数的时候，的确会生成默认构造函数并在<strong>main中Line 13</strong>进行了调用。<br />
+至于其他几种情况，如类有虚基类、非静态成员变量或直接基类生成了构造函数，才会生成默认构造函数。</p>
+<hr />
+<h2 id="q2默认构造函数会初始化成员变量吗"><a class="markdownIt-Anchor" href="#q2默认构造函数会初始化成员变量吗"></a> Q2：默认构造函数会初始化成员变量吗？</h2>
+<h2 id="a2不一定"><a class="markdownIt-Anchor" href="#a2不一定"></a> A2：不一定</h2>
+<p>在C++05标准文档 Section 12.1.8 中有说明</p>
 <blockquote>
-<p>Default constructors are called implicitly to create class objects of static or automatic storage duration defined without an initialize.<br>默认构造函数，会在静态或自动存储期间被隐式调用，来创建类对象，没有初始化。</p>
+<p>Default constructors are called implicitly to create class objects of static or automatic storage duration defined without an initialize.<br />
+默认构造函数，会在静态或自动存储期间被隐式调用，来创建类对象，没有初始化。</p>
 </blockquote>
-<p>默认构造不一定会设定每一个成员变量的默认值<br>默认构造函数只是为了满足编译器的需要，将类中需要构造的成员变量按声明的顺序依次构造出来，使程序能够运行，但未必会进行初始化！<br>在C++的设计中，对成员变量进行初始化这种，为了满足程序的需要，是程序员的责任。</p>
-<h3 id="求证-1"><a href="#求证-1" class="headerlink" title="求证"></a>求证</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
-<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+<p>默认构造不一定会设定每一个成员变量的默认值<br />
+默认构造函数只是为了满足编译器的需要，将类中需要构造的成员变量按声明的顺序依次构造出来，使程序能够运行，但未必会进行初始化！<br />
+在C++的设计中，对成员变量进行初始化这种，为了满足程序的需要，是程序员的责任。</p>
+<h3 id="求证-2"><a class="markdownIt-Anchor" href="#求证-2"></a> 求证</h3>
+<pre class="highlight"><code class="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
 
-<span class="token keyword">class</span> <span class="token class-name">Base</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-    <span class="token keyword">int</span> m_a<span class="token punctuation">;</span>
-    <span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        cout <span class="token operator">&lt;&lt;</span> m_a <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>   
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">int</span> m_a;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-built_in">cout</span> &lt;&lt; m_a &lt;&lt; <span class="hljs-built_in">endl</span>;
+    &#125;   
+&#125;;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    Base A<span class="token punctuation">;</span>
-    A<span class="token punctuation">.</span><span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+    Base A;
+    A.func();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+</code></pre>
 <p>这段代码可以保证使用默认构造函数构造了对象A，然后调用func方法输出成员变量的值</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">jeremynancy@ubuntu<span class="token operator">:</span><span class="token operator">~</span><span class="token operator">/</span>cpp<span class="token operator">/</span>constructor$ g<span class="token operator">++</span> <span class="token operator">--</span>version
-g<span class="token operator">++</span> <span class="token punctuation">(</span>Ubuntu <span class="token number">5.4</span><span class="token number">.0</span><span class="token operator">-</span><span class="token number">6u</span>buntu1<span class="token operator">~</span><span class="token number">16.04</span><span class="token number">.1</span><span class="token punctuation">)</span> <span class="token number">5.4</span><span class="token number">.0</span> <span class="token number">20160609</span>
-<span class="token function">Copyright</span> <span class="token punctuation">(</span>C<span class="token punctuation">)</span> <span class="token number">2015</span> Free Software Foundation<span class="token punctuation">,</span> Inc<span class="token punctuation">.</span>
-This is free software<span class="token punctuation">;</span> see the source <span class="token keyword">for</span> copying conditions<span class="token punctuation">.</span>  There is NO
-warranty<span class="token punctuation">;</span> not even <span class="token keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<span class="token punctuation">.</span>
+<pre class="highlight"><code class="c">jeremynancy@ubuntu:~/cpp/constructor$ g++ --version
+g++ (Ubuntu <span class="hljs-number">5.4</span><span class="hljs-number">.0</span><span class="hljs-number">-6u</span>buntu1~<span class="hljs-number">16.04</span><span class="hljs-number">.1</span>) <span class="hljs-number">5.4</span><span class="hljs-number">.0</span> <span class="hljs-number">20160609</span>
+Copyright (C) <span class="hljs-number">2015</span> Free Software Foundation, Inc.
+This is <span class="hljs-built_in">free</span> software; see the source <span class="hljs-keyword">for</span> copying conditions.  There is NO
+warranty; <span class="hljs-keyword">not</span> even <span class="hljs-keyword">for</span> MERCHANTABILITY <span class="hljs-keyword">or</span> FITNESS FOR A PARTICULAR PURPOSE.
 
-jeremynancy@ubuntu<span class="token operator">:</span><span class="token operator">~</span><span class="token operator">/</span>cpp<span class="token operator">/</span>constructor$ <span class="token punctuation">.</span><span class="token operator">/</span><span class="token keyword">default</span><span class="token operator">-</span>value 
-<span class="token number">4196368</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>编译运行之后发现是一个随机值，并没有初始化成零值，至少在图示中的这个版本g++编译器中是这样的。<br>经过尝试，的确有些环境或版本下的某种编译器会自动把成员变量初始化成零值，但是这并不是C++标准中要求编译器做的事情，所以应该这个初始化的职责应该由程序员来承担。</p>
-<hr>
-<h2 id="Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？"><a href="#Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？" class="headerlink" title="Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？"></a>Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？</h2><h2 id="A3："><a href="#A3：" class="headerlink" title="A3："></a>A3：</h2><ul>
-<li><h3 id="调用顺序：基类构造函数-gt-成员变量构造函数-gt-类本身构造函数。"><a href="#调用顺序：基类构造函数-gt-成员变量构造函数-gt-类本身构造函数。" class="headerlink" title="调用顺序：基类构造函数 =&gt; 成员变量构造函数 =&gt; 类本身构造函数。"></a>调用顺序：基类构造函数 =&gt; 成员变量构造函数 =&gt; 类本身构造函数。</h3></li>
-<li><h3 id="实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。"><a href="#实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。" class="headerlink" title="实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。"></a>实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。</h3></li>
+jeremynancy@ubuntu:~/cpp/constructor$ ./<span class="hljs-keyword">default</span>-value 
+<span class="hljs-number">4196368</span>
+</code></pre>
+<p>编译运行之后发现是一个随机值，并没有初始化成零值，至少在图示中的这个版本g<ins>编译器中是这样的。<br />
+经过尝试，的确有些环境或版本下的某种编译器会自动把成员变量初始化成零值，但是这并不是C</ins>标准中要求编译器做的事情，所以应该这个初始化的职责应该由程序员来承担。</p>
+<hr />
+<h2 id="q3一个类的构造过程中基类-成员变量和类本身构造函数调用的顺序编译器是如何实现的"><a class="markdownIt-Anchor" href="#q3一个类的构造过程中基类-成员变量和类本身构造函数调用的顺序编译器是如何实现的"></a> Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？</h2>
+<h2 id="a3"><a class="markdownIt-Anchor" href="#a3"></a> A3：</h2>
+<ul>
+<li>
+<h3 id="调用顺序基类构造函数-成员变量构造函数-类本身构造函数"><a class="markdownIt-Anchor" href="#调用顺序基类构造函数-成员变量构造函数-类本身构造函数"></a> 调用顺序：基类构造函数 =&gt; 成员变量构造函数 =&gt; 类本身构造函数。</h3>
+</li>
+<li>
+<h3 id="实现方式编译器通过在类的每个构造函数顶部进行填充以实现这个构造顺序"><a class="markdownIt-Anchor" href="#实现方式编译器通过在类的每个构造函数顶部进行填充以实现这个构造顺序"></a> 实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。</h3>
+</li>
 </ul>
 <p>对于下列类代码</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
-<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+<pre class="highlight"><code class="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
 
-<span class="token keyword">class</span> <span class="token class-name">Base</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-    <span class="token function">Base</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Base"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>   
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    Base() &#123;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Base"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    &#125;   
+&#125;;
 
-<span class="token keyword">class</span> <span class="token class-name">Member</span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-    <span class="token function">Member</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Member"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>   
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Member</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    Member() &#123;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Member"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    &#125;   
+&#125;;
 
-<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token operator">:</span> <span class="token base-clause"><span class="token keyword">public</span> <span class="token class-name">Base</span></span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-    Member m<span class="token punctuation">;</span>
-    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>   
-    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo 1"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>   
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> :</span> <span class="hljs-keyword">public</span> Base &#123;
+<span class="hljs-keyword">public</span>:
+    Member m;
+    Demo() &#123;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    &#125;   
+    Demo(<span class="hljs-keyword">int</span> x) &#123;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo 1"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    &#125;   
+&#125;;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    Demo A<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+    Demo A;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+</code></pre>
 <p><strong>Demo</strong> 类的每个构造函数在编译时会被扩张成如下</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token class-name">Demo</span><span class="token operator">::</span><span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 插入父类构造</span>
-    <span class="token class-name">Base</span><span class="token operator">::</span><span class="token function">Base</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-    <span class="token comment">// 插入成员变量构造</span>
-    <span class="token class-name">Member</span><span class="token operator">::</span><span class="token function">Member</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-    <span class="token comment">// 继续本身的处理</span>
-    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="求证-2"><a href="#求证-2" class="headerlink" title="求证"></a>求证</h2><p>编译后反汇编查看无参构造函数</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token operator">:</span> <span class="token base-clause"><span class="token keyword">public</span> <span class="token class-name">Base</span></span> <span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-    Member m<span class="token punctuation">;</span>
-    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token number">4009</span>a0<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
-  <span class="token number">4009</span>a1<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
-  <span class="token number">4009</span>a4<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">83</span> ec <span class="token number">10</span>             sub    $<span class="token number">0x10</span><span class="token punctuation">,</span><span class="token operator">%</span>rsp
-  <span class="token number">4009</span>a8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
-  <span class="token number">4009</span>ac<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">45</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
-  <span class="token number">4009</span>b0<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
-  <span class="token number">4009</span>b3<span class="token operator">:</span>   e8 <span class="token number">90</span> ff ff ff          callq  <span class="token number">400948</span> <span class="token operator">&lt;</span>_ZN4BaseC1Ev<span class="token operator">></span>
-  <span class="token number">4009</span>b8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">45</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
-  <span class="token number">4009</span>bc<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
-  <span class="token number">4009</span>bf<span class="token operator">:</span>   e8 b0 ff ff ff          callq  <span class="token number">400974</span> <span class="token operator">&lt;</span>_ZN6MemberC1Ev<span class="token operator">></span>
-        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
-  <span class="token number">4009</span>c4<span class="token operator">:</span>   be <span class="token number">80</span> <span class="token number">0</span>a <span class="token number">40</span> <span class="token number">00</span>          mov    $<span class="token number">0x400a80</span><span class="token punctuation">,</span><span class="token operator">%</span>esi
-  <span class="token number">4009</span>c9<span class="token operator">:</span>   bf <span class="token number">80</span> <span class="token number">10</span> <span class="token number">60</span> <span class="token number">00</span>          mov    $<span class="token number">0x601080</span><span class="token punctuation">,</span><span class="token operator">%</span>edi
-  <span class="token number">4009</span>ce<span class="token operator">:</span>   e8 <span class="token number">9</span>d fd ff ff          callq  <span class="token number">400770</span> <span class="token operator">&lt;</span>_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt<span class="token operator">></span>
-  <span class="token number">4009</span>d3<span class="token operator">:</span>   be a0 <span class="token number">07</span> <span class="token number">40</span> <span class="token number">00</span>          mov    $<span class="token number">0x4007a0</span><span class="token punctuation">,</span><span class="token operator">%</span>esi
-  <span class="token number">4009</span>d8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
-  <span class="token number">4009</span>db<span class="token operator">:</span>   e8 b0 fd ff ff          callq  <span class="token number">400790</span> <span class="token operator">&lt;</span>_ZNSolsEPFRSoS_E@plt<span class="token operator">></span>
-    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="highlight"><code class="cpp">Demo::Demo() &#123;
+    <span class="hljs-comment">// 插入父类构造</span>
+    Base::Base()
+    <span class="hljs-comment">// 插入成员变量构造</span>
+    Member::Member()
+    <span class="hljs-comment">// 继续本身的处理</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+&#125;
+</code></pre>
+<h2 id="求证-3"><a class="markdownIt-Anchor" href="#求证-3"></a> 求证</h2>
+<p>编译后反汇编查看无参构造函数</p>
+<pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> :</span> <span class="hljs-keyword">public</span> Base &#123;
+<span class="hljs-keyword">public</span>:
+    Member m;
+    Demo() &#123;
+  <span class="hljs-number">4009</span>a0:   <span class="hljs-number">55</span>                      push   %rbp
+  <span class="hljs-number">4009</span>a1:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp
+  <span class="hljs-number">4009</span>a4:   <span class="hljs-number">48</span> <span class="hljs-number">83</span> ec <span class="hljs-number">10</span>             sub    $<span class="hljs-number">0x10</span>,%rsp
+  <span class="hljs-number">4009</span>a8:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)
+  <span class="hljs-number">4009</span>ac:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">45</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rax
+  <span class="hljs-number">4009b</span>0:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi
+  <span class="hljs-number">4009b</span>3:   e8 <span class="hljs-number">90</span> ff ff ff          callq  <span class="hljs-number">400948</span> &lt;_ZN4BaseC1Ev&gt;
+  <span class="hljs-number">4009b</span>8:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">45</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rax
+  <span class="hljs-number">4009b</span>c:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi
+  <span class="hljs-number">4009b</span>f:   e8 b0 ff ff ff          callq  <span class="hljs-number">400974</span> &lt;_ZN6MemberC1Ev&gt;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+  <span class="hljs-number">4009</span>c4:   be <span class="hljs-number">80</span> <span class="hljs-number">0</span>a <span class="hljs-number">40</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x400a80</span>,%esi
+  <span class="hljs-number">4009</span>c9:   bf <span class="hljs-number">80</span> <span class="hljs-number">10</span> <span class="hljs-number">60</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x601080</span>,%edi
+  <span class="hljs-number">4009</span>ce:   e8 <span class="hljs-number">9</span>d fd ff ff          callq  <span class="hljs-number">400770</span> &lt;_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt&gt;
+  <span class="hljs-number">4009</span>d3:   be a0 <span class="hljs-number">07</span> <span class="hljs-number">40</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x4007a0</span>,%esi
+  <span class="hljs-number">4009</span>d8:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi
+  <span class="hljs-number">4009</span>db:   e8 b0 fd ff ff          callq  <span class="hljs-number">400790</span> &lt;_ZNSolsEPFRSoS_E@plt&gt;
+    &#125;
+</code></pre>
 <p>可见，在<strong>Demo::Demo</strong>构造函数原本的函数体之前，依次插入了Base类的构造函数 <strong>_ZN4BaseC1Ev</strong>，和Member类的构造函数 <strong>_ZN6MemberC1Ev</strong>.</p>
-</div></div><div class="nextinfo"><p>上一篇：没有了</p><p>下一篇：<a href="/2021/03/21/C++/STL/%E7%AE%97%E6%B3%95/">算法</a></p></div><div class="news_pl"><div id="comment_container"></div>
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls"
+                data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+            <ul id="audio-list" style="display:none">
+                
+                
+                <li title='0' data-url='/statics/chengdu.mp3'></li>
+                
+                    
+            </ul>
+            
+            
+            <div class="post-nav">
+                <hr>
+                
+                
+                    <div class="post-nav-item">下一篇:<a href="/2021/03/21/C++/STL/%E7%AE%97%E6%B3%95/" rel="next" 
+                        title="算法">算法</a></div>
+                                
+            </div>   
+                        
+            
+            
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='ec894e2b66f752e8b7fb'
+        data-cs='3ccc2e92bb350688fe2c2dc2930189b62622bfb1'
+        data-r='blog-comments'
+        data-o='TriDiamond'
+        data-a='TriDiamond'
+        data-d=''
+    >留言</div>
 
-<script src="/js/md5.min.js"></script>
-<script>const gitalk = new Gitalk({
-    clientID: 'you github Client ID',
-    clientSecret: 'you github Client Secret',
-    repo: 'you github repository',
-    owner: 'you github repository owner',
-    admin: ['you github repository owner'],
-    id: md5("2021/03/21/C++/ObjectModel/default-constructor/"),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: true  // Facebook-like distraction free mode
-})
-gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
-<p>C++/Python/Web</p>
-<p>Email：JeremyYv@foxmal.com</p>
-</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/scrollreveal.js"></script>
-<script src="/js/hc-sticky.js"></script>
-<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="/js/common.js?v=202103212320.js"></script>
-<script src="/js/index.js?v=202103212320.js"></script>
-</body></html>
+
+            
+            
+        </div>
+        <div class="sidebar">
+            <div class="box animated fadeInRight">
+                <div class="subbox">
+                    <img src="https://res.cloudinary.com/tridiamond/image/upload/v1573019751/TriDiamond_logo_ui_xeublz.jpg" height=300 width=300></img>
+                    <p>JeremyYv</p>
+                    <span>Think like an artist, develop like an artisan</span>
+                    <dl>
+                        <dd><a href="https://github.com/TriDiamond" target="_blank"><span
+                                    class=" iconfont icon-github"></span></a></dd>
+                        <dd><a href="https://twitter.com/TriDiamond6" target="_blank"><span
+                                    class=" iconfont icon-twitter"></span></a></dd>
+                        <dd><a href="https://stackoverflow.com/users/7602324/tridiamond?tab=profile" target="_blank"><span
+                                    class=" iconfont icon-stack-overflow"></span></a></dd>
+                    </dl>
+                </div>
+                <ul>
+                    <li><a href="/">30 <p>文章</p></a></li>
+                    <li><a href="/categories">3 <p>分类</p></a></li>
+                    <li><a href="/tags">8 <p>标签</p></a></li>
+                </ul>
+            </div>
+            
+            
+            
+            <div class="box sticky animated fadeInRight faster">
+                <div id="toc" class="subbox">
+                    <h4>目录</h4>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#q1%E7%94%A8%E6%88%B7%E6%9C%AA%E5%AE%9A%E4%B9%89%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%97%B6%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%A2%AB%E7%94%9F%E6%88%90%E5%90%97"><span class="toc-number">1.</span> <span class="toc-text"> Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a1%E4%B8%8D%E4%B8%80%E5%AE%9A"><span class="toc-number">2.</span> <span class="toc-text"> A1：不一定。</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%82%E8%AF%81"><span class="toc-number">2.1.</span> <span class="toc-text"> 求证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%B1%BB%E5%86%85%E5%AE%9A%E4%B9%89%E6%97%A0%E5%8F%82%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text"> 1. 类内定义无参构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%B1%BB%E5%86%85%E4%B8%8D%E5%AE%9A%E4%B9%89%E6%97%A0%E5%8F%82%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E4%BC%9A%E8%B0%83%E7%94%A8%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text"> 2. 类内不定义无参构造函数，查看是否会调用默认构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BD%9C%E4%B8%BA%E5%AF%B9%E6%AF%94%E5%8F%AA%E5%9C%A8%E7%A9%BA%E7%B1%BB%E4%B8%AD%E5%86%99%E4%B8%AA%E8%99%9A%E5%87%BD%E6%95%B0%E7%9C%8B%E7%9C%8B%E6%98%AF%E5%90%A6%E4%BC%9A%E6%8C%89%E7%85%A7%E6%A0%87%E5%87%86%E4%B8%AD%E8%AF%B4%E7%9A%84%E9%82%A3%E6%A0%B7%E7%94%9F%E6%88%90%E4%B8%80%E4%B8%AA%E6%9C%89%E4%BB%B7%E5%80%BC%E7%9A%84%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text"> 3. 作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#q2%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%90%97"><span class="toc-number">3.</span> <span class="toc-text"> Q2：默认构造函数会初始化成员变量吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a2%E4%B8%8D%E4%B8%80%E5%AE%9A"><span class="toc-number">4.</span> <span class="toc-text"> A2：不一定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%82%E8%AF%81-2"><span class="toc-number">4.1.</span> <span class="toc-text"> 求证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#q3%E4%B8%80%E4%B8%AA%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%9F%BA%E7%B1%BB-%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E7%B1%BB%E6%9C%AC%E8%BA%AB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E7%9A%84%E9%A1%BA%E5%BA%8F%E7%BC%96%E8%AF%91%E5%99%A8%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="toc-number">5.</span> <span class="toc-text"> Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a3"><span class="toc-number">6.</span> <span class="toc-text"> A3：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8F%E5%9F%BA%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E7%B1%BB%E6%9C%AC%E8%BA%AB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">6.1.</span> <span class="toc-text"> 调用顺序：基类构造函数 &#x3D;&gt; 成员变量构造函数 &#x3D;&gt; 类本身构造函数。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%E7%BC%96%E8%AF%91%E5%99%A8%E9%80%9A%E8%BF%87%E5%9C%A8%E7%B1%BB%E7%9A%84%E6%AF%8F%E4%B8%AA%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E9%A1%B6%E9%83%A8%E8%BF%9B%E8%A1%8C%E5%A1%AB%E5%85%85%E4%BB%A5%E5%AE%9E%E7%8E%B0%E8%BF%99%E4%B8%AA%E6%9E%84%E9%80%A0%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.2.</span> <span class="toc-text"> 实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%82%E8%AF%81-3"><span class="toc-number">7.</span> <span class="toc-text"> 求证</span></a></li></ol>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+    <div id="back-to-top" class="animated fadeIn faster">
+        <div class="flow"></div>
+        <span class="percentage animated fadeIn faster">0%</span>
+        <span class="iconfont icon-top02 animated fadeIn faster"></span>
+    </div>
+</body>
+<footer>
+    <p class="copyright" id="copyright">
+        &copy; 2021
+        <span class="gradient-text">
+            JeremyYv
+        </span>.
+        Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+        Theme
+        <span class="gradient-text">
+            <a href="https://github.com/TriDiamond/hexo-theme-obsidian" title="Obsidian" target="_blank" rel="noopener">Obsidian</a>
+        </span>
+        <small><a href="https://github.com/TriDiamond/hexo-theme-obsidian/blob/master/CHANGELOG.md" title="v1.4.5" target="_blank" rel="noopener">v1.4.5</a></small>
+    </p>
+</footer>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script>
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      preferredFont: "TeX",
+      availableFonts: ["STIX", "TeX"],
+      linebreaks: {
+        automatic: true
+      },
+      EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+      inlineMath: [
+        ["$", "$"],
+        ["\\(", "\\)"]
+      ],
+      processEscapes: true,
+      ignoreClass: "tex2jax_ignore|dno",
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      noUndefined: {
+        attributes: {
+          mathcolor: "red",
+          mathbackground: "#FFEEEE",
+          mathsize: "90%"
+        }
+      },
+      Macros: {
+        href: "{}"
+      }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script>
+  function initialMathJax() {
+    MathJax.Hub.Queue(function () {
+      var all = MathJax.Hub.getAllJax(),
+        i;
+      // console.log(all);
+      for (i = 0; i < all.length; i += 1) {
+        console.log(all[i].SourceElement().parentNode)
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  }
+
+  function reprocessMathJax() {
+    if (typeof MathJax !== 'undefined') {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+  }
+</script>
+
+
+ 
+<link rel="stylesheet" href="//cdn.bootcss.com/gitalk/1.5.0/gitalk.min.css">
+ 
+<script src="//cdn.bootcss.com/gitalk/1.5.0/gitalk.min.js"></script>
+  
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/obsidian.js"></script>
+<script src="/js/jquery.truncate.js"></script>
+<script src="/js/search.js"></script>
+ 
+<script src="//cdn.bootcss.com/typed.js/2.0.10/typed.min.js"></script>
+ 
+<script src="//cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script>
+ 
+<script src="//cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+
+
+<script src="https://cdn.bootcss.com/codemirror/5.48.4/codemirror.min.js"></script>
+ 
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/javascript/javascript.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/css/css.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/xml/xml.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/htmlmixed/htmlmixed.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/clike/clike.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/php/php.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/shell/shell.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/python/python.min.js"></script>
+   
+<script src="/js/busuanzi.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    if ($('span[id^="busuanzi_"]').length) {
+      initialBusuanzi();
+    }
+  });
+</script>
+ 
+<link rel="stylesheet" href="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/photoswipe/4.1.3/default-skin/default-skin.min.css">
+
+
+<script src="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="//www.googletagmanager.com/gtag/js?id=UA-149874671-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-149874671-1');
+</script>
+ 
+
+<script>
+  function initialTyped() {
+    var typedTextEl = $('.typed-text');
+    if (typedTextEl && typedTextEl.length > 0) {
+      var typed = new Typed('.typed-text', {
+        strings: ['Think like an artist, develop like an artisan', '艺术家思维去思考问题，工匠创造精神去开发'],
+        typeSpeed: 90,
+        loop: true,
+        loopCount: Infinity,
+        backSpeed: 20,
+      });
+    }
+  }
+
+  if ($('.article-header') && $('.article-header').length) {
+    $(document).ready(function () {
+      initialTyped();
+    });
+  }
+</script>
+
+
+
+
+ <!-- 例：百度统计 --> <script> var _hmt = _hmt || []; (function() { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?your_code"; var s = document.getElementsByTagName("script")[0];  s.parentNode.insertBefore(hm, s); })(); </script> 
+
+</html>

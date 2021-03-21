@@ -1,134 +1,281 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>组合模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
-<script src="/js/modernizr.js"></script>
-<![endif]-->
-<link rel="stylesheet" href="/css/iconfont.css">
 
-<link rel="stylesheet" href="/css/index.css?v=202103212320.css">
-<link rel="stylesheet" href="/css/info.css?v=202103212320.css">
-<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
-</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">组合模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:47:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/" target="_blank">结构型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>组合模式 - JeremyYv&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="TriDiamond Obsidian,"> 
+    <meta name="description" content="个人, 简介
+
+组合模式：一种结构型设计模式
+应用场景：
+对象需要组合成树形结构以表示“部分-整体”的层次结构时。
+举例：
+一家公司的OA系统（Office Automation, 自动化办公），公司部门,"> 
+    <meta name="author" content="JeremyYv"> 
+    <link rel="alternative" href="atom.xml" title="JeremyYv&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1429596_nzgqgvnmkjb.css">
+
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.7.2/animate.min.css">
+
+    
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/codemirror/5.48.4/codemirror.min.css">
+
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/codemirror/5.48.4/theme/dracula.css">
+
+    
+<link rel="stylesheet" href="/css/obsidian.css">
+
+    
+<link rel="stylesheet" href="/css/ball-atom.min.css">
+
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="loading">
+    <div class="loader">
+        <div class="la-ball-atom la-2x">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <span id="config-title" style="display:none">JeremyYv&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div class="scrollbar gradient-bg-rev"></div>
+<div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <div class="navigation animated fadeIn fast delay-1s">
+        <img id="home-icon" class="icon-home" src="/img/favicon.png" alt="" data-url="https://JeremyYvv.github.io">
+        <div id="play-icon" title="Play/Pause" class="iconfont icon-play"></div>
+        <h3 class="subtitle">组合模式</h3>
+        <div class="social">
+            <!--        <div class="like-icon">-->
+            <!--            <a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+            <!--        </div>-->
+            <div>
+                <div class="share">
+                    
+                        <a href="javascript:;" class="iconfont icon-share1"></a>
+                        <div class="share-component-cc" data-disabled="facebook,douban,linkedin,diandian,tencent,google"></div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="section">
+        <div class=article-header-wrapper>
+    <div class="article-header">
+        <div class="article-cover animated fadeIn" style="
+            animation-delay: 600ms;
+            animation-duration: 1.2s;
+            background-image: 
+                radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+                url(/img/cover.jpg) ">
+        </div>
+        <div class="else">
+            <p class="animated fadeInDown">
+                
+                <a href="/categories/设计模式"><b>「
+                    </b>设计模式<b> 」</b></a>
+                
+                三月 21, 2021
+            </p>
+            <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" title="组合模式" class="">组合模式</a>
+            </h3>
+            
+            <p class="post-count animated fadeInDown">
+                
+                <span>
+                    <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                    11k
+                </span>
+                
+                
+                <span>
+                    <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                    10 mins.
+                </span>
+                
+                
+                
+                <span id="busuanzi_container_page_pv">
+                    <b class="iconfont icon-read"></b> <i>阅读次数</i>
+                    <span id="busuanzi_value_page_pv">0</span>
+                </span>
+                
+            </p>
+            
+            
+            <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/" rel="tag">结构型</a></li></ul>
+            
+        </div>
+    </div>
+</div>
+
+<div class="screen-gradient-after">
+    <div class="screen-gradient-content">
+        <div class="screen-gradient-content-inside">
+            <div class="bold-underline-links screen-gradient-sponsor">
+                <p>
+                    <span class="animated fadeIn delay-1s"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="article">
+    <div class='main'>
+        <div class="content markdown animated fadeIn">
+            <h1 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h1>
+<ul>
 <li><strong>组合模式：一种结构型设计模式</strong></li>
-<li><strong>应用场景：</strong><br>对象需要组合成树形结构以表示“部分-整体”的层次结构时。</li>
+<li><strong>应用场景：</strong><br />
+对象需要组合成树形结构以表示“部分-整体”的层次结构时。<br />
+<strong>举例：</strong><br />
+一家公司的OA系统（Office Automation, 自动化办公），公司部门为多级结构，分为一级、二级、三级部门，为表现这种系统的层次结构，可以考虑组合模式</li>
+<li><strong>实现方式：</strong><br />
+<strong>首先</strong>，创建所有部门的共有基类，封装共用的方法。<br />
+<strong>然后</strong>，在基类中添加用于存放子部门的容器，对子部门执行的操作，通过迭代该容器来完成。并封装向容器中添加和删除子部门的方法。<br />
+<strong>最后</strong>，各级部门类继承自该基类，并增添各自的方法。<br />
+<strong>备注</strong>：内存管理可以在基类中实现。</li>
+<li><strong>优点：</strong><br />
+可以清楚地定义分层次的复杂对象，并可以不断组合。</li>
+<li><strong>缺点：</strong><br />
+1.将子部门容器与添加/删除方法放在基类中，会使所有部门都有该容器与方法。但有些没有子部门的部门，在逻辑上不应该有这些。<br />
+2.如果不将子部门容器与添加/删除方法放在基类中，则有子部门但是功能不同的各部门需要在继承时重复实现容器与方法，代码重复会很多。<br />
+3.对哦，如果把有子部门的部门抽象出一个继承自基类的抽象类，可能会解决这个问题吧？稍后我会试一试</li>
 </ul>
-<p><strong>举例：</strong><br>一家公司的OA系统（Office Automation, 自动化办公），公司部门为多级结构，分为一级、二级、三级部门，为表现这种系统的层次结构，可以考虑组合模式</p>
-<ul>
-<li><strong>实现方式：</strong></li>
-</ul>
-<p><strong>首先</strong>，创建所有部门的共有基类，封装共用的方法。<br><strong>然后</strong>，在基类中添加用于存放子部门的容器，对子部门执行的操作，通过迭代该容器来完成。并封装向容器中添加和删除子部门的方法。<br><strong>最后</strong>，各级部门类继承自该基类，并增添各自的方法。<br><strong>备注</strong>：内存管理可以在基类中实现。</p>
-<ul>
-<li><strong>优点：</strong><br>可以清楚地定义分层次的复杂对象，并可以不断组合。</li>
-<li><strong>缺点：</strong></li>
-</ul>
-<p>1.将子部门容器与添加/删除方法放在基类中，会使所有部门都有该容器与方法。但有些没有子部门的部门，在逻辑上不应该有这些。<br>2.如果不将子部门容器与添加/删除方法放在基类中，则有子部门但是功能不同的各部门需要在继承时重复实现容器与方法，代码重复会很多。<br>3.对哦，如果把有子部门的部门抽象出一个继承自基类的抽象类，可能会解决这个问题吧？稍后我会试一试</p>
-<hr>
-<h1 id="组合模式的简单代码实现"><a href="#组合模式的简单代码实现" class="headerlink" title="组合模式的简单代码实现"></a>组合模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
-#include &lt;list&gt;
-using namespace std;
-&#x2F;&#x2F;部门抽象类
-class Department
-&#123;
-public:
-    &#x2F;&#x2F;构造，传入部门名称作为部门标记
-    Department(string strName):m_strName(strName)&#123;&#125;
-    &#x2F;&#x2F;内存管理，析构时析构所有下属部门
-    virtual ~Department()
+<hr />
+<h1 id="组合模式的简单代码实现"><a class="markdownIt-Anchor" href="#组合模式的简单代码实现"></a> 组合模式的简单代码实现</h1>
+<pre class="highlight"><code class="c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;list&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-comment">//部门抽象类</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Department</span>
+&#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-comment">//构造，传入部门名称作为部门标记</span>
+    Department(<span class="hljs-built_in">string</span> strName):m_strName(strName)&#123;&#125;
+    <span class="hljs-comment">//内存管理，析构时析构所有下属部门</span>
+    <span class="hljs-keyword">virtual</span> ~Department()
     &#123;
-        cout &lt;&lt; m_strName &lt;&lt; &quot;部门解散&quot; &lt;&lt; endl;
-        &#x2F;&#x2F;下属部门析构
-        list&lt;Department*&gt;::iterator Iter &#x3D; m_listDep.begin();
-        for(; Iter !&#x3D; m_listDep.end(); ++Iter)
+        <span class="hljs-built_in">cout</span> &lt;&lt; m_strName &lt;&lt; <span class="hljs-string">"部门解散"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+        <span class="hljs-comment">//下属部门析构</span>
+        <span class="hljs-built_in">list</span>&lt;Department*&gt;::iterator Iter = m_listDep.<span class="hljs-built_in">begin</span>();
+        <span class="hljs-keyword">for</span>(; Iter != m_listDep.<span class="hljs-built_in">end</span>(); ++Iter)
         &#123;
-            if(NULL !&#x3D; (*Iter))
+            <span class="hljs-keyword">if</span>(<span class="hljs-literal">NULL</span> != (*Iter))
             &#123;
-                delete (*Iter);
-                (*Iter) &#x3D; NULL;
+                <span class="hljs-keyword">delete</span> (*Iter);
+                (*Iter) = <span class="hljs-literal">NULL</span>;
             &#125;
         &#125;
     &#125;
-    &#x2F;&#x2F;获取部门名称的方法
-    string GetName()
-    &#123;
-        return m_strName;
+    <span class="hljs-comment">//获取部门名称的方法</span>
+    <span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">GetName</span><span class="hljs-params">()</span>
+    </span>&#123;
+        <span class="hljs-keyword">return</span> m_strName;
     &#125;
-    &#x2F;&#x2F;展示所有下属部门名称
-    virtual void ShowSubDep()
-    &#123;
-        cout &lt;&lt; m_strName &lt;&lt; &quot;部门下属部门：&quot;;
-        list&lt;Department*&gt;::iterator Iter &#x3D; m_listDep.begin();
-        for(; Iter !&#x3D; m_listDep.end(); ++Iter)
+    <span class="hljs-comment">//展示所有下属部门名称</span>
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ShowSubDep</span><span class="hljs-params">()</span>
+    </span>&#123;
+        <span class="hljs-built_in">cout</span> &lt;&lt; m_strName &lt;&lt; <span class="hljs-string">"部门下属部门："</span>;
+        <span class="hljs-built_in">list</span>&lt;Department*&gt;::iterator Iter = m_listDep.<span class="hljs-built_in">begin</span>();
+        <span class="hljs-keyword">for</span>(; Iter != m_listDep.<span class="hljs-built_in">end</span>(); ++Iter)
         &#123;
-            cout &lt;&lt; &quot; &quot; &lt;&lt; (*Iter)-&gt;GetName();
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; (*Iter)-&gt;GetName();
         &#125;
-        cout &lt;&lt; endl;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
     &#125;
-    &#x2F;&#x2F;添加下属部门并打印信息
-    void AddDepartment(Department* pDep)
-    &#123;
+    <span class="hljs-comment">//添加下属部门并打印信息</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">AddDepartment</span><span class="hljs-params">(Department* pDep)</span>
+    </span>&#123;
         m_listDep.push_back(pDep);
-        cout &lt;&lt; m_strName &lt;&lt; &quot;部门增加了下属的&quot; &lt;&lt; pDep-&gt;GetName() &lt;&lt; &quot;部门&quot; &lt;&lt; endl;
+        <span class="hljs-built_in">cout</span> &lt;&lt; m_strName &lt;&lt; <span class="hljs-string">"部门增加了下属的"</span> &lt;&lt; pDep-&gt;GetName() &lt;&lt; <span class="hljs-string">"部门"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
     &#125;
-    &#x2F;&#x2F;删除下属部门并打印信息
-    void DelDepartment(Department* pDep)
-    &#123;
-        list&lt;Department*&gt;::iterator Iter &#x3D; m_listDep.begin();
-        for(; Iter !&#x3D; m_listDep.end(); ++Iter)
+    <span class="hljs-comment">//删除下属部门并打印信息</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">DelDepartment</span><span class="hljs-params">(Department* pDep)</span>
+    </span>&#123;
+        <span class="hljs-built_in">list</span>&lt;Department*&gt;::iterator Iter = m_listDep.<span class="hljs-built_in">begin</span>();
+        <span class="hljs-keyword">for</span>(; Iter != m_listDep.<span class="hljs-built_in">end</span>(); ++Iter)
         &#123;
-            if(pDep &#x3D;&#x3D; (*Iter))
+            <span class="hljs-keyword">if</span>(pDep == (*Iter))
             &#123;
-                cout &lt;&lt; m_strName &lt;&lt; &quot;部门删除了下属的&quot; &lt;&lt; pDep-&gt;GetName() &lt;&lt; &quot;部门&quot; &lt;&lt; endl;
-                delete (*Iter);
+                <span class="hljs-built_in">cout</span> &lt;&lt; m_strName &lt;&lt; <span class="hljs-string">"部门删除了下属的"</span> &lt;&lt; pDep-&gt;GetName() &lt;&lt; <span class="hljs-string">"部门"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+                <span class="hljs-keyword">delete</span> (*Iter);
                 m_listDep.erase(Iter);
-                break;
+                <span class="hljs-keyword">break</span>;
             &#125;
         &#125;
     &#125;
 
-private:
-    string m_strName;&#x2F;&#x2F;部门名称
-    list&lt;Department*&gt; m_listDep;&#x2F;&#x2F;存放下属部门的列表，用列表为了方便增删
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-built_in">string</span> m_strName;<span class="hljs-comment">//部门名称</span>
+    <span class="hljs-built_in">list</span>&lt;Department*&gt; m_listDep;<span class="hljs-comment">//存放下属部门的列表，用列表为了方便增删</span>
 &#125;;
 
-&#x2F;&#x2F;一级部门
-class FirstLevelDepartment:public Department
+<span class="hljs-comment">//一级部门</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FirstLevelDepartment</span>:</span><span class="hljs-keyword">public</span> Department
 &#123;
-public:
-    FirstLevelDepartment(string strName):Department(strName)&#123;&#125;
-    virtual ~FirstLevelDepartment()&#123;&#125;
+<span class="hljs-keyword">public</span>:
+    FirstLevelDepartment(<span class="hljs-built_in">string</span> strName):Department(strName)&#123;&#125;
+    <span class="hljs-keyword">virtual</span> ~FirstLevelDepartment()&#123;&#125;
 &#125;;
 
-&#x2F;&#x2F;二级部门
-class SecondLevelDepartment:public Department
+<span class="hljs-comment">//二级部门</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SecondLevelDepartment</span>:</span><span class="hljs-keyword">public</span> Department
 &#123;
-public:
-    SecondLevelDepartment(string strName):Department(strName)&#123;&#125;
-    virtual ~SecondLevelDepartment()&#123;&#125;
+<span class="hljs-keyword">public</span>:
+    SecondLevelDepartment(<span class="hljs-built_in">string</span> strName):Department(strName)&#123;&#125;
+    <span class="hljs-keyword">virtual</span> ~SecondLevelDepartment()&#123;&#125;
 &#125;;
 
-&#x2F;&#x2F;三级部门
-class ThirdLevelDepartment:public Department
+<span class="hljs-comment">//三级部门</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThirdLevelDepartment</span>:</span><span class="hljs-keyword">public</span> Department
 &#123;
-public:
-    ThirdLevelDepartment(string strName):Department(strName)&#123;&#125;
-    virtual ~ThirdLevelDepartment()&#123;&#125;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
-#include &lt;composite.hpp&gt;
-using namespace std;
-int main()
-&#123;
-    &#x2F;&#x2F;1级部门A1
-    Department* pFstLvA &#x3D; new FirstLevelDepartment(&quot;A1&quot;);
-    &#x2F;&#x2F;2级部门B2、C2、D2
-    Department* pSndLvB &#x3D; new SecondLevelDepartment(&quot;B2&quot;);
-    Department* pSndLvC &#x3D; new SecondLevelDepartment(&quot;C2&quot;);
-    Department* pSndLvD &#x3D; new SecondLevelDepartment(&quot;D2&quot;);
-    &#x2F;&#x2F;3级部门E3、F3、G3、H3
-    Department* PTrdLvE &#x3D; new ThirdLevelDepartment(&quot;E3&quot;);
-    Department* PTrdLvF &#x3D; new ThirdLevelDepartment(&quot;F3&quot;);
-    Department* PTrdLvG &#x3D; new ThirdLevelDepartment(&quot;G3&quot;);
-    Department* PTrdLvH &#x3D; new ThirdLevelDepartment(&quot;H3&quot;);
-    &#x2F;&#x2F;组建树形结构
-    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;组建部门结构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+<span class="hljs-keyword">public</span>:
+    ThirdLevelDepartment(<span class="hljs-built_in">string</span> strName):Department(strName)&#123;&#125;
+    <span class="hljs-keyword">virtual</span> ~ThirdLevelDepartment()&#123;&#125;
+&#125;;
+</code></pre>
+<h2 id="主函数中的使用"><a class="markdownIt-Anchor" href="#主函数中的使用"></a> 主函数中的使用</h2>
+<pre class="highlight"><code class="c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;composite.hpp&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+    <span class="hljs-comment">//1级部门A1</span>
+    Department* pFstLvA = <span class="hljs-keyword">new</span> FirstLevelDepartment(<span class="hljs-string">"A1"</span>);
+    <span class="hljs-comment">//2级部门B2、C2、D2</span>
+    Department* pSndLvB = <span class="hljs-keyword">new</span> SecondLevelDepartment(<span class="hljs-string">"B2"</span>);
+    Department* pSndLvC = <span class="hljs-keyword">new</span> SecondLevelDepartment(<span class="hljs-string">"C2"</span>);
+    Department* pSndLvD = <span class="hljs-keyword">new</span> SecondLevelDepartment(<span class="hljs-string">"D2"</span>);
+    <span class="hljs-comment">//3级部门E3、F3、G3、H3</span>
+    Department* PTrdLvE = <span class="hljs-keyword">new</span> ThirdLevelDepartment(<span class="hljs-string">"E3"</span>);
+    Department* PTrdLvF = <span class="hljs-keyword">new</span> ThirdLevelDepartment(<span class="hljs-string">"F3"</span>);
+    Department* PTrdLvG = <span class="hljs-keyword">new</span> ThirdLevelDepartment(<span class="hljs-string">"G3"</span>);
+    Department* PTrdLvH = <span class="hljs-keyword">new</span> ThirdLevelDepartment(<span class="hljs-string">"H3"</span>);
+    <span class="hljs-comment">//组建树形结构</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"=======组建部门结构======="</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
     pFstLvA-&gt;AddDepartment(pSndLvB);
     pFstLvA-&gt;AddDepartment(pSndLvC);
     pFstLvA-&gt;AddDepartment(pSndLvD);
@@ -136,20 +283,22 @@ int main()
     pSndLvB-&gt;AddDepartment(PTrdLvF);
     pSndLvC-&gt;AddDepartment(PTrdLvG);
     pSndLvD-&gt;AddDepartment(PTrdLvH);
-    &#x2F;&#x2F;展示一级部门A所有子部门
-    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;展示子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    <span class="hljs-comment">//展示一级部门A所有子部门</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"========展示子部门========"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
     pFstLvA-&gt;ShowSubDep();
-    &#x2F;&#x2F;删除A下属二级部门B
-    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;解散子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    <span class="hljs-comment">//删除A下属二级部门B</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"========解散子部门========"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
     pFstLvA-&gt;DelDepartment(pSndLvB);
-    &#x2F;&#x2F;析构，资源回收
-    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;开始析构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
-    delete pFstLvA;
+    <span class="hljs-comment">//析构，资源回收</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"=========开始析构========="</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-keyword">delete</span> pFstLvA;
 
-    return 0;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;组建部门结构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+</code></pre>
+<h2 id="控制台输出结果"><a class="markdownIt-Anchor" href="#控制台输出结果"></a> 控制台输出结果</h2>
+<pre class="highlight"><code class="c++">=======组建部门结构=======
 A1部门增加了下属的B2部门
 A1部门增加了下属的C2部门
 A1部门增加了下属的D2部门
@@ -157,44 +306,322 @@ B2部门增加了下属的E3部门
 B2部门增加了下属的F3部门
 C2部门增加了下属的G3部门
 D2部门增加了下属的H3部门
-&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;展示子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+========展示子部门========
 A1部门下属部门： B2 C2 D2
-&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;解散子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+========解散子部门========
 A1部门删除了下属的B2部门
 B2部门解散
 E3部门解散
 F3部门解散
-&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;开始析构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+=========开始析构=========
 A1部门解散
 C2部门解散
 G3部门解散
 D2部门解散
-H3部门解散<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<hr>
+H3部门解散
+</code></pre>
+<hr />
 <p><em>如有错误，欢迎指正</em></p>
-</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/">备忘录模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/">装饰模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls"
+                data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+            <ul id="audio-list" style="display:none">
+                
+                
+                <li title='0' data-url='/statics/chengdu.mp3'></li>
+                
+                    
+            </ul>
+            
+            
+            <div class="post-nav">
+                <hr>
+                
+                    <div class="post-nav-item">上一篇:<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/" rel="prev" 
+                        title="备忘录模式">备忘录模式
+                      </a></div>
+                
+                
+                    <div class="post-nav-item">下一篇:<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" rel="next" 
+                        title="装饰模式">装饰模式</a></div>
+                                
+            </div>   
+                        
+            
+            
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='ec894e2b66f752e8b7fb'
+        data-cs='3ccc2e92bb350688fe2c2dc2930189b62622bfb1'
+        data-r='blog-comments'
+        data-o='TriDiamond'
+        data-a='TriDiamond'
+        data-d=''
+    >留言</div>
 
-<script src="/js/md5.min.js"></script>
-<script>const gitalk = new Gitalk({
-    clientID: 'you github Client ID',
-    clientSecret: 'you github Client Secret',
-    repo: 'you github repository',
-    owner: 'you github repository owner',
-    admin: ['you github repository owner'],
-    id: md5("2021/03/21/设计模式/结构型/组合模式/"),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: true  // Facebook-like distraction free mode
-})
-gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
-<p>C++/Python/Web</p>
-<p>Email：JeremyYv@foxmal.com</p>
-</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/scrollreveal.js"></script>
-<script src="/js/hc-sticky.js"></script>
-<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="/js/common.js?v=202103212320.js"></script>
-<script src="/js/index.js?v=202103212320.js"></script>
-</body></html>
+
+            
+            
+        </div>
+        <div class="sidebar">
+            <div class="box animated fadeInRight">
+                <div class="subbox">
+                    <img src="https://res.cloudinary.com/tridiamond/image/upload/v1573019751/TriDiamond_logo_ui_xeublz.jpg" height=300 width=300></img>
+                    <p>JeremyYv</p>
+                    <span>Think like an artist, develop like an artisan</span>
+                    <dl>
+                        <dd><a href="https://github.com/TriDiamond" target="_blank"><span
+                                    class=" iconfont icon-github"></span></a></dd>
+                        <dd><a href="https://twitter.com/TriDiamond6" target="_blank"><span
+                                    class=" iconfont icon-twitter"></span></a></dd>
+                        <dd><a href="https://stackoverflow.com/users/7602324/tridiamond?tab=profile" target="_blank"><span
+                                    class=" iconfont icon-stack-overflow"></span></a></dd>
+                    </dl>
+                </div>
+                <ul>
+                    <li><a href="/">30 <p>文章</p></a></li>
+                    <li><a href="/categories">3 <p>分类</p></a></li>
+                    <li><a href="/tags">8 <p>标签</p></a></li>
+                </ul>
+            </div>
+            
+            
+            
+            <div class="box sticky animated fadeInRight faster">
+                <div id="toc" class="subbox">
+                    <h4>目录</h4>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text"> 组合模式的简单代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text"> 主函数中的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C"><span class="toc-number">2.2.</span> <span class="toc-text"> 控制台输出结果</span></a></li></ol></li></ol>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+    <div id="back-to-top" class="animated fadeIn faster">
+        <div class="flow"></div>
+        <span class="percentage animated fadeIn faster">0%</span>
+        <span class="iconfont icon-top02 animated fadeIn faster"></span>
+    </div>
+</body>
+<footer>
+    <p class="copyright" id="copyright">
+        &copy; 2021
+        <span class="gradient-text">
+            JeremyYv
+        </span>.
+        Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+        Theme
+        <span class="gradient-text">
+            <a href="https://github.com/TriDiamond/hexo-theme-obsidian" title="Obsidian" target="_blank" rel="noopener">Obsidian</a>
+        </span>
+        <small><a href="https://github.com/TriDiamond/hexo-theme-obsidian/blob/master/CHANGELOG.md" title="v1.4.5" target="_blank" rel="noopener">v1.4.5</a></small>
+    </p>
+</footer>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script>
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      preferredFont: "TeX",
+      availableFonts: ["STIX", "TeX"],
+      linebreaks: {
+        automatic: true
+      },
+      EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+      inlineMath: [
+        ["$", "$"],
+        ["\\(", "\\)"]
+      ],
+      processEscapes: true,
+      ignoreClass: "tex2jax_ignore|dno",
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      noUndefined: {
+        attributes: {
+          mathcolor: "red",
+          mathbackground: "#FFEEEE",
+          mathsize: "90%"
+        }
+      },
+      Macros: {
+        href: "{}"
+      }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script>
+  function initialMathJax() {
+    MathJax.Hub.Queue(function () {
+      var all = MathJax.Hub.getAllJax(),
+        i;
+      // console.log(all);
+      for (i = 0; i < all.length; i += 1) {
+        console.log(all[i].SourceElement().parentNode)
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  }
+
+  function reprocessMathJax() {
+    if (typeof MathJax !== 'undefined') {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+  }
+</script>
+
+
+ 
+<link rel="stylesheet" href="//cdn.bootcss.com/gitalk/1.5.0/gitalk.min.css">
+ 
+<script src="//cdn.bootcss.com/gitalk/1.5.0/gitalk.min.js"></script>
+  
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/obsidian.js"></script>
+<script src="/js/jquery.truncate.js"></script>
+<script src="/js/search.js"></script>
+ 
+<script src="//cdn.bootcss.com/typed.js/2.0.10/typed.min.js"></script>
+ 
+<script src="//cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script>
+ 
+<script src="//cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+
+
+<script src="https://cdn.bootcss.com/codemirror/5.48.4/codemirror.min.js"></script>
+ 
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/javascript/javascript.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/css/css.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/xml/xml.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/htmlmixed/htmlmixed.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/clike/clike.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/php/php.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/shell/shell.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/python/python.min.js"></script>
+   
+<script src="/js/busuanzi.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    if ($('span[id^="busuanzi_"]').length) {
+      initialBusuanzi();
+    }
+  });
+</script>
+ 
+<link rel="stylesheet" href="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/photoswipe/4.1.3/default-skin/default-skin.min.css">
+
+
+<script src="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="//www.googletagmanager.com/gtag/js?id=UA-149874671-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-149874671-1');
+</script>
+ 
+
+<script>
+  function initialTyped() {
+    var typedTextEl = $('.typed-text');
+    if (typedTextEl && typedTextEl.length > 0) {
+      var typed = new Typed('.typed-text', {
+        strings: ['Think like an artist, develop like an artisan', '艺术家思维去思考问题，工匠创造精神去开发'],
+        typeSpeed: 90,
+        loop: true,
+        loopCount: Infinity,
+        backSpeed: 20,
+      });
+    }
+  }
+
+  if ($('.article-header') && $('.article-header').length) {
+    $(document).ready(function () {
+      initialTyped();
+    });
+  }
+</script>
+
+
+
+
+ <!-- 例：百度统计 --> <script> var _hmt = _hmt || []; (function() { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?your_code"; var s = document.getElementsByTagName("script")[0];  s.parentNode.insertBefore(hm, s); })(); </script> 
+
+</html>

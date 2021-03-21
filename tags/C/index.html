@@ -1,42 +1,923 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>JeremyYv's Blog</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
-<script src="/js/modernizr.js"></script>
-<![endif]-->
-<link rel="stylesheet" href="/css/iconfont.css">
 
-<link rel="stylesheet" href="/css/index.css?v=202103212320.css">
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
-</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="blogtab"><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/" target="_blank">状态模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/" title="状态模式"><img src="/" alt=""></a></span><p class="blogtext">状态模式：一种行为型设计模式
-应用场景：状态模式主要应用于对象有很多状态，每种状态下有不同的表现，而且在程序运行过程中会频繁变化状态，进而变化变现的情景。(程序运行过程中是否会频繁变化状态，是状态模式与策略模式本质上的区别)
-举例：以...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:59:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/" target="_blank">中介者模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/" title="中介者模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-中介者模式：一种行为型设计模式
-应用场景：一般来说，大型的软件在开发的过程中会使用模块化的开发方式。以我现在参与的项目举例，完整的软件包括交互、检索、算路、引导等等多个模块，这样有利于模块之间的独立开发，提高整体开发效率。但是无...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:58:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/" target="_blank">职责链模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/" title="职责链模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-职责链模式：一种行为型设计模式
-应用场景：系统中会出现一些请求，而可以处理请求的处理者会有很多，如何将由适当的处理者处理请求，是职责链模式解决的问题。职责链模式将所有处理者连成一条链，请求在链上传播，直至被处理完成。
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tag: C++ - JeremyYv&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="TriDiamond Obsidian,"> 
+    <meta name="description" content="个人,"> 
+    <meta name="author" content="JeremyYv"> 
+    <link rel="alternative" href="atom.xml" title="JeremyYv&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1429596_nzgqgvnmkjb.css">
 
-举例：在...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:57:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" target="_blank">模板方法模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" title="模板方法模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-模板方法模式：一种行为型设计模式
-应用场景：模板方法是一种代码复用的基本技术,定义了一个操作中的算法骨架，而将一些步骤延迟到子类中。在使用模板方法时，很重要的一点是模板方法应当指明哪些操作是可以被重写的，以及哪些是必须被重写的。...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:56:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" target="_blank">命令模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" title="命令模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-命令模式：一种行为型设计模式
-应用场景：在GOF的《设计模式:可复用面向对象软件的基础》一书中对命令模式是这样说的：将一个请求封装为一个对象，从而使你可以用不同的请求对客户进行参数化，将请求排队或记录请求日志，以及支持可撤销的操...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:55:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/" target="_blank">解释器模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="解释器模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-解释器模式：一种行为型设计模式
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.7.2/animate.min.css">
 
- 首先，我想先说明一下，解释器模式是我个人认为最复杂的设计模式，可能因为我目前对编程语言的解析原理不甚了解，对这个模式的理解也很片面。
+    
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
 
-应用场景：解释器模式的应用场景是对语句进行解析。给定语法...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:54:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" target="_blank">观察者模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" title="观察者模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-观察者模式：一种行为型设计模式
-应用场景：观察者模式定义了对象间一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。这种交互也称为发布-订阅(publish-subscribe)。观察者模式在...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:52:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/" target="_blank">访问者模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/" title="访问者模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-访问者模式：一种行为型设计模式
-应用场景：一个对象由很多部分组成，对这个对象的操作会对各部分依次操作。而在不同情景下，对各部分操作也不同。为了新增操作时无需了解对象内部结构，且具备可扩展性，将操作抽离为访问者类，类中实现对各部分...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:51:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/" target="_blank">迭代器模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="迭代器模式"><img src="/" alt=""></a></span><p class="blogtext">简介
-迭代器模式：一种行为型设计模式
-应用场景：刚学习C++STL容器的时候，自然也学习了迭代器。当时很不懂为什么指针可以解决的问题，要封成一个表现和指针很类似的类，还起了个新名词叫迭代器。后来对多种数据结构的应用渐渐有了了解之后，大...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:50:32</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div><div data-scroll-reveal="enter bottom over 1s" class="blogs"><h3 class="blogtitle"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" target="_blank">策略模式</a></h3><span class="blogpic"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" title="策略模式"><img src="/" alt=""></a></span><p class="blogtext">策略模式：一种行为型设计模式
-应用场景：在GOF的《设计模式:可复用面向对象软件的基础》中是这样定义的：将一系列的算法一个个封装起来，并且使它们可相互替换。策略模式使得算法可独立于使用它的客户而变化。对于同一流程中不同的需求，对数据的...</p><div class="bloginfo"><ul><li class="author"><a href="/">JeremyYv</a></li><li class="lmname"><a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></li><li class="timer">2021-03-21 19:49:00</li><!--li.view--><!--    span 34567--><!--    | 已阅读--><!--li.like 9999--></ul></div></div></div><div class="pagelist"><span class="page-number current">1</span><a class="page-number" href="/tags/C/page/2/">2</a><a class="page-number" href="/tags/C/page/3/">3</a><a class="extend next" rel="next" href="/tags/C/page/2/"><i class='iconfont icon-page-next' ></i></a></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
-<p>C++/Python/Web</p>
-<p>Email：JeremyYv@foxmal.com</p>
-</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="box recommend"><h2>推荐</h2><div class="box_con"><ul></ul></div></div><div class="tags box"><h2>标签</h2><div class="box_con"><ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/" rel="tag">C++对象模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E5%BA%93/" rel="tag">C++库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-%E8%AF%AD%E6%B3%95/" rel="tag">C++语法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B/" rel="tag">创建型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/" rel="tag">结构型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AF%AD%E6%B3%95/" rel="tag">语法</a></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/scrollreveal.js"></script>
-<script src="/js/hc-sticky.js"></script>
-<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script>
-<script src="/js/common.js?v=202103212320.js"></script>
-<script src="/js/index.js?v=202103212320.js"></script>
-</body></html>
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/codemirror/5.48.4/codemirror.min.css">
+
+    
+<link rel="stylesheet" href="//cdn.bootcss.com/codemirror/5.48.4/theme/dracula.css">
+
+    
+<link rel="stylesheet" href="/css/obsidian.css">
+
+    
+<link rel="stylesheet" href="/css/ball-atom.min.css">
+
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="loading">
+    <div class="loader">
+        <div class="la-ball-atom la-2x">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <span id="config-title" style="display:none">JeremyYv&#39;s Blog</span>
+    <div id="loader"></div>
+    <div class="nav">
+    <ul id="menu-menu" class="menu">
+        
+        <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/whoami/" title="ABOUT" external="false">ABOUT</a>
+        </li>
+        
+        <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/categories/" title="CATEGORIES" external="false">CATEGORIES</a>
+        </li>
+        
+        <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/tags/" title="TAGS" external="false">TAGS</a>
+        </li>
+        
+        <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/archives/" title="ARCHIVES" external="false">ARCHIVES</a>
+        </li>
+        
+    </ul>
+    <p class="copyright" id="copyright">
+        &copy; 2021 JeremyYv.
+        Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+        Theme <a href="https://github.com/TriDiamond/hexo-theme-obsidian" title="Obsidian" target="_blank" rel="noopener">Obsidian</a>
+    </p>
+</div>
+
+<div id="container">
+    
+<div class="search-box">
+    <form class="site-search-form">
+        <span class="iconfont icon-search"></span>
+        <input type="text" id="local-search-input" class="st-search-input" />
+        <div class="iconfont icon-cross search-box-close"></div>
+    </form>
+    <div class="search-scrollable">
+        <div id="local-search-result" class="local-search-result-cls" data-initialise="首次搜索，正在载入索引文件，请稍后……"
+            data-start="输入关键词搜索。" data-empty="没有找到内容，请尝试更换检索词。">
+            <span>输入关键词搜索。</span>
+        </div>
+    </div>
+</div>
+<div id="header">
+    <div>
+        <div class="logo animated fadeInDown">
+            <img src="/img/favicon.png" alt="">
+            <a class="image-logo" href="/"></a>
+        </div>
+        <ul id="menu-menu" class="menu text-menu">
+            
+            <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+                <a href="/whoami/" title="ABOUT" external="false" class="menu-link">ABOUT</a>
+            </li>
+            
+            <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+                <a href="/categories/" title="CATEGORIES" external="false" class="menu-link">CATEGORIES</a>
+            </li>
+            
+            <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+                <a href="/tags/" title="TAGS" external="false" class="menu-link">TAGS</a>
+            </li>
+            
+            <li class="animated fadeInDown menu-item menu-item-type-post_type menu-item-object-page">
+                <a href="/archives/" title="ARCHIVES" external="false" class="menu-link">ARCHIVES</a>
+            </li>
+            
+            
+            <li class="animated fadeInDown search-bar iconfont icon-search"></li>
+            
+        </ul>
+        <div class="iconfont icon-menu switchmenu gradient-text animated fadeInDown"></div>
+    </div>
+</div>
+<div id="screen">
+    <div id="mark">
+        <div class="cover animated fadeIn" style="
+            animation-delay: 900ms;
+            animation-duration: 2.8s;
+            background-image:
+                radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.56), #100e17),
+                url(/img/cover.jpg);">
+        </div>
+    </div>
+    
+    <div id="post0" class="else">
+        <p class="animated fadeInDown">
+            
+            <a href="/categories/设计模式"><b>「
+                </b>设计模式<b> 」</b></a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown">
+            <a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/" title="状态模式" class="posttitle">状态模式</a></h3>
+        
+        <p class="post-count animated fadeInDown">
+            
+            <span>
+                <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                6.4k
+            </span>
+            
+            
+            <span>
+                <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                6 mins.
+            </span>
+            
+            
+        </p>
+        
+        
+        <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+        
+        <div class="md-content animated fadeIn">
+            
+            <h3 id="状态模式一种行为型设计模式"><a class="markdownIt-Anchor" href="#状态模式一种行为型设计模式"></a> 状态模式：一种行为型设计模式</h3>
+<ul>
+<li><strong>应用场景：</strong><br>
+状态模式主要应用于对象有很多状态，每种状态下有不同的表现，而且在程序运行过程中会频繁变化状态，进而变化变现的情景。(<strong>程序运行过程中是否会频繁变化状态</strong>，是状...</li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a>
+                <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+    
+</div>
+
+<div class="screen-gradient-after">
+    <div class="screen-gradient-content">
+        <div class="screen-gradient-content-inside">
+            <div class="bold-underline-links screen-gradient-sponsor">
+                <p>
+                    <span class="typed-text"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="primary">
+        
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/" title="中介者模式" class="posttitle">中介者模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        13k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        12 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>中介者模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>
+一般来说，大型的软件在开发的过程中会使用<strong>模块化</strong>的开发方式。以我现在参与的项目举例，完整的软件包括交互、检索、算路、引导等等多个模块，这样有利于模块之间的<strong>独立</strong>开发，提高整体开发效率。<br>
+但是无论模块之间如何独立，总是会有需要模块间通信的时候。<br>
+例如用户通过界面交互，发起检索，这个过程需要交互与检索两模块间通信，将用户的意图由交互模块传递至检索模块。<br>
+这就会产生一个<strong>扩展性</strong>上的问题。如果模块有很多，且每个模块都向外提供了<strong>唯一</strong>的接收消息的接口，那么一个模块如...</li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/" title="职责链模式" class="posttitle">职责链模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        7k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        6 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>职责链模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>
+系统中会出现一些请求，而可以处理请求的处理者会有很多，如何将由适当的处理者处理请求，是职责链模式解决的问题。<br>
+职责链模式将所有处理者连成一条链，请求在链上传播，直至被处理完成。<br>
+<strong>举例：</strong><br>
+在公司的请假系统中，一般会分为n级审核人。一级审核人是组长，可以批准24小时以下请假申请；二级审核人是部门主管，可以批准48小时以下请假申请；而48小时以上的申请则需要由三级审核人，部门经理批准。<br>
+使用职责链模式将一二三级审核人连成一条链，申请由一级审核人开始审核，...</li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" title="模板方法模式" class="posttitle">模板方法模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        4.1k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        4 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>模板方法模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>
+模板方法是一种代码复用的基本技术,定义了一个操作中的<strong>算法骨架</strong>，而将一些步骤<strong>延迟</strong>到子类中。<br>
+在使用模板方法时，很重要的一点是模板方法应当指明哪些操作是可以被重写的，以及哪些是必须被重写的。<br>
+此设计模式比较简单，直接看代码吧。</li>
+</ul>
+<hr>
+
+<pre class="highlight"><code class="c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-comment">//默认的模板方法类</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DefaultTemplate</span>
+&#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-comment">//固定的模板方法流程</span>
+    <span class="hljs-function"><span class="hljs-keyword">void...</span></span></code></pre>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" title="命令模式" class="posttitle">命令模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        7.2k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        7 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>命令模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>
+在GOF的《设计模式:可复用面向对象软件的基础》一书中对命令模式是这样说的：将一个请求封装为一个对象，从而使你可以用不同的请求对客户进行参数化，将请求排队或记录请求日志，以及支持可撤销的操作。<br>
+这段话的意思我在刚刚了解这个设计模式时没有很懂，可以在看完全文后再回来看一遍。<br>
+这个设计模式的应用很多。<br>
+即将要开始被天天谈论的12306订票网站，每个用户发起订票请求后，该请求不会被立即执行，而是会进入消息队列。同一用户再次发起请求时如果前一请求尚在队列中排...</li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="解释器模式" class="posttitle">解释器模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        11k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        10 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>解释器模式：一种行为型设计模式</strong></li>
+</ul>
+<p><strong>首先，我想先说明一下，解释器模式是我个人认为最复杂的设计模式，可能因为我目前对编程语言的解析原理不甚了解，对这个模式的理解也很片面。</strong></p>
+<ul>
+<li>
+<p><strong>应用场景：</strong><br>
+解释器模式的应用场景是<strong>对语句进行解析</strong>。给定<strong>语法规则</strong>，先将语句形成<strong>语义树</strong>，然后通过解释器<strong>对语义树进行解释</strong>，输出结果。<br>
+常用场景如<strong>解析xml配置文件</strong>。</p>
+</li>
+<li>
+<p><strong>举例：</strong><br>
+以解析**<code>a+b+c</code><strong>来举例，将<code>a</code>，<code>+</code>，<code>b</code>，<code>+</code>，<code>c</code>五个符号作为独立的</strong>对象<strong>来解析。<br>
+这五个符号根据</strong>解析方式不同<strong>可分为两类，<code>a b c</code>为一类，这类对象的解析结...</strong></p></li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" title="观察者模式" class="posttitle">观察者模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        6.2k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        6 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>观察者模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>
+观察者模式定义了对象间<strong>一对多</strong>的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。这种交互也称为发布-订阅(publish-subscribe)。<br>
+观察者模式在设计模式中的地位非常高，在各大框架中的应用随处可见。<br>
+Qt框架中的信号槽机制就是观察者模式的典型应用：通过用户的点击，触发与按键点击所绑定的槽函数。</li>
+<li><strong>举例：</strong><br>
+假设公司中的Boss要发邮件通知所有下属员工，那么首先需要在Boss端保存一个所有下属的邮箱列表，<br>
+这样Boss...</li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/" title="访问者模式" class="posttitle">访问者模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        10k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        9 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>访问者模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>
+一个对象由很多部分组成，对这个对象的操作会对各部分依次操作。而在不同情景下，对各部分操作也不同。<br>
+为了新增操作时无需了解对象内部结构，且具备可扩展性，将操作抽离为访问者类，类中实现对各部分具体的操作方法。<br>
+然后在对象中提供一个接口用以访问者访问，在该接口总，对象会调用访问者中对应各部分的操作方法，操作对象中的各部分。</li>
+<li><strong>举例：</strong><br>
+一台电脑中有很多组件，CPU、GPU、硬盘。维修人员对电脑进行整体维修时，需要对各部件依次进行维修，而且每部件具体的维修方式...</li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="迭代器模式" class="posttitle">迭代器模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        5.7k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        5 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                
+<ul>
+<li><strong>迭代器模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>
+刚学习C++STL容器的时候，自然也学习了迭代器。当时很不懂为什么指针可以解决的问题，要封成一个表现和指针很类似的类，还起了个新名词叫迭代器。<br>
+后来对多种数据结构的应用渐渐有了了解之后，大致知道了迭代器的优点。<br>
+再后来学习到了迭代器模式，才懂得<strong>迭代器是一种思想</strong>，可以<strong>隐藏</strong>容器的内部<strong>实现细节</strong>，向使用者提供<strong>简单</strong>的方式进行<strong>容器内元素的迭代访问</strong>。</li>
+<li><strong>举例：</strong><br>
+数组和链表，一个是<strong>连续</strong>内存，一个是<strong>非连续</strong>内存。在这两种数据结构中，对某个元素<strong>下一个元素的访问方式是不同的...</strong></li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="post" id="post">
+    <div class="post-cover animated fadeIn" style="
+            background-image:
+            radial-gradient(ellipse closest-side, rgba(0, 0, 0, 0.65), #100e17),
+            url(/img/welcome-cover.jpg);">
+    </div>
+    <div class="else">
+        <p class="animated fadeInDown">
+            
+                <a href="/categories/设计模式">
+                  <b>「 </b>设计模式<b> 」</b>
+                </a>
+            
+            三月 21, 2021
+        </p>
+        <h3 class="post-title animated fadeInDown"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" title="策略模式" class="posttitle">策略模式</a></h3>
+        
+            <p class="post-count animated fadeInDown">
+                
+                    <span>
+                        <b class="iconfont icon-text2"></b> <i>文章字数</i>
+                        6.9k
+                    </span>
+                
+                
+                    <span>
+                        <b class="iconfont icon-timer__s"></b> <i>阅读约需</i>
+                        6 mins.
+                    </span>
+                
+                
+            </p>
+            
+                <ul class="animated fadeInDown post-tags-list" itemprop="keywords"><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="animated fadeInDown post-tags-list-item"><a class="animated fadeInDown post-tags-list-link" href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" rel="tag">行为型</a></li></ul>
+            
+        
+        <div class="md-content animated fadeIn">
+            
+                <h3 id="策略模式一种行为型设计模式"><a class="markdownIt-Anchor" href="#策略模式一种行为型设计模式"></a> 策略模式：一种行为型设计模式</h3>
+<ul>
+<li><strong>应用场景：</strong><br>
+在GOF的《设计模式:可复用面向对象软件的基础》中是这样定义的：将一系列的算法一个个封装起来，并且使它们可相互替换。策略模式使得算法可独立于使用它的客户而变化。<br>
+对于同一流程中不同的需求，对数据的处理算法可能会变更，所以将处理数据的算法单独抽离出去，形成一系列算法类，可以相互替换。</li>
+<li><strong>举例：</strong><br>
+《大话设计模式》中举了一个很好的例子。<br>
+商场经常会推出不同的优惠活动，对于结账流程来说，不同的优惠活动会使用不同的算法处理账单总额。<br>
+所以抽离出一个算法的基类，提...</li></ul>
+            
+            <span class="read-more"><a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" title="查看全文" class="posttitle">查看全文</a> <b class="iconfont icon-arrow-right- gradient-text"></b></span>
+        </div>
+    </div>
+</div>
+
+
+    </div>
+    
+    <div id="pager"><a href="/tags/C/page/2/" class="more" data-loading="加载中..." data-load-more="加载更多">加载更多</a></div>
+    
+</div>
+<div id="preview"></div>
+
+
+    <div id="back-to-top" class="animated fadeIn faster">
+        <div class="flow"></div>
+        <span class="percentage animated fadeIn faster">0%</span>
+        <span class="iconfont icon-top02 animated fadeIn faster"></span>
+    </div>
+</body>
+<footer>
+    <p class="copyright" id="copyright">
+        &copy; 2021
+        <span class="gradient-text">
+            JeremyYv
+        </span>.
+        Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+        Theme
+        <span class="gradient-text">
+            <a href="https://github.com/TriDiamond/hexo-theme-obsidian" title="Obsidian" target="_blank" rel="noopener">Obsidian</a>
+        </span>
+        <small><a href="https://github.com/TriDiamond/hexo-theme-obsidian/blob/master/CHANGELOG.md" title="v1.4.5" target="_blank" rel="noopener">v1.4.5</a></small>
+    </p>
+</footer>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script>
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      preferredFont: "TeX",
+      availableFonts: ["STIX", "TeX"],
+      linebreaks: {
+        automatic: true
+      },
+      EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+      inlineMath: [
+        ["$", "$"],
+        ["\\(", "\\)"]
+      ],
+      processEscapes: true,
+      ignoreClass: "tex2jax_ignore|dno",
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      noUndefined: {
+        attributes: {
+          mathcolor: "red",
+          mathbackground: "#FFEEEE",
+          mathsize: "90%"
+        }
+      },
+      Macros: {
+        href: "{}"
+      }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script>
+  function initialMathJax() {
+    MathJax.Hub.Queue(function () {
+      var all = MathJax.Hub.getAllJax(),
+        i;
+      // console.log(all);
+      for (i = 0; i < all.length; i += 1) {
+        console.log(all[i].SourceElement().parentNode)
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  }
+
+  function reprocessMathJax() {
+    if (typeof MathJax !== 'undefined') {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+  }
+</script>
+
+
+ 
+<link rel="stylesheet" href="//cdn.bootcss.com/gitalk/1.5.0/gitalk.min.css">
+ 
+<script src="//cdn.bootcss.com/gitalk/1.5.0/gitalk.min.js"></script>
+  
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/obsidian.js"></script>
+<script src="/js/jquery.truncate.js"></script>
+<script src="/js/search.js"></script>
+ 
+<script src="//cdn.bootcss.com/typed.js/2.0.10/typed.min.js"></script>
+ 
+<script src="//cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js"></script>
+ 
+<script src="//cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+
+
+<script src="https://cdn.bootcss.com/codemirror/5.48.4/codemirror.min.js"></script>
+ 
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/javascript/javascript.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/css/css.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/xml/xml.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/htmlmixed/htmlmixed.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/clike/clike.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/php/php.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/shell/shell.min.js"></script>
+  
+<script src="//cdn.bootcss.com/codemirror/5.48.4/mode/python/python.min.js"></script>
+   
+<script src="/js/busuanzi.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    if ($('span[id^="busuanzi_"]').length) {
+      initialBusuanzi();
+    }
+  });
+</script>
+ 
+<link rel="stylesheet" href="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/photoswipe/4.1.3/default-skin/default-skin.min.css">
+
+
+<script src="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="//cdn.bootcss.com/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="//www.googletagmanager.com/gtag/js?id=UA-149874671-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-149874671-1');
+</script>
+ 
+
+<script>
+  function initialTyped() {
+    var typedTextEl = $('.typed-text');
+    if (typedTextEl && typedTextEl.length > 0) {
+      var typed = new Typed('.typed-text', {
+        strings: ['Think like an artist, develop like an artisan', '艺术家思维去思考问题，工匠创造精神去开发'],
+        typeSpeed: 90,
+        loop: true,
+        loopCount: Infinity,
+        backSpeed: 20,
+      });
+    }
+  }
+
+  if ($('.article-header') && $('.article-header').length) {
+    $(document).ready(function () {
+      initialTyped();
+    });
+  }
+</script>
+
+
+
+
+ <!-- 例：百度统计 --> <script> var _hmt = _hmt || []; (function() { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?your_code"; var s = document.getElementsByTagName("script")[0];  s.parentNode.insertBefore(hm, s); })(); </script> 
+
+</html>
