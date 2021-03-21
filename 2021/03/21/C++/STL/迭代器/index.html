@@ -3,8 +3,8 @@
 <![endif]-->
 <link rel="stylesheet" href="/css/iconfont.css">
 
-<link rel="stylesheet" href="/css/index.css?v=202103212300.css">
-<link rel="stylesheet" href="/css/info.css?v=202103212300.css">
+<link rel="stylesheet" href="/css/index.css?v=202103212312.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212312.css">
 <link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
 </head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">迭代器</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">STL</a></li><li class="timer">时间：2021-03-21 20:03:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E5%BA%93/" target="_blank">C++库</a><a href="/tags/%E8%AF%AD%E6%B3%95/" target="_blank">语法</a></div><div class="news_con"><h2 id="条款26-iterator优先于const-iterator、reverse-iterator及const-reverse-iterator"><a href="#条款26-iterator优先于const-iterator、reverse-iterator及const-reverse-iterator" class="headerlink" title="条款26.iterator优先于const_iterator、reverse_iterator及const_reverse_iterator"></a>条款26.iterator优先于const_iterator、reverse_iterator及const_reverse_iterator</h2><p><strong>先说这四种迭代器各自的功能</strong><br>对iterator进行递增可以从容器头部遍历到尾部<br>对reverse_iterator进行递增则可以从容器尾部遍历到头部<br>const_iterator和const_reverse_iterator则是对这两种迭代器增加了常量性，不可改变迭代器指向的值<br><strong>再说它们之间的转换</strong>，为了直观一些我做了一张图<br><img src="https://gitee.com/JeremyYv/pic-go/raw/master/20210118000508.PNG"><br><strong>这四个迭代器是四个毫无关联的类(!!)。</strong><br><strong>可以通过隐式转换，将非const转换为const，但const无法直接转换为非const(具体方法见下一条款)。</strong><br><strong>至于非reverse和reverse之间转换</strong>，书上说非reverse可以隐式转换为reverse，但在vs2005的STL实现中，<strong>已经由explicit声明为非隐式转换了，需要将iterator传入reverse_iterator的构造函数转换为reverse迭代器</strong>。<strong>而reverse转换为非reverse则可以通过迭代器调用base()获得</strong>。<br><strong>最后可以说下这个条款了，</strong>为什么要优先使用iterator，避免使用其他三个<br><strong>容器类中的很多成员函数形参类型都是iterator</strong>，包括运算符重载函数，传入其他三个无法隐式转换为iterator类型的迭代器，将无法通过编译。而且<strong>混用不同类型迭代器，将导致模板函数在类型推导时产生意料之外的编译问题</strong>。</p>
 <hr>
@@ -47,6 +47,6 @@ gitalk.render('comment_container')</script></div></div></div></main><aside class
 <script src="/js/scrollreveal.js"></script>
 <script src="/js/hc-sticky.js"></script>
 <script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<script src="/js/common.js?v=202103212300.js"></script>
-<script src="/js/index.js?v=202103212300.js"></script>
+<script src="/js/common.js?v=202103212312.js"></script>
+<script src="/js/index.js?v=202103212312.js"></script>
 </body></html>
