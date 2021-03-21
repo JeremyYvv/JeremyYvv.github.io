@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>解释器模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">解释器模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:54:32</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" target="_blank">行为型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>解释器模式：一种行为型设计模式</strong></li>
+</ul>
+<p> <strong>首先，我想先说明一下，解释器模式是我个人认为最复杂的设计模式，可能因为我目前对编程语言的解析原理不甚了解，对这个模式的理解也很片面。</strong></p>
+<ul>
+<li><p><strong>应用场景：</strong><br>解释器模式的应用场景是<strong>对语句进行解析</strong>。给定<strong>语法规则</strong>，先将语句形成<strong>语义树</strong>，然后通过解释器<strong>对语义树进行解释</strong>，输出结果。<br>常用场景如<strong>解析xml配置文件</strong>。</p>
+</li>
+<li><p><strong>举例：</strong><br>以解析**<code>a+b+c</code><strong>来举例，将<code>a</code>，<code>+</code>，<code>b</code>，<code>+</code>，<code>c</code>五个符号作为独立的</strong>对象<strong>来解析。<br>这五个符号根据</strong>解析方式不同<strong>可分为两类，<code>a b c</code>为一类，这类对象的解析结果就是这个对象</strong>本身的值<strong>。而<code>+</code>的解析要取这个元素左右相邻的两个元素，进行</strong>相加<strong>，将和作为解析结果返回。<br>解释前</strong>先生成语义树**，类似这样：</p>
+<pre class="line-numbers language-none"><code class="language-none">     +
+   &#x2F;   \
+  +     c
+ &#x2F;   \
+a     b<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>然后从<strong>根节点</strong>开始，依次对节点进行<strong>递归</strong>解析。<code>a b c</code>这类解释器使程序不会无限递归下去，称作<strong>终结符解释器</strong>（终结递归）。另一类需要递归向下解析的，称作<strong>非终结符解释器</strong>。</p>
+</li>
+<li><p><strong>实现方式：</strong><br>解释器基类派生出<strong>终结符解释器</strong>和<strong>非终结符解释器</strong>，非终结符解释器根据解释功能派生出<strong>具体的解释器类</strong>（**<code>+</code><strong>调用左右两数相加，</strong><code>-</code><strong>调用左右两数相减）。<br>再有一个</strong>解析器**，将语句生成语义树。</p>
+</li>
+</ul>
+<hr>
+<h1 id="解释器模式的简单代码实现"><a href="#解释器模式的简单代码实现" class="headerlink" title="解释器模式的简单代码实现"></a>解释器模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+#include &lt;stack&gt;
+#include &lt;typeinfo&gt;
+
+using namespace std;
+
+&#x2F;&#x2F;解释器抽象类
+class Expression
+&#123;
+public:
+    &#x2F;&#x2F;解析公式和数值，其中mapValue中的key是公式中的参数，value值是具体的值
+    virtual int interpreter(map&lt;string, int&gt;&amp; MapValue) &#x3D; 0;
+    virtual ~Expression()&#123;&#125;;
+&#125;;
+
+
+&#x2F;&#x2F;变量解析器（终结符）
+class VarExpression : public Expression
+&#123;
+    string m_strkey;
+public:
+    VarExpression(string strkey):m_strkey(strkey)&#123;&#125;
+
+    &#x2F;&#x2F;从map中取出变量的值
+    int interpreter(map&lt;string, int&gt;&amp; MapValue)
+    &#123;
+        return MapValue[m_strkey];
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;运算符解析器（非终结符）
+class SymbolExpression : public Expression
+&#123;
+protected:
+    Expression* m_pLeft;
+    Expression* m_pRight;
+public:
+    SymbolExpression(Expression* pLeft, Expression* pRight):m_pLeft(pLeft), m_pRight(pRight)&#123;&#125;
+&#125;;
+
+&#x2F;&#x2F;加法解析器
+class AddExpression : public SymbolExpression
+&#123;
+public:
+    AddExpression(Expression* pLeft, Expression* pRight):SymbolExpression(pLeft,pRight)&#123;&#125;
+
+    &#x2F;&#x2F;把左右两个变量相加
+    int interpreter(map&lt;string, int&gt;&amp; MapValue)
+    &#123;
+        return m_pLeft-&gt;interpreter(MapValue) + m_pRight -&gt;interpreter(MapValue);
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;减法解析器
+class SubExpression : public SymbolExpression
+&#123;
+public:
+    SubExpression(Expression* pLeft, Expression* pRight): SymbolExpression(pLeft,pRight)
+    &#123;
+    &#125;
+
+    &#x2F;&#x2F;把左右两个变量相减
+    int interpreter(map&lt;string, int&gt;&amp; MapValue)
+    &#123;
+        return m_pLeft-&gt;interpreter(MapValue) - m_pRight -&gt;interpreter(MapValue);
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;语义解析器
+class Parse
+&#123;
+private:
+    Expression* m_pExpression;
+public:
+    &#x2F;&#x2F;构造函数传参，并解析表达式，构建语法树
+    Parse(string strExpStr)
+    &#123;
+        m_pExpression &#x3D; NULL;
+        stack&lt;Expression*&gt; stackExp;
+
+        Expression* pLeft  &#x3D; NULL;
+        Expression* pRight &#x3D; NULL;
+
+        for(unsigned int i &#x3D; 0; i&lt; strExpStr.length(); ++i)
+        &#123;
+            switch(strExpStr[i])
+            &#123;
+            case &#39;+&#39;:  &#x2F;&#x2F;加法
+                &#x2F;&#x2F;1.先从栈中取出左操作数
+                pLeft &#x3D; stackExp.top();
+                stackExp.pop();
+
+                &#x2F;&#x2F;2.从表达式中取出+号后面的右操作数，并生成终结符解析对象
+                pRight &#x3D; new VarExpression(strExpStr.substr(++i,1));
+
+                &#x2F;&#x2F;3.将左右操作数相加，并把结果放入栈中
+                stackExp.push(new AddExpression(pLeft, pRight));
+
+                break;
+
+            case &#39;-&#39;:
+                &#x2F;&#x2F;1.先从栈中取出左操作数
+                pLeft &#x3D; stackExp.top();
+                stackExp.pop();
+
+                &#x2F;&#x2F;2.从表达式中取出+号后面的右操作数，并生成终结符解析对象
+                pRight &#x3D; new VarExpression(strExpStr.substr(++i,1));
+
+                &#x2F;&#x2F;3.将左右操作数相减，并把结果放入栈中
+                stackExp.push(new SubExpression(pLeft, pRight));
+
+                break;
+
+            default:
+                &#x2F;&#x2F;如果是变量（终结符），
+                &#x2F;&#x2F;则直接生成对应的变量解析器
+                stackExp.push(new VarExpression(strExpStr.substr(i,1)));
+            &#125;
+        &#125;
+
+        &#x2F;&#x2F;栈中保存的就是最终语法树的根结点（本例为SuuExpression对象）
+        if(!stackExp.empty())
+        &#123;
+            m_pExpression &#x3D; stackExp.top();
+            stackExp.pop();
+        &#125;
+    &#125;
+
+    &#x2F;&#x2F;开始运算
+    int Calculate(map&lt;string, int&gt;&amp; MapValue)
+    &#123;
+        return (!m_pExpression) ? 0 : m_pExpression-&gt;interpreter(MapValue);
+    &#125;
+&#125;;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+    string strExpression &#x3D; &quot;a-b+c&quot;;
+
+    map&lt;string, int&gt; MapValue;
+    MapValue[&quot;a&quot;] &#x3D; 50;
+    MapValue[&quot;b&quot;] &#x3D; 40;
+    MapValue[&quot;c&quot;] &#x3D; 30;
+
+    Parse ParseTree(strExpression); &#x2F;&#x2F;生成语义树
+
+    cout &lt;&lt; strExpression &lt;&lt; &quot; &#x3D; &quot; &lt;&lt; ParseTree.Calculate(MapValue) &lt;&lt; endl;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">a-b+c &#x3D; 40<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/">命令模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">观察者模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/行为型/解释器模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

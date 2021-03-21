@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>状态模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">状态模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:59:32</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" target="_blank">行为型</a></div><div class="news_con"><h3 id="状态模式：一种行为型设计模式"><a href="#状态模式：一种行为型设计模式" class="headerlink" title="状态模式：一种行为型设计模式"></a>状态模式：一种行为型设计模式</h3><ul>
+<li><strong>应用场景：</strong><br>状态模式主要应用于对象有很多状态，每种状态下有不同的表现，而且在程序运行过程中会频繁变化状态，进而变化变现的情景。(<strong>程序运行过程中是否会频繁变化状态</strong>，是状态模式与策略模式本质上的区别)</li>
+<li><strong>举例：</strong><br>以一个钟表举例，假设其有4种状态，上午、下午、傍晚和午夜模式，不同的模式下灯光显示不同。<br>比较简单的实现方式是使用枚举，在钟表的展示方法中通过枚举判断当前的模式，然后调用该模式对应的显示方法。<br>但是如果状态很多，判断枚举类型时的if-else或switch-case会很庞大，而且难于维护。<br>此时可以考虑将每种状态对应的表现封装成一个状态类，所有状态类继承自同一个基类，并提供统一的展示接口。<br>然后在钟表类中保存一个状态指针，通过设置该状态指针，调用不同状态类的展示接口。<br>这种消除分支语句的方式，和工厂模式类似。</li>
+<li><strong>实现方式：</strong><br>状态基类中提供统一设置状态与展示的接口。<br>各状态类中重写展示接口，实现各自的展示方法。<br>钟表类中保存一个状态类对象的指针，钟表展示时调用该状态类指针的展示方法。</li>
+</ul>
+<hr>
+<h1 id="状态模式的简单代码实现"><a href="#状态模式的简单代码实现" class="headerlink" title="状态模式的简单代码实现"></a>状态模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+class Clock;
+&#x2F;&#x2F;时钟的状态属性
+class StateForClock
+&#123;
+public:
+    virtual void Show(Clock* pClock) &#x3D; 0;
+&#125;;
+
+&#x2F;&#x2F;时钟类
+class Clock
+&#123;
+public:
+    Clock(): m_pState(NULL)&#123;&#125;
+    ~Clock()
+    &#123;
+        if(m_pState)
+        &#123;
+            delete m_pState;
+            m_pState &#x3D; NULL;
+        &#125;
+    &#125;
+
+    void SetState(StateForClock* pState)
+    &#123;
+        if(!m_pState)
+        &#123;
+            delete m_pState;
+        &#125;
+        m_pState &#x3D; pState;
+    &#125;
+
+    void Show()
+    &#123;
+        m_pState-&gt;Show(this);
+    &#125;
+
+private:
+    StateForClock* m_pState;
+&#125;;
+
+
+&#x2F;&#x2F;午夜状态
+class MidNightState:public StateForClock
+&#123;
+public:
+    virtual void Show(Clock* pClock)
+    &#123;
+        cout &lt;&lt;&quot;MidNight Mode&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;上午状态
+class NoonState:public StateForClock
+&#123;
+public:
+    virtual void Show(Clock* pClock)
+    &#123;
+        cout &lt;&lt;&quot;Noon Mode&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;下午状态
+class AfterNoonState:public StateForClock
+&#123;
+public:
+    virtual void Show(Clock* pClock)
+    &#123;
+         cout &lt;&lt;&quot;AfterNoon Mode&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;晚上状态
+class NightState:public StateForClock
+&#123;
+public:
+    virtual void Show(Clock* pClock)
+    &#123;
+        cout &lt;&lt;&quot;Night Mode&quot; &lt;&lt; endl;
+    &#125;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+    Clock oClock;
+    oClock.SetState(new NoonState());
+    oClock.Show();
+
+    oClock.SetState(new AfterNoonState());
+    oClock.Show();
+
+    oClock.SetState(new MidNightState());
+    oClock.Show();
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">Noon Mode
+AfterNoon Mode
+MidNight Mode<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/C++/STL/%E5%AE%B9%E5%99%A8/">容器</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/">中介者模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/行为型/状态模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

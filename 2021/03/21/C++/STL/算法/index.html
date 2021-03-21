@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>算法</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">算法</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">STL</a></li><li class="timer">时间：2021-03-21 20:04:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E5%BA%93/" target="_blank">C++库</a><a href="/tags/%E8%AF%AD%E6%B3%95/" target="_blank">语法</a></div><div class="news_con"><h2 id="条款30：确保目标区间足够大"><a href="#条款30：确保目标区间足够大" class="headerlink" title="条款30：确保目标区间足够大"></a>条款30：确保目标区间足够大</h2><p>首先了解标准库中的一个算法：</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class InputIterator, class OutputIterator, class UnaryOperation&gt;
+OutputIterator transform (InputIterator first1, InputIterator last1, OutputIterator result, UnaryOperation op);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>**<code>transform</code><strong>将</strong><code>[first1, last1)</code><strong>区间中的每个元素，传入函数</strong><code>op</code><strong>，然后将返回的结果赋值给</strong><code>result</code>**所指向的元素<br>但是这个算法有一个非常容易错误的用法：</p>
+<pre class="line-numbers language-none"><code class="language-none">transform(values.begin(), values.end(), results.end(), func);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>意在将**<code>values</code><strong>中的元素一一传入</strong><code>func()</code><strong>，然后将返回值依次放在</strong><code>results</code>**的末尾。</p>
+<p>这个用法的错误在于，**<code>results.end()</code><strong>返回的迭代器及其之后并</strong>没有指向任何元素<strong>，这样只会</strong>给不存在的对象赋值<strong>。<br>正确的用法是使用</strong><code>back_inserter()</code>**.</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class Container&gt;
+back_insert_iterator&lt;Container&gt; back_inserter(Container&amp; x);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>将容器作为**<code>back_inserter</code><strong>的参数可以</strong>获得指向该容器末尾的一个<code>back_insert_iterator</code><strong>，而这个末尾插入迭代器</strong>重载了赋值运算符**：</p>
+<pre class="line-numbers language-none"><code class="language-none">back_insert_iterator&lt;_Container&gt;&amp; operator&#x3D;(typename _Container::const_reference _Val)
+&#123;	
+	container-&gt;push_back(_Val);
+	return (*this);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>对这个迭代器赋值，即是向容器push_back一个元素</strong>。<br>所以正确的用法是这样：</p>
+<pre class="line-numbers language-none"><code class="language-none">transform(values.begin(), values.end(), back_inserter(results), func);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>相对的，有尾插入就会有头插入，**<code>front_inserter()</code><strong>，赋值时会调用</strong><code>push_front</code><strong>，所以</strong>只能用在提供了该方法的<code>deque</code>和<code>list</code>容器上**<br><strong><code>inserter()</code><strong>则允许结果插入容器中的任意位置。<br>无论何时你使用一个要求</strong>指定目的区间的算法</strong>，确保<strong>目的区间已经足够大</strong>或者在算法<strong>执行时可以增加大小</strong>。<br><strong>如果你选择增加大小，就使用插入迭代器。</strong></p>
+<hr>
+<h2 id="条款31：了解各种和排序有关的选择"><a href="#条款31：了解各种和排序有关的选择" class="headerlink" title="条款31：了解各种和排序有关的选择"></a>条款31：了解各种和排序有关的选择</h2><p>STL算法中用于排序的算法不止**<code>sort</code>**一个，本条款介绍了另外的几个：</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class RandomAccessIterator&gt;
+void partial_sort (RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last, Compare comp);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong><code>partial_sort</code><strong>将</strong><code>[first, last)</code><strong>区间中，最好的</strong><code>(middle - first)</code><strong>个元素，</strong>排好序</strong>放在容器的**<code>[first, middle)</code><strong>区间中，</strong><code>comp()</code><strong>是判断是否更好的方法。<br>即把</strong>最好的n个<strong>元素</strong>按顺序<strong>放在容器</strong>前面<strong>，</strong>其他的无序<strong>。<br>实现方式是通过</strong>堆排序**时，每次建堆可以获得一个最佳元素，持续n次后，将一共获得的n个最好元素按顺序放在容器前面。</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class RandomAccessIterator, class Compare&gt;
+void nth_element (RandomAccessIterator first, RandomAccessIterator nth, RandomAccessIterator last, Compare comp);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong><code>nth_element</code><strong>这个算法和</strong><code>partial_sort</code><strong>类似，但是放在最前面的n个元素</strong>不进行排序</strong>。<br><strong><code>sort</code><strong>、</strong><code>partial_sort</code><strong>、</strong><code>nth_element</code><strong>这三个算法都是</strong>不稳定</strong>的排序算法（即不能保证值相同的元素在排序前后的顺序）.<br><strong>稳定</strong>的排序算法是**<code>stable_sort</code><strong>，因为使用的</strong>归并排序**。</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class RandomAccessIterator, class Compare&gt;
+void stable_sort ( RandomAccessIterator first, RandomAccessIterator last,Compare comp );<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>还有一个算法是**<code>partition</code>**:</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class BidirectionalIterator, class UnaryPredicate&gt;
+BidirectionalIterator partition (BidirectionalIterator first,BidirectionalIterator last, UnaryPredicate pred);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong><code>partition()</code><strong>重排</strong><code>[first, last)</code><strong>区间中的元素，以使满足</strong><code>pred条件</code></strong>(使pred返回true)的元素都在区间的<strong>开头</strong>，并返回重排后<strong>第一个不满足pred条件</strong>的元素的迭代器。<br>**<code>stable_partition</code><strong>则是</strong><code>partition</code><strong>的稳定版本。<br>算法</strong><code>sort</code><strong>、</strong><code>stable_sort</code><strong>、</strong><code>partial_sort</code><strong>和</strong><code>nth_element</code><strong>需要随机访问迭代器，所以无法用于</strong><code>list</code><strong>，而</strong><code>list</code><strong>提供了专属的</strong><code>list::sort</code>**用于稳定排序。</p>
+<hr>
+<h2 id="条款32-如果确实需要删除元素，则需要在remove这一类算法之后调用erase"><a href="#条款32-如果确实需要删除元素，则需要在remove这一类算法之后调用erase" class="headerlink" title="条款32.如果确实需要删除元素，则需要在remove这一类算法之后调用erase"></a>条款32.如果确实需要删除元素，则需要在remove这一类算法之后调用erase</h2><p>我在条款9中说明了**<code>std::remove</code><strong>所做的操作，它</strong>并不删除某个元素<strong>，而是将</strong>不需被删除的<strong>元素放在容器的前端。<br>类似的算法还有</strong><code>unique</code><strong>，用于</strong>删除相邻的重复元素<strong>，它也不真的删除相邻重复元素，而是将相邻的不重复元素放在容器的前端，最后返回一个</strong>指向边界的迭代器<strong>。<br>所以如果需要真的删除其它元素，应该在</strong><code>remove</code><strong>、</strong><code>unique</code><strong>后调用</strong><code>erase</code>**.</p>
+<hr>
+<h2 id="条款33-对包含指针的容器使用remove这一类算法时要特别小心"><a href="#条款33-对包含指针的容器使用remove这一类算法时要特别小心" class="headerlink" title="条款33.对包含指针的容器使用remove这一类算法时要特别小心"></a>条款33.对包含指针的容器使用remove这一类算法时要特别小心</h2><p>还是**<code>std::remove</code><strong>的问题，如果容器中的指针指向的是</strong>动态分配<strong>的内存，在调用</strong><code>remove</code><strong>时会导致一些指针丢失，导致</strong>内存泄漏<strong>。<br>如果向容器中添加的是</strong>智能指针<strong>，那这个问题就不存在了，你可以放心的对容器使用</strong><code>erase-remove</code>**删除元素。</p>
+<hr>
+<h2 id="条款34-了解哪些算法要求使用排序的区间作为参数"><a href="#条款34-了解哪些算法要求使用排序的区间作为参数" class="headerlink" title="条款34.了解哪些算法要求使用排序的区间作为参数"></a>条款34.了解哪些算法要求使用排序的区间作为参数</h2><p>搜索算法**<code>binary_search</code><strong>、</strong><code>lower_bound</code><strong>、</strong><code>upper_bound</code><strong>和</strong><code>equal_range</code><strong>(详见条款45)需要有序区间，因为它们使用</strong>二分法查找**。<br>**<code>set_union</code><strong>、</strong><code>set_intersection</code><strong>、</strong><code>set_difference</code><strong>和</strong><code>set_symmetric_difference</code>**都需要有序区间。</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class InputIterator1, class InputIterator2, class OutputIterator&gt;
+OutputIterator set_union (InputIterator1 first1, InputIterator1 last1,InputIterator2 first2, InputIterator2 last2, OutputIterator result);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong><code>set_union</code><strong>将两个有序区间中的元素</strong>合并</strong>，<strong>重复的元素只保留一份</strong>。</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class InputIterator1, class InputIterator2, class OutputIterator&gt;
+OutputIterator set_intersection (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong><code>set_intersection</code><strong>将两个有序区间中</strong>共有的元素</strong>拷贝一份</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class InputIterator1, class InputIterator2, class OutputIterator&gt;
+OutputIterator set_difference (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong><code>set_difference</code><strong>将区间</strong><code>[first1, last1)</code>中有</strong>但是区间**<code>[first2, last2)</code>中没有**的元素拷贝到result中。</p>
+<pre class="line-numbers language-none"><code class="language-none">template &lt;class InputIterator1, class InputIterator2, class OutputIterator&gt;
+OutputIterator set_symmetric_difference (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong><code>set_symmetric_difference</code><strong>将区间</strong><code>[first1, last1)</code>中有</strong>但是区间**<code>[first2, last2)</code>中没有**,与区间**<code>[first2, last2)</code>中有<strong>但是区间</strong><code>[first1, last1)</code>中没有<strong>的元素</strong>都<strong>拷贝到result中。<br>这四个算法要求</strong>有序<strong>区间，是为了保证</strong>线性时间复杂度**。</p>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/C++/ObjectModel/default-constructor/">默认构造函数</a></p><p>下一篇：<a href="/2021/03/21/C++/STL/%E8%BF%AD%E4%BB%A3%E5%99%A8/">迭代器</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/C++/STL/算法/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

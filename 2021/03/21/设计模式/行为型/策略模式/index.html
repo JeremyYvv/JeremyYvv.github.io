@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>策略模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">策略模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:49:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" target="_blank">行为型</a></div><div class="news_con"><h3 id="策略模式：一种行为型设计模式"><a href="#策略模式：一种行为型设计模式" class="headerlink" title="策略模式：一种行为型设计模式"></a>策略模式：一种行为型设计模式</h3><ul>
+<li><strong>应用场景：</strong><br>在GOF的《设计模式:可复用面向对象软件的基础》中是这样定义的：将一系列的算法一个个封装起来，并且使它们可相互替换。策略模式使得算法可独立于使用它的客户而变化。<br>对于同一流程中不同的需求，对数据的处理算法可能会变更，所以将处理数据的算法单独抽离出去，形成一系列算法类，可以相互替换。</li>
+<li><strong>举例：</strong><br>《大话设计模式》中举了一个很好的例子。<br>商场经常会推出不同的优惠活动，对于结账流程来说，不同的优惠活动会使用不同的算法处理账单总额。<br>所以抽离出一个算法的基类，提供统一的用于计算折后价的接口，然后所有的算法都在派生类中实现各自的方法。<br>切换商场类中的算法指针所指向的算法类，即可切换调用的算法。</li>
+<li><strong>实现方式：</strong><br>所有算法类派生自同一基类，实现统一的计算接口。<br>商场类中使用成员指针指向具体的算法类，结账时通过该指针调用算法。</li>
+</ul>
+<hr>
+<h1 id="策略模式的简单代码实现"><a href="#策略模式的简单代码实现" class="headerlink" title="策略模式的简单代码实现"></a>策略模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+&#x2F;&#x2F;策略基类
+class Strategy
+&#123;
+public:
+    virtual float Calculate(float fTotal) &#x3D; 0;
+&#125;;
+
+&#x2F;&#x2F;策略A，打8折
+class StrategyA:public Strategy
+&#123;
+public:
+    virtual float Calculate(float fTotal)
+    &#123;
+        printf(&quot;优惠活动，全部8折\n&quot;);
+        return fTotal * 0.8;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;策略B，打7折
+class StrategyB:public Strategy
+&#123;
+public:
+    virtual float Calculate(float fTotal)
+    &#123;
+        printf(&quot;优惠活动，全部7折\n&quot;);
+        return fTotal * 0.7;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;策略C，满300减100
+class StrategyC:public Strategy
+&#123;
+public:
+    virtual float Calculate(float fTotal)
+    &#123;
+        printf(&quot;优惠活动，满300减100\n&quot;);
+        float fFinal &#x3D; fTotal - static_cast&lt;int&gt;(fTotal&#x2F;300) * 100;
+        return fFinal;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;商场类
+class Shop
+&#123;
+public:
+    Shop(Strategy* pStrategy &#x3D; NULL):m_pStrategy(pStrategy)&#123;&#125;
+    ~Shop()
+    &#123;
+        if(m_pStrategy)
+        &#123;
+            delete m_pStrategy;
+            m_pStrategy &#x3D; NULL;
+        &#125;
+    &#125;
+
+    &#x2F;&#x2F;设置商场策略
+    void SetStrategy(Strategy* pStrategy)
+    &#123;
+        if(m_pStrategy)
+        &#123;
+            delete m_pStrategy;
+        &#125;
+        m_pStrategy &#x3D; pStrategy;
+    &#125;
+
+    &#x2F;&#x2F;调用策略类的计算方法计算折后价
+    void CalculatePay(float fTotal)
+    &#123;
+        if(m_pStrategy)
+        &#123;
+            float fFinal &#x3D; m_pStrategy-&gt;Calculate(fTotal);
+            printf(&quot;原价:%.2f元, 折后:%.2f元\n&quot;, fTotal, fFinal);
+        &#125;
+        else
+        &#123;
+            printf(&quot;无活动，总价:%.2f元\n&quot;, fTotal);
+        &#125;
+    &#125;
+
+private:
+    Strategy* m_pStrategy;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+    Shop oShop;
+    oShop.CalculatePay(400);
+
+    oShop.SetStrategy(new StrategyA());
+    oShop.CalculatePay(400);
+
+    oShop.SetStrategy(new StrategyB());
+    oShop.CalculatePay(400);
+
+    oShop.SetStrategy(new StrategyC());
+    oShop.CalculatePay(400);
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">无活动，总价:400.00元
+优惠活动，全部8折
+原价:400.00元, 折后:320.00元
+优惠活动，全部7折
+原价:400.00元, 折后:280.00元
+优惠活动，满300减100
+原价:400.00元, 折后:300.00元<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/">迭代器模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/">备忘录模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/行为型/策略模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

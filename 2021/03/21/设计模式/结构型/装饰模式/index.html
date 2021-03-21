@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>装饰模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">装饰模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:46:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/" target="_blank">结构型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>装饰模式：一种结构型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>想要动态的给一个对象添加功能，即希望可以根据需求对现有对象添加不同的功能，以及不同功能的相互组合。<br>如果通过继承实现功能增加，则为了各功能的组合，需要将不同功能排列组合形成数量爆炸的一堆子类。<br>此时可以考虑装饰模式</li>
+</ul>
+<p><strong>举例：</strong><br>游戏中的人物和时装。人物可以选择穿上帽子或穿上鞋子，或者都穿上，通过方法展示穿搭结果。<br>比较容易想到的实现方法就是单纯通过继承，一个人物基类，继承出一个穿帽子的人物类，一个穿鞋子的人物类，再一个穿帽子+鞋子的人物类。在只有两种选择时，需要产生3个子类，这种实现方式每增加一种选择就要增加一倍+1数量的子类，非常不可取。</p>
+<ul>
+<li><strong>实现方式：</strong><br>第一步，抽象出一个装饰基类，类中添加一个人物类指针，在构造时传入人物类指针。<br>第二步，增加需要修饰的同名方法，在方法中通过指针调用原方法，再添加新修饰内容。<br>第三步，将装饰基类继承自人物基类，为了使传入装饰类A进行装饰的指针能够传入装饰类B进行其他装饰，并且使传入装饰类A的指针可以指向该装饰类对象。<br>最后一步，实现装饰基类，实现装饰内容。<br>备注：为什么装饰类中增加的方法要与被装饰方法同名呢。因为在第三步中，为了需求，传入装饰类的指针，不一定指向的是人物基类对象，也可能是另一个装饰类对象。所以为了其他装饰类中通过指针调用的原方法存在，对原方法装饰后的方法要与原方法同名。 </li>
+<li><strong>优点：</strong><br>可以动态为对象添加功能，相比于继承实现，组合的方式更加灵活而且代码量小很多</li>
+<li><strong>缺点：</strong><br>减少了类的数量，但是在装饰的过程中每一步都会产生一个对象，对于debug来说会困难很多，因为中间每一步产生的对象都很像。</li>
+</ul>
+<hr>
+<h1 id="装饰模式的简单代码实现"><a href="#装饰模式的简单代码实现" class="headerlink" title="装饰模式的简单代码实现"></a>装饰模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#ifndef DECORATOR_HPP
+#define DECORATOR_HPP
+#include &lt;iostream&gt;
+using namespace std;
+&#x2F;&#x2F;人物基类
+class Man
+&#123;
+public:
+    virtual ~Man()&#123;&#125;
+    virtual void Show()&#x2F;&#x2F;用于展示
+    &#123;
+        cout &lt;&lt; &quot;A man.&quot; &lt;&lt;endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;装饰器抽象类
+class ManWithCloth:public Man&#x2F;&#x2F;继承自Man，为了使被装饰的对象可以传入其他装饰器进行组合装饰
+&#123;
+public:
+    ManWithCloth(Man* pMan)
+        :m_pMan(pMan)&#123;&#125;
+    virtual ~ManWithCloth()
+    &#123;
+        if(NULL !&#x3D; m_pMan)
+        &#123;
+            delete m_pMan;
+            m_pMan &#x3D; NULL;
+        &#125;
+    &#125;
+
+    virtual void Show()&#x2F;&#x2F;上述实现方式中的第二步
+    &#123;
+        m_pMan-&gt;Show();&#x2F;&#x2F;通过指针调用原指针所指对象的方法，然后添加方法进行修饰
+        DressUp();&#x2F;&#x2F;对原方法增加修饰
+    &#125;
+    virtual void DressUp() &#x3D; 0;&#x2F;&#x2F;修饰方法在实现类中实现
+
+private:
+    Man* m_pMan;
+&#125;;
+
+&#x2F;&#x2F;装饰器实现类
+class ManWearAHat:public ManWithCloth
+&#123;
+public:
+    ManWearAHat(Man* pMan)
+        :ManWithCloth(pMan)&#123;&#125;
+    virtual void DressUp()
+    &#123;
+        cout &lt;&lt; &quot;Wear a Hat.&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+class ManWearShoes:public ManWithCloth
+&#123;
+public:
+    ManWearShoes(Man* pMan)
+        :ManWithCloth(pMan)&#123;&#125;
+    virtual void DressUp()
+    &#123;
+        cout &lt;&lt; &quot;Wear shoes.&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+#endif &#x2F;&#x2F; DECORATOR_HPP<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &quot;decorator.hpp&quot;
+using namespace std;
+
+int main()
+&#123;
+    Man* pMan &#x3D; new Man();
+    pMan-&gt;Show();
+
+    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;Wear Hat&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    pMan &#x3D; new ManWearAHat(pMan);
+    pMan-&gt;Show();
+
+    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;Wear Shoes&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    pMan &#x3D; new ManWearShoes(pMan);
+    pMan-&gt;Show();
+
+    delete pMan;
+    pMan &#x3D; NULL;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">A man.
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;Wear Hat&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+A man.
+Wear a Hat.
+&#x3D;&#x3D;&#x3D;&#x3D;Wear Shoes&#x3D;&#x3D;&#x3D;&#x3D;
+A man.
+Wear a Hat.
+Wear Shoes.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">组合模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/">享元模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/结构型/装饰模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

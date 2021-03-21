@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>组合模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">组合模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:47:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/" target="_blank">结构型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>组合模式：一种结构型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>对象需要组合成树形结构以表示“部分-整体”的层次结构时。</li>
+</ul>
+<p><strong>举例：</strong><br>一家公司的OA系统（Office Automation, 自动化办公），公司部门为多级结构，分为一级、二级、三级部门，为表现这种系统的层次结构，可以考虑组合模式</p>
+<ul>
+<li><strong>实现方式：</strong></li>
+</ul>
+<p><strong>首先</strong>，创建所有部门的共有基类，封装共用的方法。<br><strong>然后</strong>，在基类中添加用于存放子部门的容器，对子部门执行的操作，通过迭代该容器来完成。并封装向容器中添加和删除子部门的方法。<br><strong>最后</strong>，各级部门类继承自该基类，并增添各自的方法。<br><strong>备注</strong>：内存管理可以在基类中实现。</p>
+<ul>
+<li><strong>优点：</strong><br>可以清楚地定义分层次的复杂对象，并可以不断组合。</li>
+<li><strong>缺点：</strong></li>
+</ul>
+<p>1.将子部门容器与添加/删除方法放在基类中，会使所有部门都有该容器与方法。但有些没有子部门的部门，在逻辑上不应该有这些。<br>2.如果不将子部门容器与添加/删除方法放在基类中，则有子部门但是功能不同的各部门需要在继承时重复实现容器与方法，代码重复会很多。<br>3.对哦，如果把有子部门的部门抽象出一个继承自基类的抽象类，可能会解决这个问题吧？稍后我会试一试</p>
+<hr>
+<h1 id="组合模式的简单代码实现"><a href="#组合模式的简单代码实现" class="headerlink" title="组合模式的简单代码实现"></a>组合模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;list&gt;
+using namespace std;
+&#x2F;&#x2F;部门抽象类
+class Department
+&#123;
+public:
+    &#x2F;&#x2F;构造，传入部门名称作为部门标记
+    Department(string strName):m_strName(strName)&#123;&#125;
+    &#x2F;&#x2F;内存管理，析构时析构所有下属部门
+    virtual ~Department()
+    &#123;
+        cout &lt;&lt; m_strName &lt;&lt; &quot;部门解散&quot; &lt;&lt; endl;
+        &#x2F;&#x2F;下属部门析构
+        list&lt;Department*&gt;::iterator Iter &#x3D; m_listDep.begin();
+        for(; Iter !&#x3D; m_listDep.end(); ++Iter)
+        &#123;
+            if(NULL !&#x3D; (*Iter))
+            &#123;
+                delete (*Iter);
+                (*Iter) &#x3D; NULL;
+            &#125;
+        &#125;
+    &#125;
+    &#x2F;&#x2F;获取部门名称的方法
+    string GetName()
+    &#123;
+        return m_strName;
+    &#125;
+    &#x2F;&#x2F;展示所有下属部门名称
+    virtual void ShowSubDep()
+    &#123;
+        cout &lt;&lt; m_strName &lt;&lt; &quot;部门下属部门：&quot;;
+        list&lt;Department*&gt;::iterator Iter &#x3D; m_listDep.begin();
+        for(; Iter !&#x3D; m_listDep.end(); ++Iter)
+        &#123;
+            cout &lt;&lt; &quot; &quot; &lt;&lt; (*Iter)-&gt;GetName();
+        &#125;
+        cout &lt;&lt; endl;
+    &#125;
+    &#x2F;&#x2F;添加下属部门并打印信息
+    void AddDepartment(Department* pDep)
+    &#123;
+        m_listDep.push_back(pDep);
+        cout &lt;&lt; m_strName &lt;&lt; &quot;部门增加了下属的&quot; &lt;&lt; pDep-&gt;GetName() &lt;&lt; &quot;部门&quot; &lt;&lt; endl;
+    &#125;
+    &#x2F;&#x2F;删除下属部门并打印信息
+    void DelDepartment(Department* pDep)
+    &#123;
+        list&lt;Department*&gt;::iterator Iter &#x3D; m_listDep.begin();
+        for(; Iter !&#x3D; m_listDep.end(); ++Iter)
+        &#123;
+            if(pDep &#x3D;&#x3D; (*Iter))
+            &#123;
+                cout &lt;&lt; m_strName &lt;&lt; &quot;部门删除了下属的&quot; &lt;&lt; pDep-&gt;GetName() &lt;&lt; &quot;部门&quot; &lt;&lt; endl;
+                delete (*Iter);
+                m_listDep.erase(Iter);
+                break;
+            &#125;
+        &#125;
+    &#125;
+
+private:
+    string m_strName;&#x2F;&#x2F;部门名称
+    list&lt;Department*&gt; m_listDep;&#x2F;&#x2F;存放下属部门的列表，用列表为了方便增删
+&#125;;
+
+&#x2F;&#x2F;一级部门
+class FirstLevelDepartment:public Department
+&#123;
+public:
+    FirstLevelDepartment(string strName):Department(strName)&#123;&#125;
+    virtual ~FirstLevelDepartment()&#123;&#125;
+&#125;;
+
+&#x2F;&#x2F;二级部门
+class SecondLevelDepartment:public Department
+&#123;
+public:
+    SecondLevelDepartment(string strName):Department(strName)&#123;&#125;
+    virtual ~SecondLevelDepartment()&#123;&#125;
+&#125;;
+
+&#x2F;&#x2F;三级部门
+class ThirdLevelDepartment:public Department
+&#123;
+public:
+    ThirdLevelDepartment(string strName):Department(strName)&#123;&#125;
+    virtual ~ThirdLevelDepartment()&#123;&#125;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;composite.hpp&gt;
+using namespace std;
+int main()
+&#123;
+    &#x2F;&#x2F;1级部门A1
+    Department* pFstLvA &#x3D; new FirstLevelDepartment(&quot;A1&quot;);
+    &#x2F;&#x2F;2级部门B2、C2、D2
+    Department* pSndLvB &#x3D; new SecondLevelDepartment(&quot;B2&quot;);
+    Department* pSndLvC &#x3D; new SecondLevelDepartment(&quot;C2&quot;);
+    Department* pSndLvD &#x3D; new SecondLevelDepartment(&quot;D2&quot;);
+    &#x2F;&#x2F;3级部门E3、F3、G3、H3
+    Department* PTrdLvE &#x3D; new ThirdLevelDepartment(&quot;E3&quot;);
+    Department* PTrdLvF &#x3D; new ThirdLevelDepartment(&quot;F3&quot;);
+    Department* PTrdLvG &#x3D; new ThirdLevelDepartment(&quot;G3&quot;);
+    Department* PTrdLvH &#x3D; new ThirdLevelDepartment(&quot;H3&quot;);
+    &#x2F;&#x2F;组建树形结构
+    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;组建部门结构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    pFstLvA-&gt;AddDepartment(pSndLvB);
+    pFstLvA-&gt;AddDepartment(pSndLvC);
+    pFstLvA-&gt;AddDepartment(pSndLvD);
+    pSndLvB-&gt;AddDepartment(PTrdLvE);
+    pSndLvB-&gt;AddDepartment(PTrdLvF);
+    pSndLvC-&gt;AddDepartment(PTrdLvG);
+    pSndLvD-&gt;AddDepartment(PTrdLvH);
+    &#x2F;&#x2F;展示一级部门A所有子部门
+    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;展示子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    pFstLvA-&gt;ShowSubDep();
+    &#x2F;&#x2F;删除A下属二级部门B
+    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;解散子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    pFstLvA-&gt;DelDepartment(pSndLvB);
+    &#x2F;&#x2F;析构，资源回收
+    cout &lt;&lt; &quot;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;开始析构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; &lt;&lt; endl;
+    delete pFstLvA;
+
+    return 0;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;组建部门结构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+A1部门增加了下属的B2部门
+A1部门增加了下属的C2部门
+A1部门增加了下属的D2部门
+B2部门增加了下属的E3部门
+B2部门增加了下属的F3部门
+C2部门增加了下属的G3部门
+D2部门增加了下属的H3部门
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;展示子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+A1部门下属部门： B2 C2 D2
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;解散子部门&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+A1部门删除了下属的B2部门
+B2部门解散
+E3部门解散
+F3部门解散
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;开始析构&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+A1部门解散
+C2部门解散
+G3部门解散
+D2部门解散
+H3部门解散<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/">备忘录模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/">装饰模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/结构型/组合模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

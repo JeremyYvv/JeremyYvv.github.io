@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>默认构造函数</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">默认构造函数</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">C++</a></li><li class="timer">时间：2021-03-21 20:11:26</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E8%AF%AD%E6%B3%95/" target="_blank">C++语法</a><a href="/tags/C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/" target="_blank">C++对象模型</a></div><div class="news_con"><p><a target="_blank" rel="noopener" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1804.pdf">C++05标准文档</a> 中 Section 12.1.5 关于默认构造函数的说明</p>
+<blockquote>
+<p>A default constructor for a class X is a constructor of class X that can be called without an argument. If there is no user- declared constructor for class X, a default constructor is implicitly declared<br>类X的默认构造函数是一个无参构造函数，在类X中没有用户声明的构造函数时，被隐式声明。</p>
+</blockquote>
+<hr>
+<h2 id="Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？"><a href="#Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？" class="headerlink" title="Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？"></a>Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？</h2><h2 id="A1：不一定。"><a href="#A1：不一定。" class="headerlink" title="A1：不一定。"></a>A1：不一定。</h2><p>在上一段Section 12.1.5 的说明后，还有一段额外的说明</p>
+<blockquote>
+<p>A default constructor is trivial if it is implicitly-declared and if:<br>its class has no virtual functions and no virtual base classes, and<br>all the direct base classes of its class have trivial default constructors, and<br>for all the non-static data members of its class that are of class type (or array thereof), each such class has a trivial default constructor.<br>一个隐式声明的默认构造函数将是无价值（trivial）的，如果<br>类里没有虚函数和虚基类，并且<br>类的直接基类都有无价值的默认构造函数，并且<br>类中所有非静态成员变量都有无价值的默认构造函数<br>可见，即使是默认构造函数，也被分为了有价值（non-trivial）和无价值（trivial）两种。<br>而对于无价值的默认构造函数，实际上并不会被生成。</p>
+</blockquote>
+<h3 id="求证"><a href="#求证" class="headerlink" title="求证"></a>求证</h3><p>通过反汇编，对比用户定义无参构造和默认构造，查看在类的实例过程中是否被调用。</p>
+<h3 id="1-类内定义无参构造函数"><a href="#1-类内定义无参构造函数" class="headerlink" title="1. 类内定义无参构造函数"></a>1. 类内定义无参构造函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    Demo a<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>编译完成后查看反汇编（截取text段中相关的一段）:</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token number">400546</span><span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
+  <span class="token number">400547</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
+  <span class="token number">40054</span>a<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">83</span> ec <span class="token number">10</span>             sub    $<span class="token number">0x10</span><span class="token punctuation">,</span><span class="token operator">%</span>rsp
+  <span class="token number">40054</span>e<span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">04</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    mov    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
+  <span class="token number">400555</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
+  <span class="token number">400557</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">45</span> f8             mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
+  <span class="token number">40055</span>b<span class="token operator">:</span>   <span class="token number">31</span> c0                   <span class="token operator">xor</span>    <span class="token operator">%</span>eax<span class="token punctuation">,</span><span class="token operator">%</span>eax
+    Demo a<span class="token punctuation">;</span> 
+  <span class="token number">40055</span>d<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>d <span class="token number">45</span> f7             lea    <span class="token operator">-</span><span class="token number">0x9</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
+  <span class="token number">400561</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
+  <span class="token number">400564</span><span class="token operator">:</span>   e8 <span class="token number">1</span>b <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          callq  <span class="token number">400584</span> <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token number">400569</span><span class="token operator">:</span>   b8 <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          mov    $<span class="token number">0x0</span><span class="token punctuation">,</span><span class="token operator">%</span>eax
+<span class="token punctuation">&#125;</span>
+  <span class="token number">40056</span>e<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">55</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
+  <span class="token number">400572</span><span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">33</span> <span class="token number">14</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    <span class="token operator">xor</span>    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
+  <span class="token number">400579</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
+  <span class="token number">40057</span>b<span class="token operator">:</span>   <span class="token number">74</span> <span class="token number">05</span>                   je     <span class="token number">400582</span> <span class="token operator">&lt;</span>main<span class="token operator">+</span><span class="token number">0x3c</span><span class="token operator">></span>
+  <span class="token number">40057</span>d<span class="token operator">:</span>   e8 <span class="token number">9</span>e fe ff ff          callq  <span class="token number">400420</span> <span class="token operator">&lt;</span>__stack_chk_fail@plt<span class="token operator">></span>
+  <span class="token number">400582</span><span class="token operator">:</span>   c9                      leaveq
+  <span class="token number">400583</span><span class="token operator">:</span>   c3                      retq
+​
+<span class="token number">0000000000400584</span> <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span><span class="token operator">:</span>
+<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+  <span class="token number">400584</span><span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
+  <span class="token number">400585</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
+  <span class="token number">400588</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
+  <span class="token number">40058</span>c<span class="token operator">:</span>   <span class="token number">90</span>                      nop
+  <span class="token number">40058</span>d<span class="token operator">:</span>   <span class="token number">5</span>d                      pop    <span class="token operator">%</span>rbp
+  <span class="token number">40058</span>e<span class="token operator">:</span>   c3                      retq
+  <span class="token number">40058f</span><span class="token operator">:</span>   <span class="token number">90</span>                      nop<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>Line13 main函数中，<strong>Demo a;</strong> 调用了Demo类的无参构造函数 <strong>_ZN4DemoC1Ev</strong>.</p>
+<h3 id="2-类内不定义无参构造函数，查看是否会调用默认构造函数"><a href="#2-类内不定义无参构造函数，查看是否会调用默认构造函数" class="headerlink" title="2. 类内不定义无参构造函数，查看是否会调用默认构造函数"></a>2. 类内不定义无参构造函数，查看是否会调用默认构造函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Derived</span> <span class="token punctuation">&#123;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    Derived a<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+编译完成后查看反汇编（截取text段中相关的一段）<span class="token operator">:</span>
+<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token number">4004</span>d6<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
+  <span class="token number">4004</span>d7<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
+    Demo a<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token number">4004</span>da<span class="token operator">:</span>   b8 <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          mov    $<span class="token number">0x0</span><span class="token punctuation">,</span><span class="token operator">%</span>eax
+<span class="token punctuation">&#125;</span>
+  <span class="token number">4004</span>df<span class="token operator">:</span>   <span class="token number">5</span>d                      pop    <span class="token operator">%</span>rbp
+  <span class="token number">4004e0</span><span class="token operator">:</span>   c3                      retq   
+  <span class="token number">4004e1</span><span class="token operator">:</span>   <span class="token number">66</span> <span class="token number">2</span>e <span class="token number">0f</span> <span class="token number">1f</span> <span class="token number">84</span> <span class="token number">00</span> <span class="token number">00</span>    nopw   <span class="token operator">%</span>cs<span class="token operator">:</span><span class="token number">0x0</span><span class="token punctuation">(</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token number">4004e8</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> 
+  <span class="token number">4004</span>eb<span class="token operator">:</span>   <span class="token number">0f</span> <span class="token number">1f</span> <span class="token number">44</span> <span class="token number">00</span> <span class="token number">00</span>          nopl   <span class="token number">0x0</span><span class="token punctuation">(</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token number">00000000004004f</span>0 <span class="token operator">&lt;</span>__libc_csu_init<span class="token operator">></span><span class="token operator">:</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可见，并没有生成或调用默认构造函数，因为类Demo中没有虚函数/虚基类，且所有成员变量和直接基类都没有non-trivial默认构造或用户声明构造函数。</p>
+<h3 id="3-作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数"><a href="#3-作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数" class="headerlink" title="3. 作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数"></a>3. 作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    Demo a<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+编译完成后查看反汇编：
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token number">400676</span><span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
+  <span class="token number">400677</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
+  <span class="token number">40067</span>a<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">83</span> ec <span class="token number">10</span>             sub    $<span class="token number">0x10</span><span class="token punctuation">,</span><span class="token operator">%</span>rsp
+  <span class="token number">40067</span>e<span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">04</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    mov    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
+  <span class="token number">400685</span><span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
+  <span class="token number">400687</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">45</span> f8             mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
+  <span class="token number">40068</span>b<span class="token operator">:</span>   <span class="token number">31</span> c0                   <span class="token operator">xor</span>    <span class="token operator">%</span>eax<span class="token punctuation">,</span><span class="token operator">%</span>eax
+    Demo a<span class="token punctuation">;</span> 
+  <span class="token number">40068</span>d<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>d <span class="token number">45</span> f0             lea    <span class="token operator">-</span><span class="token number">0x10</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
+  <span class="token number">400691</span><span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
+  <span class="token number">400694</span><span class="token operator">:</span>   e8 <span class="token number">27</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          callq  <span class="token number">4006</span>c0 <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token number">400699</span><span class="token operator">:</span>   b8 <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span> <span class="token number">00</span>          mov    $<span class="token number">0x0</span><span class="token punctuation">,</span><span class="token operator">%</span>eax
+<span class="token punctuation">&#125;</span>
+  <span class="token number">40069</span>e<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">55</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
+  <span class="token number">4006</span>a2<span class="token operator">:</span>   <span class="token number">64</span> <span class="token number">48</span> <span class="token number">33</span> <span class="token number">14</span> <span class="token number">25</span> <span class="token number">28</span> <span class="token number">00</span>    <span class="token operator">xor</span>    <span class="token operator">%</span>fs<span class="token operator">:</span><span class="token number">0x28</span><span class="token punctuation">,</span><span class="token operator">%</span>rdx
+  <span class="token number">4006</span>a9<span class="token operator">:</span>   <span class="token number">00</span> <span class="token number">00</span> 
+  <span class="token number">4006</span>ab<span class="token operator">:</span>   <span class="token number">74</span> <span class="token number">05</span>                   je     <span class="token number">4006</span>b2 <span class="token operator">&lt;</span>main<span class="token operator">+</span><span class="token number">0x3c</span><span class="token operator">></span>
+  <span class="token number">4006</span>ad<span class="token operator">:</span>   e8 ae fe ff ff          callq  <span class="token number">400560</span> <span class="token operator">&lt;</span>__stack_chk_fail@plt<span class="token operator">></span>
+  <span class="token number">4006</span>b2<span class="token operator">:</span>   c9                      leaveq 
+  <span class="token number">4006</span>b3<span class="token operator">:</span>   c3                      retq   
+
+<span class="token number">00000000004006</span>b4 <span class="token operator">&lt;</span>_ZN4Demo4funcEv<span class="token operator">></span><span class="token operator">:</span>
+<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+  <span class="token number">4006</span>b4<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
+  <span class="token number">4006</span>b5<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
+  <span class="token number">4006</span>b8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
+  <span class="token number">4006</span>bc<span class="token operator">:</span>   <span class="token number">90</span>                      nop
+  <span class="token number">4006</span>bd<span class="token operator">:</span>   <span class="token number">5</span>d                      pop    <span class="token operator">%</span>rbp
+  <span class="token number">4006</span>be<span class="token operator">:</span>   c3                      retq   
+  <span class="token number">4006</span>bf<span class="token operator">:</span>   <span class="token number">90</span>                      nop
+
+<span class="token number">00000000004006</span>c0 <span class="token operator">&lt;</span>_ZN4DemoC1Ev<span class="token operator">></span><span class="token operator">:</span>
+<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
+  <span class="token number">4006</span>c0<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
+  <span class="token number">4006</span>c1<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
+  <span class="token number">4006</span>c4<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
+  <span class="token number">4006</span>c8<span class="token operator">:</span>   ba <span class="token number">78</span> <span class="token number">07</span> <span class="token number">40</span> <span class="token number">00</span>          mov    $<span class="token number">0x400778</span><span class="token punctuation">,</span><span class="token operator">%</span>edx
+  <span class="token number">4006</span>cd<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">45</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可见，在类中有虚函数的时候，的确会生成默认构造函数并在<strong>main中Line 13</strong>进行了调用。<br>至于其他几种情况，如类有虚基类、非静态成员变量或直接基类生成了构造函数，才会生成默认构造函数。</p>
+<hr>
+<h2 id="Q2：默认构造函数会初始化成员变量吗？"><a href="#Q2：默认构造函数会初始化成员变量吗？" class="headerlink" title="Q2：默认构造函数会初始化成员变量吗？"></a>Q2：默认构造函数会初始化成员变量吗？</h2><h2 id="A2：不一定"><a href="#A2：不一定" class="headerlink" title="A2：不一定"></a>A2：不一定</h2><p>在C++05标准文档 Section 12.1.8 中有说明</p>
+<blockquote>
+<p>Default constructors are called implicitly to create class objects of static or automatic storage duration defined without an initialize.<br>默认构造函数，会在静态或自动存储期间被隐式调用，来创建类对象，没有初始化。</p>
+</blockquote>
+<p>默认构造不一定会设定每一个成员变量的默认值<br>默认构造函数只是为了满足编译器的需要，将类中需要构造的成员变量按声明的顺序依次构造出来，使程序能够运行，但未必会进行初始化！<br>在C++的设计中，对成员变量进行初始化这种，为了满足程序的需要，是程序员的责任。</p>
+<h3 id="求证-1"><a href="#求证-1" class="headerlink" title="求证"></a>求证</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Base</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">int</span> m_a<span class="token punctuation">;</span>
+    <span class="token keyword">virtual</span> <span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        cout <span class="token operator">&lt;&lt;</span> m_a <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>   
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    Base A<span class="token punctuation">;</span>
+    A<span class="token punctuation">.</span><span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这段代码可以保证使用默认构造函数构造了对象A，然后调用func方法输出成员变量的值</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">jeremynancy@ubuntu<span class="token operator">:</span><span class="token operator">~</span><span class="token operator">/</span>cpp<span class="token operator">/</span>constructor$ g<span class="token operator">++</span> <span class="token operator">--</span>version
+g<span class="token operator">++</span> <span class="token punctuation">(</span>Ubuntu <span class="token number">5.4</span><span class="token number">.0</span><span class="token operator">-</span><span class="token number">6u</span>buntu1<span class="token operator">~</span><span class="token number">16.04</span><span class="token number">.1</span><span class="token punctuation">)</span> <span class="token number">5.4</span><span class="token number">.0</span> <span class="token number">20160609</span>
+<span class="token function">Copyright</span> <span class="token punctuation">(</span>C<span class="token punctuation">)</span> <span class="token number">2015</span> Free Software Foundation<span class="token punctuation">,</span> Inc<span class="token punctuation">.</span>
+This is free software<span class="token punctuation">;</span> see the source <span class="token keyword">for</span> copying conditions<span class="token punctuation">.</span>  There is NO
+warranty<span class="token punctuation">;</span> not even <span class="token keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<span class="token punctuation">.</span>
+
+jeremynancy@ubuntu<span class="token operator">:</span><span class="token operator">~</span><span class="token operator">/</span>cpp<span class="token operator">/</span>constructor$ <span class="token punctuation">.</span><span class="token operator">/</span><span class="token keyword">default</span><span class="token operator">-</span>value 
+<span class="token number">4196368</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>编译运行之后发现是一个随机值，并没有初始化成零值，至少在图示中的这个版本g++编译器中是这样的。<br>经过尝试，的确有些环境或版本下的某种编译器会自动把成员变量初始化成零值，但是这并不是C++标准中要求编译器做的事情，所以应该这个初始化的职责应该由程序员来承担。</p>
+<hr>
+<h2 id="Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？"><a href="#Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？" class="headerlink" title="Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？"></a>Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？</h2><h2 id="A3："><a href="#A3：" class="headerlink" title="A3："></a>A3：</h2><ul>
+<li><h3 id="调用顺序：基类构造函数-gt-成员变量构造函数-gt-类本身构造函数。"><a href="#调用顺序：基类构造函数-gt-成员变量构造函数-gt-类本身构造函数。" class="headerlink" title="调用顺序：基类构造函数 =&gt; 成员变量构造函数 =&gt; 类本身构造函数。"></a>调用顺序：基类构造函数 =&gt; 成员变量构造函数 =&gt; 类本身构造函数。</h3></li>
+<li><h3 id="实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。"><a href="#实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。" class="headerlink" title="实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。"></a>实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。</h3></li>
+</ul>
+<p>对于下列类代码</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Base</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Base</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Base"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>   
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Member</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Member</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Member"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>   
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token operator">:</span> <span class="token base-clause"><span class="token keyword">public</span> <span class="token class-name">Base</span></span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    Member m<span class="token punctuation">;</span>
+    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>   
+    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo 1"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>   
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    Demo A<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>Demo</strong> 类的每个构造函数在编译时会被扩张成如下</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token class-name">Demo</span><span class="token operator">::</span><span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 插入父类构造</span>
+    <span class="token class-name">Base</span><span class="token operator">::</span><span class="token function">Base</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment">// 插入成员变量构造</span>
+    <span class="token class-name">Member</span><span class="token operator">::</span><span class="token function">Member</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment">// 继续本身的处理</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="求证-2"><a href="#求证-2" class="headerlink" title="求证"></a>求证</h2><p>编译后反汇编查看无参构造函数</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token operator">:</span> <span class="token base-clause"><span class="token keyword">public</span> <span class="token class-name">Base</span></span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    Member m<span class="token punctuation">;</span>
+    <span class="token function">Demo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token number">4009</span>a0<span class="token operator">:</span>   <span class="token number">55</span>                      push   <span class="token operator">%</span>rbp
+  <span class="token number">4009</span>a1<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> e5                mov    <span class="token operator">%</span>rsp<span class="token punctuation">,</span><span class="token operator">%</span>rbp
+  <span class="token number">4009</span>a4<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">83</span> ec <span class="token number">10</span>             sub    $<span class="token number">0x10</span><span class="token punctuation">,</span><span class="token operator">%</span>rsp
+  <span class="token number">4009</span>a8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> <span class="token number">7</span>d f8             mov    <span class="token operator">%</span>rdi<span class="token punctuation">,</span><span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span>
+  <span class="token number">4009</span>ac<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">45</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
+  <span class="token number">4009</span>b0<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
+  <span class="token number">4009</span>b3<span class="token operator">:</span>   e8 <span class="token number">90</span> ff ff ff          callq  <span class="token number">400948</span> <span class="token operator">&lt;</span>_ZN4BaseC1Ev<span class="token operator">></span>
+  <span class="token number">4009</span>b8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">8</span>b <span class="token number">45</span> f8             mov    <span class="token operator">-</span><span class="token number">0x8</span><span class="token punctuation">(</span><span class="token operator">%</span>rbp<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">%</span>rax
+  <span class="token number">4009</span>bc<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
+  <span class="token number">4009</span>bf<span class="token operator">:</span>   e8 b0 ff ff ff          callq  <span class="token number">400974</span> <span class="token operator">&lt;</span>_ZN6MemberC1Ev<span class="token operator">></span>
+        cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Demo"</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+  <span class="token number">4009</span>c4<span class="token operator">:</span>   be <span class="token number">80</span> <span class="token number">0</span>a <span class="token number">40</span> <span class="token number">00</span>          mov    $<span class="token number">0x400a80</span><span class="token punctuation">,</span><span class="token operator">%</span>esi
+  <span class="token number">4009</span>c9<span class="token operator">:</span>   bf <span class="token number">80</span> <span class="token number">10</span> <span class="token number">60</span> <span class="token number">00</span>          mov    $<span class="token number">0x601080</span><span class="token punctuation">,</span><span class="token operator">%</span>edi
+  <span class="token number">4009</span>ce<span class="token operator">:</span>   e8 <span class="token number">9</span>d fd ff ff          callq  <span class="token number">400770</span> <span class="token operator">&lt;</span>_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt<span class="token operator">></span>
+  <span class="token number">4009</span>d3<span class="token operator">:</span>   be a0 <span class="token number">07</span> <span class="token number">40</span> <span class="token number">00</span>          mov    $<span class="token number">0x4007a0</span><span class="token punctuation">,</span><span class="token operator">%</span>esi
+  <span class="token number">4009</span>d8<span class="token operator">:</span>   <span class="token number">48</span> <span class="token number">89</span> c7                mov    <span class="token operator">%</span>rax<span class="token punctuation">,</span><span class="token operator">%</span>rdi
+  <span class="token number">4009</span>db<span class="token operator">:</span>   e8 b0 fd ff ff          callq  <span class="token number">400790</span> <span class="token operator">&lt;</span>_ZNSolsEPFRSoS_E@plt<span class="token operator">></span>
+    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可见，在<strong>Demo::Demo</strong>构造函数原本的函数体之前，依次插入了Base类的构造函数 <strong>_ZN4BaseC1Ev</strong>，和Member类的构造函数 <strong>_ZN6MemberC1Ev</strong>.</p>
+</div></div><div class="nextinfo"><p>上一篇：没有了</p><p>下一篇：<a href="/2021/03/21/C++/STL/%E7%AE%97%E6%B3%95/">算法</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/C++/ObjectModel/default-constructor/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

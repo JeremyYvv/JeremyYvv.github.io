@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>适配器模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">适配器模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:43:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/" target="_blank">结构型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>适配器模式：一种结构型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>类A中想要写一个很复杂的新方法，但是该方法已经在类B中实现过了，如果重复写一次，代码量会增加很多而且代码可读性会降低</li>
+</ul>
+<p><strong>举例：</strong><br>我国的市电电压是220V，但很多电器正常工作所需的电压是5V。如果为了电器使用而改变市电的电压，工程会变得很大，而且不同的电器所需的电压各不同，配合电器需求而更改市电电压显然是不现实的，所以电器都会配备一个适配器，将市电的220V转换成自己所需的电压</p>
+<ul>
+<li><strong>实现方式：</strong><br>实现方式有两种。<br>第一种，<strong>类适配器</strong>，使用多继承的方式<br>类A继承自类B，即可直接调用类B实现过的方法，无需重复写一次该方法<br>第二种，<strong>对象适配器</strong>，使用组合的方式<br>类A中增加一个类B的指针，在类A的新方法中，调用类B中已实现的方法</li>
+<li><strong>优点：</strong><br>无需重复实现与测试新方法，提高了效率</li>
+<li><strong>缺点：</strong><br>类适配器模式，由于多继承，可能会出现二义性<br>对象适配器模式，如果过多使用适配器模式，会导致代码阅读难度增大</li>
+</ul>
+<hr>
+<h1 id="类适配器模式的简单代码实现"><a href="#类适配器模式的简单代码实现" class="headerlink" title="类适配器模式的简单代码实现"></a>类适配器模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+&#x2F;&#x2F;市电类
+class Electricity
+&#123;
+public:
+    virtual void Charge()&#x2F;&#x2F;使用市电进行充电，输出验证电压的数值
+    &#123;
+        cout &lt;&lt; &quot;220V charging...&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;适配器类
+class Adapter5V
+&#123;
+public:
+    void Transfer()&#x2F;&#x2F;将电压转换为5V，输出验证
+    &#123;
+        cout &lt;&lt; &quot;5V charging...&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;类适配器，使用多继承的方式
+class ElecWithAdapter5V:public Electricity, Adapter5V
+&#123;
+public:
+    virtual void Charge()&#x2F;&#x2F;重写充电方法
+    &#123;
+        Transfer();&#x2F;&#x2F;直接调用适配器电压转换方法
+    &#125;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &quot;ClassAdapter.h&quot;
+using namespace std;
+int main()
+&#123;
+    Electricity* pEle &#x3D; new Electricity();&#x2F;&#x2F;如果不使用适配器
+    pEle-&gt;Charge();
+
+    Electricity* pEleWithAdapter &#x3D; new ElecWithAdapter5V();&#x2F;&#x2F;使用适配器
+    pEleWithAdapter-&gt;Charge();
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">220V charging...
+5V charging...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<hr>
+<h1 id="以下是对象适配器模式的简单代码实现"><a href="#以下是对象适配器模式的简单代码实现" class="headerlink" title="以下是对象适配器模式的简单代码实现"></a>以下是对象适配器模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+&#x2F;&#x2F;市电类
+class Electricity
+&#123;
+public:
+    virtual void Charge()&#x2F;&#x2F;使用市电进行充电，输出验证电压的数值
+    &#123;
+        cout &lt;&lt; &quot;220V charging...&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;适配器类
+class Adapter5V
+&#123;
+public:
+    void Transfer()&#x2F;&#x2F;将电压转换为5V，输出验证
+    &#123;
+        cout &lt;&lt; &quot;5V charging...&quot; &lt;&lt; endl;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;对象适配器
+class ElecWithAdapter5V:public Electricity
+&#123;
+public:
+    ElecWithAdapter5V():pAdapter(NULL)
+    &#123;
+        pAdapter &#x3D; new Adapter5V();
+    &#125;
+    virtual void Charge()&#x2F;&#x2F;重写充电方法
+    &#123;
+        pAdapter-&gt;Transfer();&#x2F;&#x2F;通过适配器指针，调用电压转换方法
+    &#125;
+
+private:
+    Adapter5V* pAdapter;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用-1"><a href="#主函数中的使用-1" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &quot;ObjectAdapter.h&quot;
+using namespace std;
+int main()
+&#123;
+    Electricity* pEle &#x3D; new Electricity();&#x2F;&#x2F;如果不使用适配器
+    pEle-&gt;Charge();
+
+    Electricity* pEleWithAdapter &#x3D; new ElecWithAdapter5V();&#x2F;&#x2F;使用适配器
+    pEleWithAdapter-&gt;Charge();
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果-1"><a href="#控制台输出结果-1" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">220V charging...
+5V charging...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">外观模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/">桥接模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/结构型/适配器模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

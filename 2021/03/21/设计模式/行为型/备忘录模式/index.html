@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>备忘录模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">备忘录模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:48:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" target="_blank">行为型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><p><strong>备忘录模式：一种行为型设计模式</strong></p>
+</li>
+<li><p><strong>应用场景：</strong><br>备忘录模式是对原型模式的<strong>进一步</strong>思考，因为有些时候我们并不需要一个完整对象的拷贝，只需要拷贝对象的一部分数据作为备份即可。<br>最典型的例子是虚拟机VWware，它的快照功能用以保存系统当前状态以便日后恢复。但如果是使用原型模式实现这个功能，每次快照时都需要生成一个完整的系统文件，是<strong>非常占用空间</strong>的。于是便进一步思考， 备份的时候<strong>只备份系统中必要的状态信息</strong>，日后通过这份不完整的备份信息，也可以使系统恢复到快照中的状态，就可以避免无用的备份信息占用空间。<br>每次的快照就是<strong>备忘记录</strong>，再指定一个<strong>管理者来管理所有的快照</strong>，这就是<strong>备忘录模式</strong>。</p>
+</li>
+<li><p><strong>举例：</strong><br>假设有一个游戏角色，它有很多属性，如姓名、血量、攻击力等，在存档备份的时候并不需要生成一个完整的角色对象作为拷贝，只需要存储血量、攻击力即可，因为姓名不会随着游戏进度更改。</p>
+</li>
+<li><p><strong>实现方式：</strong><br>为角色类创建一个对应的备份类，该类中只将必要的备份信息作为成员变量<br>在角色类中实现一个方法，该方法创建一个备份类对象作为返回值。<br>然后再创建一个管理者类，使用容器存放备份类对象。</p>
+</li>
+</ul>
+<h1 id="备忘录模式的简单代码实现"><a href="#备忘录模式的简单代码实现" class="headerlink" title="备忘录模式的简单代码实现"></a>备忘录模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+&#x2F;&#x2F;单条备忘的记录
+class Memento
+&#123;
+public:
+    Memento(uint32_t uiLevel, uint32_t uiHp, uint32_t uiAttack)
+        :m_uiLevel(uiLevel),m_uiHp(uiHp),m_uiAttack(uiAttack)
+    &#123;
+    &#125;
+public:
+    uint32_t m_uiLevel;
+    uint32_t m_uiHp;
+    uint32_t m_uiAttack;
+&#125;;
+
+&#x2F;&#x2F;需要保存的数据类
+class GameRole
+&#123;
+public:
+    GameRole(string strName)
+        :m_strName(strName)
+        ,m_uiLevel(1)
+        ,m_uiHp(100)
+        ,m_uiAttack(10)
+    &#123;
+    &#125;
+
+    void Show()
+    &#123;
+        cout &lt;&lt; &quot;Name:&quot; &lt;&lt; m_strName &lt;&lt; &quot; Level:&quot; &lt;&lt; m_uiLevel &lt;&lt; &quot; HP:&quot; &lt;&lt; m_uiHp &lt;&lt; &quot; ATK:&quot; &lt;&lt; m_uiAttack &lt;&lt; endl;
+    &#125;
+
+    Memento* Save()
+    &#123;
+        Memento* pSaveInfo &#x3D; new Memento(m_uiLevel, m_uiHp, m_uiAttack);
+        return pSaveInfo;
+    &#125;
+
+    void Load(Memento* pMem)
+    &#123;
+        m_uiLevel &#x3D; pMem-&gt;m_uiLevel;
+        m_uiHp &#x3D; pMem-&gt;m_uiHp;
+        m_uiAttack &#x3D; pMem-&gt;m_uiAttack;
+        cout &lt;&lt; &quot;Loaded&quot; &lt;&lt; endl;
+    &#125;
+
+private:
+    string m_strName;
+public:
+    uint32_t m_uiLevel;
+    uint32_t m_uiHp;
+    uint32_t m_uiAttack;
+&#125;;
+
+&#x2F;&#x2F;备忘管理者
+class Recorder
+&#123;
+public:
+    void Record(Memento* pMem)
+    &#123;
+        vecMemento.push_back(pMem);
+        cout &lt;&lt; &quot;Saved&quot; &lt;&lt; endl;
+    &#125;
+    Memento* Get(uint32_t uiIndex)
+    &#123;
+        return vecMemento[uiIndex];
+    &#125;
+
+private:
+    vector&lt;Memento*&gt; vecMemento;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+    Recorder oRecorder;
+    GameRole oPlayer(&quot;Mark&quot;);
+    oPlayer.Show();
+
+    oRecorder.Record(oPlayer.Save());
+
+    oPlayer.m_uiLevel &#x3D; 100;
+    oPlayer.m_uiHp &#x3D; 1000;
+    oPlayer.m_uiAttack &#x3D; 100;
+    oPlayer.Show();
+
+    oPlayer.Load(oRecorder.Get(0));
+    oPlayer.Show();
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">Name:Mark Level:1 HP:100 ATK:10
+Saved
+Name:Mark Level:100 HP:1000 ATK:100
+Loaded
+Name:Mark Level:1 HP:100 ATK:10<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/">策略模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">组合模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/行为型/备忘录模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

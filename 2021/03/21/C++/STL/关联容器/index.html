@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>关联容器</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">关联容器</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">STL</a></li><li class="timer">时间：2021-03-21 20:02:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E5%BA%93/" target="_blank">C++库</a><a href="/tags/%E8%AF%AD%E6%B3%95/" target="_blank">语法</a></div><div class="news_con"><h2 id="条款19-理解相等-equality-和等价-equivalence-的区别"><a href="#条款19-理解相等-equality-和等价-equivalence-的区别" class="headerlink" title="条款19.理解相等(equality)和等价(equivalence)的区别"></a>条款19.理解相等(equality)和等价(equivalence)的区别</h2><p>标准关联容器需要保持有序，所以每个容器<strong>必须有一个定义了怎么保持东西有序的比较函数</strong>(默认是<code>less</code>)。<br>以set举例，**<code>set&lt;string*&gt; ssp</code>** 是 <strong><code>set&lt;string*, less&lt;string*&gt;, allocator&lt;string*&gt; &gt; ssp </code><strong>的简写。<br>第三个参数分配器不是这章讨论的问题。我们看第二个参数</strong><code>less&lt;string*&gt;</code></strong>,这是一个<strong>仿函数</strong>（通过重载类的()运算符，模仿函数的调用），是<strong>用于判断set中元素是否等价的比较函数</strong>。<br><strong>等价不同于相等</strong>，是关联容器所引入的概念，即<strong>在排序顺序上，如果两个元素各自都不应该排在另一个的前面，则这两个元素是等价的</strong>。</p>
+<p>在set类中，将比较函数<strong>typedef为<code>key_compare</code></strong>.<br><strong>判断是否等价的判别式</strong>为**<code>!c.key_compare()(x, y) &amp;&amp; !c.key_compare()(y, x)</code><strong>.<br>当<code>keycompare()</code>为<code>less&lt;&gt;</code>时，<code>key_compare()(x,y)</code>只有在x不小于y时返回false，<code>key_compare()(y,x)</code>只有在y不小于x时返回false.<br>所以只有x和y相等时</strong>该判别式为true，视该两元素等价<strong>，</strong>关联容器中不会保存两个等价的元素**。</p>
+<p>ps.set的第二个参数使用仿函数，是因为<strong>set模版第二个参数是数据类型</strong>，用于模板具现化，<strong>不接收函数指针</strong>。</p>
+<hr>
+<h2 id="条款20-为包含指针的关联容器指定比较类型"><a href="#条款20-为包含指针的关联容器指定比较类型" class="headerlink" title="条款20.为包含指针的关联容器指定比较类型"></a>条款20.为包含指针的关联容器指定比较类型</h2><p>考虑下面这段代码，向一个set中放入指针对象</p>
+<pre class="line-numbers language-none"><code class="language-none">set&lt;string*&gt; ssp; 
+ssp.insert(new string(&quot;Anteater&quot;));
+ssp.insert(new string(&quot;Wombat&quot;));
+ssp.insert(new string(&quot;Lemur&quot;));
+ssp.insert(new string(&quot;Penguin&quot;));<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>默认的比较函数会作用于指针值，即地址，<strong>将指针按地址大小排序</strong>，而不是根据指针所指向的内容进行排序<br>如果希望容器中根据指针所指向的内容排序，则需要为其指定<strong>特殊的比较函数</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">struct StringPtrLess:public binary_function&lt;const string*, const string*, bool&gt;
+&#123;
+		bool operator()(const string *ps1, const string *ps2) const
+		&#123;
+			return *ps1 &lt; *ps2;
+		&#125;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>ps.继承自**<code>binary_function&lt;const string*, const string*, bool&gt;</code><strong>的原因详见条款40（</strong>该基类也是less&lt;&gt;的基类**）<br>创建关联容器时指定该比较函数</p>
+<pre class="line-numbers language-none"><code class="language-none">set&lt;string*, StringPtrLess&gt; ssp; <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>然后这个容器内的元素就是按照指针所指向的元素进行排序了</p>
+<p>ps.在输出时如果不想使用<code>**iter</code>，可以写一个输出函数<code>print</code>，使用<code>foreach()</code>，对每个元素调用<code>print</code></p>
+<pre class="line-numbers language-none"><code class="language-none">void print(const string *ps)
+&#123;
+	cout &lt;&lt; *ps &lt;&lt; endl;
+&#125;
+for_each(ssp.begin(), ssp.end(), print);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="条款21-总是让比较函数在等值情况下返回false"><a href="#条款21-总是让比较函数在等值情况下返回false" class="headerlink" title="条款21.总是让比较函数在等值情况下返回false"></a>条款21.总是让比较函数在等值情况下返回false</h2><p>条款19中，**<code>less&lt;&gt;</code><strong>相当于”&lt;”,而**<code>less_equal&lt;&gt;</code>**相当于”&lt;=”，<br>如果比较函数**<code>key_compare</code>**指定为**<code>less_equal&lt;&gt;</code>**，则在判别式**<code>!c.key_compare()(x, y) &amp;&amp; !c.key_compare()(y, x)</code>**中，<br>**<code>!c.key_compare()(x,y)</code>**在x==y时返回false,**<code>!c.key_compare()(y,x)</code><strong>在x==y时也返回false,则</strong>判断为x,y不等价，</strong><br><strong>set中就会插入值相等的x与y</strong>，这会<strong>破坏set的容器结构</strong>。</p>
+<hr>
+<h2 id="条款22-切勿直接修改set或multiset中的键"><a href="#条款22-切勿直接修改set或multiset中的键" class="headerlink" title="条款22.切勿直接修改set或multiset中的键"></a>条款22.切勿直接修改set或multiset中的键</h2><p>本条款中没有一并提及<code>map</code>和<code>multimap</code>，因为**<code>map&lt;K,V&gt;</code><strong>中元素类型为</strong><code>pair&lt;const K, V&gt;</code><strong>，对键的更改无法通过编译。<br>而</strong>set和multiset用于排序的键可由迭代器访问更改其值<strong>，这会</strong>破坏set中元素的有序性<strong>。<br>如果想要更改set中用于排序的键，应先通过迭代器将对象</strong>拷贝<strong>，再</strong>erase<strong>容器中的该元素，然后</strong>更改<strong>拷贝对象的键值，最将该拷贝</strong>insert**入容器。</p>
+<hr>
+<h2 id="条款23-考虑用排序的vector替代关联容器"><a href="#条款23-考虑用排序的vector替代关联容器" class="headerlink" title="条款23.考虑用排序的vector替代关联容器"></a>条款23.考虑用排序的vector替代关联容器</h2><p><strong>map中单个元素占用的内存比vector中多</strong>，因为map要<strong>额外维护</strong>指向两个子节点和指向父节点的<strong>三个指针</strong>。<br>所以<strong>元素很多时map要比vector多占用很多内存</strong>。<br>如果程序中使用的容器只在很短的阶段进行数据的插入和删除，而<strong>大多数的阶段是在进行查询和修改，使用vector性能会更好</strong>。<br>容器完成插入阶段后，进行排序。<strong>有序容器可以正确地使用查找算法</strong>——**<code>binary_search</code>、<code>lower_bound</code>、<code>equal_range</code><strong>等（参见条款34）。<br>而且</strong>一个有序vector的二分法查找(通过下标访问)比一个二叉树的二分法查找(通过指针迭代)提供了更好的性能**。</p>
+<hr>
+<h2 id="条款24-当效率至关重要时，请在map-operator-与map-insert之间谨慎做出选择"><a href="#条款24-当效率至关重要时，请在map-operator-与map-insert之间谨慎做出选择" class="headerlink" title="条款24.当效率至关重要时，请在map::operator[]与map::insert之间谨慎做出选择"></a>条款24.当效率至关重要时，请在map::operator[]与map::insert之间谨慎做出选择</h2><p><strong><code>map::operator[]</code><strong>被设计为</strong>简化”添加或更新”功能</strong>。<br><strong><code>map::operator[]</code><strong>会生成一个</strong>临时对象，只赋键值</strong>，insert入map中，无论是否已经有该键值了，insert都会返回**<code>pair&lt;iterator, bool&gt;</code><strong>对象，<br>这个返回值中的first变量会指向拥有该唯一键值的元素，然后</strong>将operator[]等号右侧的值赋给该变量**.<br>当<strong>map中已经有该键值时，operator[]性能不如insert</strong>，因为在构造时并没有给新的元素赋值，而是在<strong>构造之后</strong>赋的值。<br><strong>如果你要更新已存在的map元素，operator[]更好，但如果你要增加一个新元素，insert则有优势。</strong></p>
+<hr>
+<h2 id="条款25-熟悉非标准的散列容器"><a href="#条款25-熟悉非标准的散列容器" class="headerlink" title="条款25.熟悉非标准的散列容器"></a>条款25.熟悉非标准的散列容器</h2><p><strong>散列容器，即基于哈希表(Hash Table)实现的容器。</strong><br>本书作于2001年，当时C++标准委员会标准委员为了不过度地推迟标准的完成，将散列容器放在了标准的下一个版本中。<br>即C++11中，增加了散列容器**<code>unordered_set</code><strong>和</strong><code>unordered_map</code>**<br>散列容器中元素<strong>并不是有序的，所以并没有等价的概念</strong>，默认比较函数为<code>equal_to</code>。</p>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/C++/STL/%E8%BF%AD%E4%BB%A3%E5%99%A8/">迭代器</a></p><p>下一篇：<a href="/2021/03/21/C++/STL/vector%E5%92%8Cstring/">vector和string</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/C++/STL/关联容器/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>中介者模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">中介者模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:58:32</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" target="_blank">行为型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>中介者模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>一般来说，大型的软件在开发的过程中会使用<strong>模块化</strong>的开发方式。以我现在参与的项目举例，完整的软件包括交互、检索、算路、引导等等多个模块，这样有利于模块之间的<strong>独立</strong>开发，提高整体开发效率。<br>但是无论模块之间如何独立，总是会有需要模块间通信的时候。<br>例如用户通过界面交互，发起检索，这个过程需要交互与检索两模块间通信，将用户的意图由交互模块传递至检索模块。<br>这就会产生一个<strong>扩展性</strong>上的问题。如果模块有很多，且每个模块都向外提供了<strong>唯一</strong>的接收消息的接口，那么一个模块如果需要与其他所有模块通信，则需要记录其他所有模块的通信接口，同理<strong>每个模块都要记录所有与自己相关联的模块的通信接口</strong>。首先这就是一件很冗余并降低开发效率的事情。<br>其次，一旦有一天，某个模块修改了自己所提供的通信接口，或者<strong>增加</strong>了一个新模块，尤其是后者，在公司项目发展过程中是很正常的事情。那么<strong>所有模块关于其他模块通信接口的记录可能都需要修改或增加</strong>，这在拥有庞大模块数量的项目中，是很恐怖的事情。<br>此时可以考虑<strong>中介者模式</strong>。</li>
+<li><strong>举例：</strong><br>假设现在有3个模块<code>A B C</code>，<code>MessageAB</code>是<code>A B</code>间双向传递的一个消息，同理还有<code>MessageAC、MessageBC</code>。<br>引入一个中介者，它手中记录着各模块的<strong>通信接口</strong>与<strong>通信协议</strong>，协议即是一种<strong>约定</strong>，<code>A B</code>两模块间约定通过<code>MessageAB</code>来传递某种信息，即是这两模块间的一个<strong>协议</strong>。模块间通信都将消息发给中介者，中介者无需关注消息具体用来传递什么信息，只需要关注协议双方，通过正确的通信接口转发消息，确保消息的<strong>转发对象正确</strong>即可，而消息的解析处理在接收模块内部进行。<br>这样如果有通信接口修改或增加新模块，<strong>协议双方将新协议告知中介者记录即可</strong>。</li>
+<li><strong>实现方式：</strong><br>中介者对象中需要保存所有需转发消息的模块指针作为成员变量。<br>各模块类中也需要保存负责转发消息的中介者指针作为成员变量。<br>各模块类中需要实现发送与接收消息的方法。<strong>模块发送消息时调用中介者的转发接口，中介者确定接收目标后调用目标的接收接口</strong>。<br>下面代码中为了简化协议，我统一了各模块接收消息的接口名称。</li>
+</ul>
+<hr>
+<h1 id="中介者模式的简单代码实现"><a href="#中介者模式的简单代码实现" class="headerlink" title="中介者模式的简单代码实现"></a>中介者模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+&#x2F;*
+ * 约定三种协议
+ * MessageAB是AB模块间通信的消息
+ * MessageAC是AC模块间通信的消息
+ * MessageBC是BC模块间通信的消息
+ *&#x2F;
+enum Message
+&#123;
+    MessageAB,
+    MessageAC,
+    MessageBC,
+&#125;;
+
+class ModuleBase;
+&#x2F;&#x2F;中介者基类，提供转发接口
+class MediatorBase
+&#123;
+public:
+    virtual void Transmit(Message enMessage, ModuleBase* pFrom) &#x3D; 0;
+&#125;;
+
+&#x2F;&#x2F;模块基类，实现向外发消息的方法
+class ModuleBase
+&#123;
+public:
+    ModuleBase(MediatorBase* pMediator):m_pMediator(pMediator)&#123;&#125;
+    &#x2F;&#x2F;模块向外发消息的方法
+    void SendMessage(Message enMessage)
+    &#123;
+        m_pMediator-&gt;Transmit(enMessage, this);
+    &#125;
+
+    &#x2F;&#x2F;模块接收消息的接口，由模块自己实现
+    virtual void vNotify(Message enMessage) &#x3D; 0;
+
+protected:
+    &#x2F;&#x2F;每个模块内都有一份负责分发消息的中介者
+    MediatorBase* m_pMediator;
+&#125;;
+
+&#x2F;&#x2F;模块A
+class ModuleA : public ModuleBase
+&#123;
+public:
+    ModuleA(MediatorBase* pMediator):ModuleBase(pMediator)&#123;&#125;
+    virtual void vNotify(Message enMessage)
+    &#123;
+        switch(enMessage)
+        &#123;
+        case MessageAB:
+            cout &lt;&lt; &quot;ModuleA get MessageAB from ModuleB&quot; &lt;&lt; endl;
+            break;
+        case MessageAC:
+            cout &lt;&lt; &quot;ModuleA get MessageAC from MoudleC&quot; &lt;&lt; endl;
+            break;
+        default:
+            break;
+        &#125;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;模块B
+class ModuleB : public ModuleBase
+&#123;
+public:
+    ModuleB(MediatorBase* pMediator):ModuleBase(pMediator)&#123;&#125;
+    virtual void vNotify(Message enMessage)
+    &#123;
+        switch(enMessage)
+        &#123;
+        case MessageAB:
+            cout &lt;&lt; &quot;ModuleB get MessageAB from ModuleA&quot; &lt;&lt; endl;
+            break;
+        case MessageBC:
+            cout &lt;&lt; &quot;ModuleB get MessageBC form ModuleC&quot; &lt;&lt; endl;
+            break;
+        default:
+            break;
+        &#125;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;模块C
+class ModuleC : public ModuleBase
+&#123;
+public:
+    ModuleC(MediatorBase* pMediator):ModuleBase(pMediator)&#123;&#125;
+    virtual void vNotify(Message enMessage)
+    &#123;
+        switch(enMessage)
+        &#123;
+        case MessageAC:
+            cout &lt;&lt; &quot;ModuleC get MessageAC from ModuleA&quot; &lt;&lt; endl;
+            break;
+        case MessageBC:
+            cout &lt;&lt; &quot;ModuleC get MessageBC form ModuleB&quot; &lt;&lt; endl;
+            break;
+        default:
+            break;
+        &#125;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;中介者实现类
+class ConcreteMediator : public MediatorBase
+&#123;
+public:
+    ConcreteMediator():m_pModA(NULL),m_pModB(NULL),m_pModC(NULL)&#123;&#125;
+    void Transmit(Message enMessage, ModuleBase* pFrom)
+    &#123;
+        switch(enMessage)
+        &#123;
+        case MessageAB:
+            &#123;
+                ModuleA* pFromWhere &#x3D; dynamic_cast&lt;ModuleA*&gt;(pFrom);
+                &#x2F;&#x2F;能通过dynamic_cast转换为不为NULL的指针,可确认指针指向的子类类型
+                if(NULL !&#x3D; pFromWhere)
+                &#123;
+                    m_pModB-&gt;vNotify(enMessage);
+                &#125;
+                else
+                &#123;
+                    m_pModA-&gt;vNotify(enMessage);
+                &#125;
+            &#125;
+            break;
+        case MessageAC:
+            &#123;
+                ModuleA* pFromWhere &#x3D; dynamic_cast&lt;ModuleA*&gt;(pFrom);
+                if(NULL !&#x3D; pFromWhere)
+                &#123;
+                    m_pModC-&gt;vNotify(enMessage);
+                &#125;
+                else
+                &#123;
+                    m_pModA-&gt;vNotify(enMessage);
+                &#125;
+            &#125;
+        case MessageBC:
+            &#123;
+                ModuleB* pFromWhere &#x3D; dynamic_cast&lt;ModuleB*&gt;(pFrom);
+                if(NULL !&#x3D; pFromWhere)
+                &#123;
+                    m_pModC-&gt;vNotify(enMessage);
+                &#125;
+                else
+                &#123;
+                    m_pModB-&gt;vNotify(enMessage);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    void SetModuleA(ModuleBase* pModuleA)&#123;m_pModA &#x3D; pModuleA;&#125;
+    void SetModuleB(ModuleBase* pModuleB)&#123;m_pModB &#x3D; pModuleB;&#125;
+    void SetModuleC(ModuleBase* pModuleC)&#123;m_pModC &#x3D; pModuleC;&#125;
+
+private:
+    ModuleBase* m_pModA;
+    ModuleBase* m_pModB;
+    ModuleBase* m_pModC;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+    MediatorBase* pMediator &#x3D; new ConcreteMediator();
+
+    &#x2F;&#x2F;为所有模块指定中介者
+    ModuleBase* pModA &#x3D; new ModuleA(pMediator);
+    ModuleBase* pModB &#x3D; new ModuleB(pMediator);
+    ModuleBase* pModC &#x3D; new ModuleC(pMediator);
+
+    &#x2F;&#x2F;为中介者设定模块
+    ConcreteMediator* pConcreteMediator &#x3D; dynamic_cast&lt;ConcreteMediator*&gt;(pMediator);
+    pConcreteMediator-&gt;SetModuleA(pModA);
+    pConcreteMediator-&gt;SetModuleB(pModB);
+    pConcreteMediator-&gt;SetModuleC(pModC);
+
+    &#x2F;&#x2F;各模块间开始互发消息
+    pModA-&gt;SendMessage(MessageAC);
+    pModB-&gt;SendMessage(MessageBC);
+    pModC-&gt;SendMessage(MessageBC);
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">ModuleC get MessageAC from ModuleA
+ModuleC get MessageBC form ModuleB
+ModuleB get MessageBC form ModuleC<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/">状态模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/">职责链模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/行为型/中介者模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

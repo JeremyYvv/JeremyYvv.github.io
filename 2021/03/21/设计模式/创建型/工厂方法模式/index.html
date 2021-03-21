@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>工厂方法模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">工厂方法模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:15:04</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B/" target="_blank">创建型</a></div><div class="news_con"><h2 id="工厂方法模式：一种创建型设计模式"><a href="#工厂方法模式：一种创建型设计模式" class="headerlink" title="工厂方法模式：一种创建型设计模式"></a>工厂方法模式：一种创建型设计模式</h2><ul>
+<li><strong>应用场景：</strong><br>简单工厂模式之上，考虑到工厂如果新加产品，需要修改产品类型的枚举，与工厂生产产品时的逻辑判断细节，修改较大<br><strong>此时工厂方法模式登场：</strong><br>将生产模式改为<strong>一个工厂只专注生产一种产品</strong>。有新产品则创建新工厂，无需改动原本工厂。</li>
+<li><strong>实现方式：</strong><br>所有工厂继承自工厂抽象类，如果要制作某一产品，就使用该产品的对应工厂进行生产</li>
+<li><strong>优点：新增产品无需改动原本代码，新增产品类与工厂类即可，符合开闭原则</strong> </li>
+<li><strong>缺点：见抽象工厂模式</strong> </li>
+</ul>
+<hr>
+<h1 id="工厂方法模式的简单代码实现"><a href="#工厂方法模式的简单代码实现" class="headerlink" title="工厂方法模式的简单代码实现"></a>工厂方法模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+
+&#x2F;&#x2F;产品抽象类
+class Product
+&#123;
+public:
+	virtual void Show() &#x3D; 0;&#x2F;&#x2F;用于验证产品信息
+&#125;;
+
+class WoodDesk : public Product
+&#123;
+public:	
+	void Show()
+	&#123;
+		cout &lt;&lt; &quot;WoodDesk&quot; &lt;&lt; endl;
+	&#125;
+&#125;;
+
+class WoodChair : public Product
+&#123;
+public:
+	void Show()
+	&#123;
+		cout &lt;&lt; &quot;WoodChair&quot; &lt;&lt; endl;
+	&#125;
+&#125;;
+
+&#x2F;&#x2F;工厂抽象类
+class Factory
+&#123;
+public:
+	virtual Product* CreateProduct() &#x3D; 0;
+&#125;;
+
+class DeskFactory : public Factory
+&#123;
+public:
+	Product* CreateProduct()
+	&#123;
+		return new WoodDesk();
+	&#125;
+&#125;;
+
+class ChairFactory : public Factory
+&#123;
+public:
+	Product* CreateProduct()
+	&#123;
+		return new WoodChair();
+	&#125;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &quot;FactoryMethod.hpp&quot;
+int main()
+&#123;
+ 	Factory* FactoryDesk &#x3D; new DeskFactory();
+ 	Product* DeskWood &#x3D; FactoryDesk-&gt;CreateProduct();
+ 	DeskWood-&gt;Show();
+ 
+ 	Factory* FactoryChair &#x3D; new ChairFactory();
+ 	Product* ChairWood &#x3D; FactoryChair-&gt;CreateProduct();
+ 	ChairWood-&gt;Show();
+ 
+ 	if (NULL !&#x3D; FactoryDesk)
+ 	&#123;
+ 		delete FactoryDesk;
+ 		FactoryDesk &#x3D; NULL;
+ 	&#125;
+ 	if (NULL !&#x3D; FactoryChair)
+ 	&#123;
+ 		delete FactoryChair;
+ 		FactoryChair &#x3D; NULL;
+ 	&#125;
+	return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">WoodDesk
+WoodChair<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">抽象工厂模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">简单工厂模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/创建型/工厂方法模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

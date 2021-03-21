@@ -1,0 +1,231 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>建造者模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">建造者模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:39:26</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E5%88%9B%E5%BB%BA%E5%9E%8B/" target="_blank">创建型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>建造者模式：一种创建型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>某个对象由多部分组成，各部分内部构建过程一直变化，但是所有部分之间的组合关系不变<br><strong>举例：</strong><br>要画一个图形，分为画形状和填色两步，<strong>这两步固定不会变</strong>，但是具体画的形状与颜色会因为需求经常变化。<br>所以为了每次形状与颜色的需求改变时无需更改原本代码，只扩展即可完成，可以通过构建一个中间者，该中间者<strong>只能满足某次需求的要求</strong>构建出图形（类似于特定的画笔，只能画出来绿色圆或红色三角），需求变更时只需扩展一个新的中间者即可。该中间者就是建造者。</li>
+<li><strong>实现方式：</strong><br>首先，构建要被构造出来的图形类，并向外部提供能修改该图形类各组成部分的接口<br>然后，构建建造者的抽象类，所有派生的建造者根据自身作用重写接口，返回不同的图形对象<br>最后，构建一个导演类，导演类对象可根据设定的不同构建者，获得不同的图形对象</li>
+<li><strong>优点：</strong><br>将一个复杂对象的构建与它的表示分离，相同的构建过程可以创建不同的表示。<br>有新的表示可以遵循开放封闭原则，扩展新的类代码完成需求。</li>
+<li><strong>缺点：</strong><br>如果构建的过程发生变化，所有建造者都需要更改代码。</li>
+</ul>
+<hr>
+<h1 id="建造者模式的简单代码实现"><a href="#建造者模式的简单代码实现" class="headerlink" title="建造者模式的简单代码实现"></a>建造者模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+using namespace std;
+&#x2F;&#x2F;要构建的对象
+class Graphic
+&#123;
+public:
+    Graphic()&#123;&#125;
+    &#x2F;&#x2F;常变属性的设置接口
+    void SetShape(string strShape)
+    &#123;
+        m_strShape &#x3D; strShape;
+    &#125;
+    void SetColor(string strColor)
+    &#123;
+        m_strColor &#x3D; strColor;
+    &#125;
+    &#x2F;&#x2F;图形的验证方法
+    void Show()
+    &#123;
+        cout &lt;&lt; m_strColor &lt;&lt; m_strShape &lt;&lt; endl;
+    &#125;
+
+private:
+    string m_strShape;
+    string m_strColor;
+&#125;;
+
+&#x2F;&#x2F;建造者抽象类
+class Builder
+&#123;
+public:
+    Builder():m_pGraphic(NULL)&#123;&#125;
+    &#x2F;&#x2F;创建空白图形
+    void CreateGraphic()
+    &#123;
+        if(NULL &#x3D;&#x3D; m_pGraphic)
+        &#123;
+            m_pGraphic &#x3D; new Graphic();
+        &#125;
+    &#125;
+    &#x2F;&#x2F;获取描绘完成的图形
+    Graphic* GetGraphic()
+    &#123;
+        return m_pGraphic;
+    &#125;
+    &#x2F;&#x2F;留给派生类实现的描绘过程
+    virtual void DrawShape() &#x3D; 0;
+    virtual void DrawColor() &#x3D; 0;
+
+protected:
+    Graphic* m_pGraphic;
+&#125;;
+
+class GreenCircleBuilder:public Builder
+&#123;
+public:
+    &#x2F;&#x2F;根据类的功能实现描绘过程
+    void DrawShape()
+    &#123;
+        if(NULL !&#x3D; m_pGraphic)
+        &#123;
+            m_pGraphic-&gt;SetShape(&quot;Circle&quot;);
+        &#125;
+    &#125;
+    void DrawColor()
+    &#123;
+        if(NULL !&#x3D; m_pGraphic)
+        &#123;
+            m_pGraphic-&gt;SetColor(&quot;Green&quot;);
+        &#125;
+    &#125;
+&#125;;
+
+class RedRectangleBuilder:public Builder
+&#123;
+public:
+    &#x2F;&#x2F;根据类的功能实现描绘过程
+    void DrawShape()
+    &#123;
+        if(NULL !&#x3D; m_pGraphic)
+        &#123;
+            m_pGraphic-&gt;SetShape(&quot;Rectangle&quot;);
+        &#125;
+    &#125;
+    void DrawColor()
+    &#123;
+        if(NULL !&#x3D; m_pGraphic)
+        &#123;
+            m_pGraphic-&gt;SetColor(&quot;Red&quot;);
+        &#125;
+    &#125;
+&#125;;
+
+class BlueTriangleBuilder:public Builder
+&#123;
+public:
+    &#x2F;&#x2F;根据类的功能实现描绘过程
+    void DrawShape()
+    &#123;
+        if(NULL !&#x3D; m_pGraphic)
+        &#123;
+            m_pGraphic-&gt;SetShape(&quot;Triangle&quot;);
+        &#125;
+    &#125;
+    void DrawColor()
+    &#123;
+        if(NULL !&#x3D; m_pGraphic)
+        &#123;
+            m_pGraphic-&gt;SetColor(&quot;Blue&quot;);
+        &#125;
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;导演类
+class Director
+&#123;
+public:
+    Director():m_pBuilder(NULL)&#123;&#125;
+    &#x2F;&#x2F;根据需求设置对应的建造者
+    void SetBuilder(Builder&amp; pBuilder)
+    &#123;
+        m_pBuilder &#x3D; &amp;pBuilder;
+    &#125;
+    &#x2F;&#x2F;通过建造者获得描绘完成的图形
+    Graphic* DrawGraphic()
+    &#123;
+        if(NULL &#x3D;&#x3D; m_pBuilder)
+        &#123;
+            return NULL;
+        &#125;
+        &#x2F;&#x2F;建造过程为不变的因素
+        m_pBuilder-&gt;CreateGraphic();
+        m_pBuilder-&gt;DrawShape();
+        m_pBuilder-&gt;DrawColor();
+        return m_pBuilder-&gt;GetGraphic();
+    &#125;
+
+private:
+    Builder* m_pBuilder;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &quot;builder.hpp&quot;
+using namespace std;
+
+int main()
+&#123;
+    Director MyDirector;
+    &#x2F;&#x2F;根据导演的不同需求，分别设置不同的建造者，获得满足需求的图形
+    GreenCircleBuilder BuilderGC;&#x2F;&#x2F;绿色圆形的建造者
+    MyDirector.SetBuilder(BuilderGC);
+    Graphic* pGraphicGC &#x3D; MyDirector.DrawGraphic();&#x2F;&#x2F;导演使用建造者画图
+    pGraphicGC-&gt;Show();
+
+    RedRectangleBuilder BuilderRB;&#x2F;&#x2F;红色矩形的建造者
+    MyDirector.SetBuilder(BuilderRB);
+    Graphic* pGraphicRB &#x3D; MyDirector.DrawGraphic();&#x2F;&#x2F;导演使用建造者画图
+    pGraphicRB-&gt;Show();
+
+    BlueTriangleBuilder BuilderBT;&#x2F;&#x2F;蓝色三角的建造者
+    MyDirector.SetBuilder(BuilderBT);
+    Graphic* pGraphicBT &#x3D; MyDirector.DrawGraphic();&#x2F;&#x2F;导演使用建造者画图
+    pGraphicBT-&gt;Show();
+
+    &#x2F;&#x2F;资源回收
+    if(NULL &#x3D;&#x3D; pGraphicGC)
+    &#123;
+        delete pGraphicGC;
+        pGraphicGC &#x3D; NULL;
+    &#125;
+    if(NULL &#x3D;&#x3D; pGraphicRB)
+    &#123;
+        delete pGraphicRB;
+        pGraphicRB &#x3D; NULL;
+    &#125;
+    if(NULL &#x3D;&#x3D; pGraphicBT)
+    &#123;
+        delete pGraphicBT;
+        pGraphicBT &#x3D; NULL;
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">GreenCircle
+RedRectangle
+BlueTriangle<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">原型模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/创建型/建造者模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

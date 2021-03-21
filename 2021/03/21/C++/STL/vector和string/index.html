@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>vector和string</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">vector和string</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">STL</a></li><li class="timer">时间：2021-03-21 20:01:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E5%BA%93/" target="_blank">C++库</a><a href="/tags/%E8%AF%AD%E6%B3%95/" target="_blank">语法</a></div><div class="news_con"><h2 id="条款13-vector和string优先于动态分配的数组"><a href="#条款13-vector和string优先于动态分配的数组" class="headerlink" title="条款13.vector和string优先于动态分配的数组"></a>条款13.vector和string优先于动态分配的数组</h2><p>使用new来动态分配内存后有三项需要承担的责任，<strong>在使用完资源后通过delete释放内存，并与new的形式配对（delete or delete[]），以及确保只delete了一次</strong>。<br>或是出于开发效率或是出于其他原因，vector和string可以使你不必承担这些责任，<strong>vector和string会自己管理内存（RAII方法，详见Effective C++条款13）</strong>，当他们被析构时，会自动析构容器中元素的内存。<br>而且<strong>vector和string是功能完全的STL序列容器</strong>，有很多的成员方法、迭代器及<algorithm>中的算法都可以使用。</p>
+<hr>
+<h2 id="条款14-使用reserve来避免不必要的重新分配"><a href="#条款14-使用reserve来避免不必要的重新分配" class="headerlink" title="条款14.使用reserve来避免不必要的重新分配"></a>条款14.使用reserve来避免不必要的重新分配</h2><p>说reserve之前需要先了解vector和string作为<strong>可变长度数组</strong>，是如何实现长度可变的。在这个问题上这两个容器是相同的，以下就以vector来说明。<br>在vector被创建出来时，它占有一定大小的内存，这个大小由STL的实现方式决定。<br><strong>每当需要更多空间时，它会重新申请一片原来两倍大的内存</strong>（在大多数实现中是这样），<strong>然后将容器内的所有元素从旧内存拷贝到新内存中，然后析构掉旧内存中的对象并释放旧内存。</strong><br>可以想象，每次改变长度这一系列操作，尤其是长度已经很长时，是很耗时的，而且这一操作可能发生在任何一次添加元素时。<br>所以如果你想创建一个vector<int>，并向其中放入1000个随机数，你可能会通过循环，将数一一push_back放入其中。那么在这个过程中，这个vector可能进行了7-8或者更多次内存申请及拷贝（这要取决于STL实现方式了），最先放入其中的数也被无效拷贝了7-8次，那么现在可以说说reserve了。</p>
+<pre class="line-numbers language-none"><code class="language-none">void reserve (size_type n);
+    用于请求改变容器的现有长度。
+    如果实参n大于现有容器capacity()，容器会重新申请长度为n个元素长度的内存进行拷贝，否则不会发生任何事。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>所以在已知要放入1000个元素时，<strong>可以在放入元素之前，先通过reserve()将容器的内存长度改变为1000个元素的内存长度，再向其中放入元素，这样在push_back的过程中不会发生长度改变，也就不会执行上述无效的内存拷贝</strong>。<br>当然，可以在一开始多申请一些预留空间，至于多余的容量如何去除，详见条款17.</p>
+<hr>
+<h2 id="条款15-注意string实现的多样性"><a href="#条款15-注意string实现的多样性" class="headerlink" title="条款15.注意string实现的多样性"></a>条款15.注意string实现的多样性</h2><p><strong>string有很多种常见的实现方式</strong>，但几乎每个实现版本都包含以下信息：<br>字符串的<strong>大小</strong>(size)、<strong>容量</strong>(capacity)和<strong>值</strong>(即构成该字符串的字符)，可能还会有<strong>分配器</strong>的拷贝(allocator)和对值的<strong>引用计数</strong>。<br>这些成员的存储结构决定了string的大小，了解string的实现多样性，然后在应当忽略细节时忽略，应该考虑时考虑。</p>
+<hr>
+<h2 id="条款16-了解如何把vector和string数据传给旧的API"><a href="#条款16-了解如何把vector和string数据传给旧的API" class="headerlink" title="条款16.了解如何把vector和string数据传给旧的API"></a>条款16.了解如何把vector和string数据传给旧的API</h2><p>vector中的元素是<strong>存储在连续的内存中</strong>，就像数组一样，所以可以通过**<code>&amp;v[0]</code><strong>获取指向第一个元素的指针。<br>而string中的数据</strong>不一定存储在连续的内存中<strong>，要通过成员函数</strong><code>c_str()</code>**获取指向字符串值的指针.</p>
+<hr>
+<h2 id="条款17-使用“swap技巧”除去多余的容量"><a href="#条款17-使用“swap技巧”除去多余的容量" class="headerlink" title="条款17.使用“swap技巧”除去多余的容量"></a>条款17.使用“swap技巧”除去多余的容量</h2><p>这条是接着条款14说。<br><strong>vector的构造函数有一个特点，会以被拷贝的vector.size()申请自己新的内存大小。</strong><br>所以可以通过**<code>vector&lt;type&gt;(OldVec)</code><strong>将旧vector中的元素拷贝到新的容器中，且</strong>新的容器容量为元素的个数<strong>。<br>然后通过</strong><code>vector::swap()</code>**将新旧vector数据交换，即完成了将旧vector中多余容量的除去。</p>
+<pre class="line-numbers language-none"><code class="language-none">vector&lt;type&gt;(OldVec).swap(OldVec);
+    用于除去多余容量的swa技巧<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>同样的技巧对string适用。</strong><br>题外话，swap技巧也可以用来清除容器并释放空间</p>
+<pre class="line-numbers language-none"><code class="language-none">vector&lt;type&gt;().swap(OldVec);
+    用于清除容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>我看了下，和vector::clear()的区别是clear()不将容量清空。</p>
+<hr>
+<h2 id="条款18-避免使用vector-lt-bool-gt"><a href="#条款18-避免使用vector-lt-bool-gt" class="headerlink" title="条款18.避免使用vector&lt;bool&gt;"></a>条款18.避免使用vector&lt;bool&gt;</h2><p>现在的vector&lt;bool&gt;是一个历史实验的失败产物。<br>bool类型的值无非真或假(1或0)，所以1个bit位就可以保存，而不需要1整个字节(8bit),<br>所以C++标准委员会在vector&lt;bool&gt;的实现中尝试了<strong>代理对象(详见More Effective C++ 条款30)<strong>，<br>即将8个bool值保存在1个字节中，</strong><code>vector&lt;boo&gt;::operator[]</code><strong>返回的是一个</strong>代理对象的引用</strong>，这个代理对象表现的像一个正常的bool对象，但这个代理对象的类型是**<code>vector&lt;bool&gt;::reference</code><strong>。所以你</strong>无法将一个bool类型的指针指向vector&lt;bool&gt;中第一个元素的地址，这将导致很多模板不能正常使用**。<br><strong>一个替代的方案是deque&lt;bool&gt;<strong>，但deque在内存中不是连续的，无法完成条款16中所述任务。<br><strong>另一个替代的方案是std::bitset</strong>,它与vector&lt;bool&gt;存储bool值的方式相同，</strong>区别在于，它不是个STL容器，不会引起模版的误用</strong>。</p>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/C++/STL/%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8/">关联容器</a></p><p>下一篇：<a href="/2021/03/21/C++/STL/%E5%AE%B9%E5%99%A8/">容器</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/C++/STL/vector和string/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

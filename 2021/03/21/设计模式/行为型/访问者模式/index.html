@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>访问者模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">访问者模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:51:32</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" target="_blank">行为型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>访问者模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>一个对象由很多部分组成，对这个对象的操作会对各部分依次操作。而在不同情景下，对各部分操作也不同。<br>为了新增操作时无需了解对象内部结构，且具备可扩展性，将操作抽离为访问者类，类中实现对各部分具体的操作方法。<br>然后在对象中提供一个接口用以访问者访问，在该接口总，对象会调用访问者中对应各部分的操作方法，操作对象中的各部分。</li>
+<li><strong>举例：</strong><br>一台电脑中有很多组件，CPU、GPU、硬盘。维修人员对电脑进行整体维修时，需要对各部件依次进行维修，而且每部件具体的维修方式不同。不同的维修人员对相同的部件维修方式可能也不同。<br>维修人员就是访问者。访问者类中实现了针对不同部件的维修方式。<br>电脑就是被访问者。被访问者提供访问接口，使用访问者类中实现的不同部件维修方式，对内部部件进行访问。</li>
+</ul>
+<hr>
+<h1 id="访问者模式的简单代码实现"><a href="#访问者模式的简单代码实现" class="headerlink" title="访问者模式的简单代码实现"></a>访问者模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;list&gt;
+using namespace std;
+
+class Visitor;
+
+&#x2F;&#x2F;组成Computer的各组件基类
+class Element
+&#123;
+public:
+    Element(string strName):m_strName(strName)&#123;&#125;
+    string GetName()
+    &#123;
+        return m_strName;
+    &#125;
+
+    &#x2F;&#x2F;组件接受访问者访问的接口
+    virtual void AcceptVisitor(Visitor* pVisitor) &#x3D; 0;
+
+private:
+    &#x2F;&#x2F;组件的标识名称
+    string m_strName;
+&#125;;
+
+&#x2F;&#x2F;访问者基类，针对不同组件，提供不同的访问接口
+class Visitor
+&#123;
+public:
+    virtual void VisitCPU(Element* pEle) &#x3D; 0;
+    virtual void VisitGPU(Element* pEle) &#x3D; 0;
+    virtual void VisitDISK(Element* pEle) &#x3D; 0;
+&#125;;
+
+&#x2F;&#x2F;Computer类，由各组件组成，访问者访问Computer时将依次访问各组件
+class Computer
+&#123;
+public:
+    ~Computer()
+    &#123;
+        for(Element* pElement: m_listEle)
+        &#123;
+            delete pElement;
+        &#125;
+    &#125;
+
+    void AddElement(Element* pEle)
+    &#123;
+        m_listEle.push_back(pEle);
+    &#125;
+
+    void DelElement(Element* pEle)
+    &#123;
+        m_listEle.remove(pEle);
+    &#125;
+
+    &#x2F;&#x2F;访问者访问Computer时将依次访问各组件
+    void AcceptVisitor(Visitor* pVisitor)
+    &#123;
+        for(Element* pElement: m_listEle)
+        &#123;
+            pElement-&gt;AcceptVisitor(pVisitor);
+        &#125;
+    &#125;
+
+private:
+    list&lt;Element*&gt; m_listEle;
+&#125;;
+
+&#x2F;&#x2F;访问者实现类，实现各自的访问方法
+class VisitorA : public Visitor
+&#123;
+public:
+    void VisitCPU(Element* pEle)
+    &#123;
+        printf(&quot;Visitor A record CPU&#39;s name:%s\n&quot;, pEle-&gt;GetName().c_str());
+    &#125;
+
+    void VisitGPU(Element* pEle)
+    &#123;
+        printf(&quot;Visitor A do nothing to GPU:%s\n&quot;, pEle-&gt;GetName().c_str());
+    &#125;
+
+    void VisitDISK(Element* pEle)
+    &#123;
+        printf(&quot;Visitor A change DISK:%s\n&quot;, pEle-&gt;GetName().c_str());
+    &#125;
+&#125;;
+
+class VisitorB : public Visitor
+&#123;
+public:
+    void VisitCPU(Element* pEle)
+    &#123;
+        printf(&quot;Visitor B do nothing to CPU:%s\n&quot;, pEle-&gt;GetName().c_str());
+    &#125;
+
+    void VisitGPU(Element* pEle)
+    &#123;
+        printf(&quot;Visitor B record GPU&#39;s name:%s\n&quot;, pEle-&gt;GetName().c_str());
+    &#125;
+
+    void VisitDISK(Element* pEle)
+    &#123;
+        printf(&quot;Visitor B do nothing to DISK:%s\n&quot;, pEle-&gt;GetName().c_str());
+    &#125;
+&#125;;
+
+&#x2F;&#x2F;组件的实现类，调用访问者相应的访问方法
+class CPU:public Element
+&#123;
+public:
+    CPU(string strName):Element(strName)&#123;&#125;
+    void AcceptVisitor(Visitor* pVisitor)
+    &#123;
+        pVisitor-&gt;VisitCPU(this);
+    &#125;
+&#125;;
+
+class GPU:public Element
+&#123;
+public:
+    GPU(string strName):Element(strName)&#123;&#125;
+    void AcceptVisitor(Visitor* pVisitor)
+    &#123;
+        pVisitor-&gt;VisitGPU(this);
+    &#125;
+&#125;;
+
+class Disk:public Element
+&#123;
+public:
+    Disk(string strName):Element(strName)&#123;&#125;
+    void AcceptVisitor(Visitor* pVisitor)
+    &#123;
+        pVisitor-&gt;VisitDISK(this);
+    &#125;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+    Computer oComputer;
+    oComputer.AddElement(new CPU(&quot;i9-10980XE&quot;));
+    oComputer.AddElement(new GPU(&quot;Titan RTX&quot;));
+    oComputer.AddElement(new Disk(&quot;HOF PRO M.2&quot;));
+
+    VisitorA oVisitorA;
+    VisitorB oVisitorB;
+
+    oComputer.AcceptVisitor(&amp;oVisitorA);
+    oComputer.AcceptVisitor(&amp;oVisitorB);
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">Visitor A record CPU&#39;s name:i9-10980XE
+Visitor A do nothing to GPU:Titan RTX
+Visitor A change DISK:HOF PRO M.2
+Visitor B do nothing to CPU:i9-10980XE
+Visitor B record GPU&#39;s name:Titan RTX
+Visitor B do nothing to DISK:HOF PRO M.2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">观察者模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/">迭代器模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/行为型/访问者模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

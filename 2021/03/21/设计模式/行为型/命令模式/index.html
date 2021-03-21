@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>命令模式</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">命令模式</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">设计模式</a></li><li class="timer">时间：2021-03-21 19:55:32</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C/" target="_blank">C++</a><a href="/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/" target="_blank">行为型</a></div><div class="news_con"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
+<li><strong>命令模式：一种行为型设计模式</strong></li>
+<li><strong>应用场景：</strong><br>在GOF的《设计模式:可复用面向对象软件的基础》一书中对命令模式是这样说的：将一个请求封装为一个对象，从而使你可以用不同的请求对客户进行参数化，将请求排队或记录请求日志，以及支持可撤销的操作。<br>这段话的意思我在刚刚了解这个设计模式时没有很懂，可以在看完全文后再回来看一遍。<br>这个设计模式的应用很多。<br>即将要开始被天天谈论的12306订票网站，每个用户发起订票请求后，该请求不会被立即执行，而是会进入消息队列。同一用户再次发起请求时如果前一请求尚在队列中排队，新的请求会被忽略，避免了恶意刷票，优化了服务器的性能。而何时将队列中的消息取出，统一处理，将由系统其他设置决定。这个队列就是请求的收集者。</li>
+</ul>
+<p><strong>举例：</strong><br>我还是以公司里的审批制度举例。<br>在部门每月末收集报销单时，一般会指定一个收集者，这个人负责收集部门内所有的报销单，收集完成后统一交给审批者进行审批。<br>而且，不同种类的报销单可能由不同的人审批，都由这个收集者分配。<br>这个收集者就是上述的队列，他可以对报销单的审批顺序进行排列，也可以对数目和人员进行记录，以及支持撤销报销的操作。</p>
+<ul>
+<li><strong>实现方式：</strong><br>需要创建三个类，请求类，审批人类和收集者类<br>请求类中要通过成员变量指定审批人，审批人要提供审批接口，收集者类中要有容器用来容纳请求，并提供统一处理的方法。</li>
+</ul>
+<hr>
+<h1 id="命令模式的简单代码实现"><a href="#命令模式的简单代码实现" class="headerlink" title="命令模式的简单代码实现"></a>命令模式的简单代码实现</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+&#x2F;&#x2F;请求抽象类
+class Request
+&#123;
+public:
+	Request(int iNo):m_iNo(iNo)&#123;&#125;
+	virtual void Execute() &#x3D; 0;
+	int GetID()&#123;return m_iNo;&#125;
+
+protected:
+	int m_iNo;&#x2F;&#x2F;请求ID
+&#125;;
+
+&#x2F;&#x2F;审核人
+class  Approver
+&#123;
+public:
+	Approver(string strName):m_strName(strName)&#123;&#125;
+	&#x2F;&#x2F;审核请求，打印信息
+	virtual void DealRequest(Request* pRequest)
+	&#123;
+		cout &lt;&lt; &quot;Request &quot; &lt;&lt; pRequest-&gt;GetID() &lt;&lt; &quot; Approved by &quot; &lt;&lt; m_strName &lt;&lt; endl;
+	&#125;
+private:
+	string m_strName;&#x2F;&#x2F;审核人的名字
+&#125;;
+
+&#x2F;&#x2F;假期请求
+class HolidayRequest : public Request
+&#123;
+public:
+	&#x2F;&#x2F;构造时指定请求ID和审核人
+	HolidayRequest(int iNO, Approver* pApprover):Request(iNO), m_pApprover(pApprover)&#123;&#125;
+	&#x2F;&#x2F;请求被处理
+	virtual void Execute()
+	&#123;
+		m_pApprover-&gt;DealRequest(this);
+	&#125;
+private:
+	Approver* m_pApprover;
+&#125;;
+
+&#x2F;&#x2F;汇总请求者
+class Invoker
+&#123;
+public:
+	&#x2F;&#x2F;收集请求
+	void AddReq(Request* pReq)
+	&#123;
+		m_vecReq.push_back(pReq);
+	&#125;
+	&#x2F;&#x2F;统一申请
+	void InvokeAllReq()
+	&#123;
+		for_each(m_vecReq.begin(), m_vecReq.end(),Invoke);
+	&#125;
+private:
+	static void Invoke(Request* pReq)
+	&#123;
+		if(pReq)
+		&#123;
+			pReq-&gt;Execute();
+		&#125;
+	&#125;
+	vector&lt;Request*&gt; m_vecReq;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="主函数中的使用"><a href="#主函数中的使用" class="headerlink" title="主函数中的使用"></a>主函数中的使用</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+	&#x2F;&#x2F;假设有两个经理负责审批，分别叫Mark和Nancy
+	Approver* pManagerMark &#x3D; new Approver(&quot;Mark&quot;);
+	Approver* pManagerNancy &#x3D; new Approver(&quot;Nancy&quot;);
+
+	&#x2F;&#x2F;一个请求收集者
+	Invoker* pInvoker &#x3D; new Invoker();
+
+	pInvoker-&gt;AddReq(new HolidayRequest(1, pManagerMark));
+	pInvoker-&gt;AddReq(new HolidayRequest(2, pManagerMark));
+	pInvoker-&gt;AddReq(new HolidayRequest(3, pManagerNancy));
+	pInvoker-&gt;AddReq(new HolidayRequest(4, pManagerNancy));
+
+	&#x2F;&#x2F;收集所有请求后统一送去审批
+	pInvoker-&gt;InvokeAllReq();
+
+	return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><pre class="line-numbers language-none"><code class="language-none">Request 1  Approved by Mark
+Request 2  Approved by Mark
+Request 3  Approved by Nancy
+Request 4  Approved by Nancy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>嗯 ~ 现在可以回去再看一遍文章开头从GOF书中摘抄的描述了 ~</strong></p>
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/">模板方法模式</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/">解释器模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/设计模式/行为型/命令模式/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>

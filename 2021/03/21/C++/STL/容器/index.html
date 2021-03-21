@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>容器</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1"><meta name="description" content="个人"><meta name="keywords"><meta name="author" content="JeremyYv"><link rel="short icon" href="/images/favicon.png"><link rel="icon" href="/images/favicon.png"><!--[if lt IE 9]>
+<script src="/js/modernizr.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/iconfont.css">
+
+<link rel="stylesheet" href="/css/index.css?v=202103212058.css">
+<link rel="stylesheet" href="/css/info.css?v=202103212058.css">
+<link href="https://cdn.bootcss.com/highlight.js/9.15.9/styles/github.min.css" rel="stylesheet"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="JeremyYv's Blog" type="application/atom+xml">
+</head><body><header id="header" class="header-navigation"><nav><div class="logo"><a href="https://JeremyYvv.github.io">JeremyYv's Blog</a></div><h2 id="mnavh"><span class="navicon"></span></h2><ul id="starlist"><li><a href="/">首页</a></li><li><a href="/time.html">时间轴</a></li></ul><div class="searchbox"><div id="search_bar" class="search_bar"><input id="keyboard" placeholder="想搜点什么呢.." type="text" name="keyboard" autocomplete="off" class="input"><p class="search_ico"><span></span></p></div></div></nav></header><article><main><div class="con_warp"><div class="infosbox"><div class="newsview"><h3 class="news_title">容器</h3><div class="bloginfo"><ul><li class="author">作者：<a href="/">JeremyYv</a></li><li class="lmname"><a href="/">STL</a></li><li class="timer">时间：2021-03-21 20:00:00</li><li class="view"><span id="busuanzi_value_page_pv">99</span><span>次访问</span></li></ul></div><div class="tags"><a href="/tags/C-%E5%BA%93/" target="_blank">C++库</a><a href="/tags/%E8%AF%AD%E6%B3%95/" target="_blank">语法</a></div><div class="news_con"><h2 id="条款1-慎重选择容器类型"><a href="#条款1-慎重选择容器类型" class="headerlink" title="条款1. 慎重选择容器类型"></a>条款1. 慎重选择容器类型</h2><p><strong>标准STL序列容器</strong>：vector、string、deque和list<br><strong>标准STL关联容器</strong>：set、map、multiset和multimap<br><strong>非标准的关联容器</strong>：hash_set、hash_multiset、hash_map和hash_multimap<br><strong>标准的非STL容器</strong>：数组、bitset、valarray、stack、queue和priority_queue</p>
+<p>另一种分类：<br><strong>连续内存容器</strong>(元素存放在一块或多块内存中，每块内存中存有多个元素)：vector、string和deque<br><strong>基于节点的容器</strong>(每块内存存放一个元素)：list和所有标准的关联容器</p>
+<hr>
+<h2 id="条款2-不要试图编写独立于容器类型的代码"><a href="#条款2-不要试图编写独立于容器类型的代码" class="headerlink" title="条款2. 不要试图编写独立于容器类型的代码"></a>条款2. 不要试图编写独立于容器类型的代码</h2><p>序列容器与关联容器数据结构不同 ，<strong>所提供的操作也不同</strong>。<br>序列容器支持<code>push_front</code>或<code>push_back</code>，但关联容器不支持。<br>关联容器提供对数时间复杂度的<code>lower_bound</code>、<code>upper_bound</code>和<code>equal_range</code>成员函数，但序列容器却没有。<br>写既要和序列容器又要和关联容器一起工作的代码并没有什么意义。<strong>很多成员函数(包括运算符重载)只存在于其中一类容器中</strong>。</p>
+<hr>
+<h2 id="条款3-确保容器中的对象拷贝正确且高效"><a href="#条款3-确保容器中的对象拷贝正确且高效" class="headerlink" title="条款3. 确保容器中的对象拷贝正确且高效"></a>条款3. 确保容器中的对象拷贝正确且高效</h2><p>当你向容器中添加一个对象（比如通过<code>insert</code>或<code>push_back</code>等），进入容器的是你指定的对象的<strong>拷贝</strong>，<br>如果你从vector、string或deque中插入或删除了什么或使用了任何排序算法，现有的<strong>容器元素会移动（拷贝）</strong>。<br>因此把一个派生类对象插入基类对象的容器会导致派生部分被删除，而且容器中如果放的对象拷贝过程很昂贵，<strong>元素的移动会成为性能瓶颈</strong>，<br>所以使拷贝更高效、正确而且对分割问题免疫的简单的方式是<strong>建立指针的容器而不是对象的容器</strong>。但是指针容器也有自己的问题，详见条款7和条款33。</p>
+<hr>
+<h2 id="条款4-调用empty-而不是检查size-是否为0"><a href="#条款4-调用empty-而不是检查size-是否为0" class="headerlink" title="条款4. 调用empty()而不是检查size()是否为0"></a>条款4. 调用empty()而不是检查size()是否为0</h2><p><strong>empty的典型实现是一个返回<code>size()==0</code>结果的内联函数</strong>。<br>对于所有的标准容器，<strong>empty是一个常数时间的操作</strong>，但对于一些list实现，<strong>size花费线性时间</strong>。<br><strong>list中有一个变量用于记录元素个数</strong>。特殊的是，<code>list::splice()</code>用于拼接两个list，为了达到splice的高效率，<strong>在splice时可能不更新size</strong>，而在<strong>调用size时遍历list计算size</strong>，<br>这就会导致size()花费线性时间而不是常数时间。<br>但书中没有说empty()为什么一定是常数时间。<br>所以我看了下我所用的QT中list::empty()的实现方式，发现<strong>list是由循化链表实现的</strong>，<strong>empty()的实现是判断头节点的下个节点是否还是头结点，因此为常数时间</strong>。<br>所以我的理解是：<strong>由于STL的实现方式不同，<code>empty()</code>的效率比<code>0 == size()</code>更加稳定(如循环链表实现的List)。</strong></p>
+<hr>
+<h2 id="条款5-区间成员函数优先于与之对应的单元素成员函数"><a href="#条款5-区间成员函数优先于与之对应的单元素成员函数" class="headerlink" title="条款5. 区间成员函数优先于与之对应的单元素成员函数"></a>条款5. 区间成员函数优先于与之对应的单元素成员函数</h2><p>本文以<code>insert</code>的单元素版本和区间版本说明，区间成员函数优点有三：</p>
+<ol>
+<li><strong>省去了没有必要的函数调用</strong>，调用1次与调用n次，即使将单元素版本声明为内联，也有可能不会成为内联。</li>
+<li>每次<code>insert</code>单元素，<strong>要将插入位置后的所有元素进行移动</strong>，进行拷贝，区间<code>insert</code>则先算好一共要插入的总数，然后将插入位置后的元素<strong>只整体挪动一次</strong></li>
+<li>看原因3前需要先看Part2.条款14中，了解序列容器插入元素时内存的重新分配机制。<strong>多次插入单元素可能导致内存多次重新分配</strong>，而<strong>区间插入则一次性分配足够的空间</strong>，然后进行插入。</li>
+</ol>
+<p><strong>常用区间成员函数整理：</strong><br>区间构造：</p>
+<pre class="line-numbers language-none"><code class="language-none">container::container(InputIterator begin, InputIterator end); 
+
+begin和end为旧容器中，被拷贝区间的起始<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>区间插入：</p>
+<pre class="line-numbers language-none"><code class="language-none">序列容器：void container::insert(iterator position,InputIterator begin, InputIterator end); 
+关联容器：void container::insert(lnputIterator begin, InputIterator end);&#x2F;&#x2F;关联容器使用自己的比较函数决定插入元素放在哪
+
+begin和end为旧容器中，要插到新容器中的区间起始
+position为新容器中，要插入位置的迭代器，新元素插入到该迭代器之前<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>区间删除：</p>
+<pre class="line-numbers language-none"><code class="language-none">C++11以上: iterator container::erase(iterator begin, iterator end);
+C++11以下: 关联容器erase()返回值void
+
+将容器中[begin, end)前闭后开区间内的元素删除<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>区间赋值：</p>
+<pre class="line-numbers language-none"><code class="language-none">void container::assign(InputIterator begin, InputIterator end);
+
+begin和end为旧容器中，被拷贝区间的起始<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="条款6-当心C-编译器最烦人的分析机制"><a href="#条款6-当心C-编译器最烦人的分析机制" class="headerlink" title="条款6.当心C++编译器最烦人的分析机制"></a>条款6.当心C++编译器最烦人的分析机制</h2><p>按照条款5中所说，尝试使用list的区间构造，以一个文件中的全部内容构造一个list对象data</p>
+<pre class="line-numbers language-none"><code class="language-none">ifstream dataFile(&quot;ints.dat&quot;);
+list&lt;int&gt; data(istream_iterator&lt;int&gt;(dataFile), istream_iterator&lt;int&gt;());<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>上面这段代码乍一看好像没有问题，从文件的begin开始，一直迭代到NULL，即文件末尾，以此区间内的元素构造对象data。<br>但是编译器会将第二句代码<strong>解析为一个函数声明</strong>。<strong>问题出在构造时使用了一个匿名迭代器</strong>。<br>目前最好的解决方式，是<strong>在数据声明中避免使用匿名迭代器对象</strong>。</p>
+<pre class="line-numbers language-none"><code class="language-none">ifstream dataFile(&quot;ints.dat&quot;);
+istream_iterator&lt;int&gt; dataBegin(dataFile);
+istream_iterator&lt;int&gt; dataEnd;
+list&lt;int&gt; data(dataBegin, dataEnd);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="条款7-如果在容器中包含了通过new操作创建的指针，切记在容器对象析构前将指针delete掉"><a href="#条款7-如果在容器中包含了通过new操作创建的指针，切记在容器对象析构前将指针delete掉" class="headerlink" title="条款7.如果在容器中包含了通过new操作创建的指针，切记在容器对象析构前将指针delete掉"></a>条款7.如果在容器中包含了通过new操作创建的指针，切记在容器对象析构前将指针delete掉</h2><p>可以通过遍历容器释放指针，这样做能行，但不是异常安全的。<br>如果在向容器中放入和释放指针时有异常抛出，同样会有资源泄露。<br>所以最安全的做法是<strong>用引用计数智能指针（如Boost::shared_ptr）容器代替指针容器。</strong><br><strong>ps.不要创建auto_ptr的容器，并指望其中的指针被自动删除，详见下一条款</strong></p>
+<hr>
+<h2 id="条款8-切勿创建包含auto-ptr的容器对象"><a href="#条款8-切勿创建包含auto-ptr的容器对象" class="headerlink" title="条款8.切勿创建包含auto_ptr的容器对象"></a>条款8.切勿创建包含auto_ptr的容器对象</h2><p><strong>auto_ptr最大的古怪在于它的拷贝构造和赋值操作符，会将被拷贝的指针置为NULL。</strong><br>STL算法中的<strong>sort()<strong>采用的快速排序算法，会用临时对象拷贝vector中的值作为基准值。<br>这将导致</strong>vector<auto_ptr>调用sort()时，其中的值被临时对象拷贝，vector中的值被置为NULL，临时对象在作用域结束时释放了该auto_ptr</strong>。<br>**ps.**C++标准委员会做了很多使vector<auto_ptr>不被编译通过，并最终在C++11中移除了auto_ptr.</p>
+<hr>
+<h2 id="条款9-慎重选择删除元素的方法"><a href="#条款9-慎重选择删除元素的方法" class="headerlink" title="条款9.慎重选择删除元素的方法"></a>条款9.慎重选择删除元素的方法</h2><h3 id="9-1-1-对于连续内存的容器-vector、deuqe和string-，删除元素的最好办法是使用erase-remove"><a href="#9-1-1-对于连续内存的容器-vector、deuqe和string-，删除元素的最好办法是使用erase-remove" class="headerlink" title="9.1.1. 对于连续内存的容器(vector、deuqe和string)，删除元素的最好办法是使用erase-remove"></a>9.1.1. 对于连续内存的容器(vector、deuqe和string)，删除元素的最好办法是使用erase-remove</h3><pre class="line-numbers language-none"><code class="language-none">vec.erase( std::remove(vec.begin(), vec.end(), value), vec.end());<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><strong>erase-remove讲解</strong>：先要说一下erase和remove，</p>
+<pre class="line-numbers language-none"><code class="language-none">std::remove (Itertor first, Itertor last, const T&amp; val);
+    是&lt;algorithm&gt;中的算法，通过传入的迭代器确定容器遍历区间，将区间中不等于val的元素依次拷贝到区间中的前端。
+    完成遍历之后即确定了一段由first起始，没有val值的新区间，
+    最后返回该新区间后一个位置的迭代器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">iterator erase (iterator first, iterator last);
+    将前开后闭区间[first, last)中的元素删除，返回last<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">erase-remove:
+    先通过remove将容器遍历，将不等于value值的元素放在容器前端新区间
+    再将新区间后一个位置的迭代器和容器的end()传入erase，将新区间以外的部分删除<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="9-1-2-对于list，erase-remove同样适用，但list-remove-更有效-详见条款44"><a href="#9-1-2-对于list，erase-remove同样适用，但list-remove-更有效-详见条款44" class="headerlink" title="9.1.2. 对于list，erase-remove同样适用，但list::remove()更有效(详见条款44)"></a>9.1.2. 对于list，erase-remove同样适用，但list::remove()更有效(详见条款44)</h3><pre class="line-numbers language-none"><code class="language-none">list.remove(value);
+从list中移除所有值等于value的元素<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="9-1-3-对于关联容器-set、multiset、map、multimap-，删除元素正确且高效的方法是调用erase（高效的原因详见条款19），不要对关联容器使用std-remove（详见条款22）"><a href="#9-1-3-对于关联容器-set、multiset、map、multimap-，删除元素正确且高效的方法是调用erase（高效的原因详见条款19），不要对关联容器使用std-remove（详见条款22）" class="headerlink" title="9.1.3. 对于关联容器(set、multiset、map、multimap)，删除元素正确且高效的方法是调用erase（高效的原因详见条款19），不要对关联容器使用std::remove（详见条款22）"></a>9.1.3. 对于关联容器(set、multiset、map、multimap)，删除元素正确且高效的方法是调用erase（高效的原因详见条款19），不要对关联容器使用std::remove（详见条款22）</h3><pre class="line-numbers language-none"><code class="language-none">set.erase(value);
+从set中删除所有值为value的元素（multiset中也是删除所有）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><strong>ps.书中提到，序列容器erase会返回下一个位置的迭代器，而关联容器erase返回void，所以序列容器可以通过<code>iter = vec.erase(iter)</code>获得erase后有效的迭代器，而关联容器则要通过<code>set.erase(iter++)</code>后置++的方式获得。</strong><br>不过我在QtCreator和VisualStudio2005两个编译器都试了下，<strong>关联容器erase的返回值已经是下一个元素的迭代器</strong>了，两种容器可以都通过<code>iter = vec.erase(iter)</code>有效迭代，但对于序列容器不要使用<code>vec.erase(iter++)</code>,因为<strong>序列容器调用erase后，会使被删除元素之后所有的迭代器失效</strong>（虽然QtCreator对此有优化，但在visual studio中的确如此，还是不要这么使用的好）。</p>
+<h3 id="9-2-要删除容器中满足特定判别式的所有对象，序列容器使用erase-remove-if，list使用list-remove-if，关联容器使用遍历-erase-没有erase-if"><a href="#9-2-要删除容器中满足特定判别式的所有对象，序列容器使用erase-remove-if，list使用list-remove-if，关联容器使用遍历-erase-没有erase-if" class="headerlink" title="9.2. 要删除容器中满足特定判别式的所有对象，序列容器使用erase-remove_if，list使用list::remove_if，关联容器使用遍历+erase(没有erase_if)"></a>9.2. 要删除容器中满足特定判别式的所有对象，序列容器使用erase-remove_if，list使用list::remove_if，关联容器使用遍历+erase(没有erase_if)</h3><pre class="line-numbers language-none"><code class="language-none">bool badvalue(int); &#x2F;&#x2F;特定判别式<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">vec.erase( std::remove_if( vec.begin(),  vec.end(),  badvalue));
+    序列容器，遍历vec，删除使badvalue返回true的对象<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">list.remove_if(badvalue);
+    list::remove_if是删除使badvalue返回true的对象的最好办法<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">for(auto iter &#x3D; set.begin(); iter !&#x3D; set.end(); &#x2F;*for第三个参数什么也不做*&#x2F;)
+&#123;
+    if(badvalue(*i))  set.erase(iter++);
+    else  ++iter;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<p><em>如有错误，欢迎指正</em></p>
+</div></div><div class="nextinfo"><p>上一篇：<a href="/2021/03/21/C++/STL/vector%E5%92%8Cstring/">vector和string</a></p><p>下一篇：<a href="/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/">状态模式</a></p></div><div class="news_pl"><div id="comment_container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="/js/md5.min.js"></script>
+<script>const gitalk = new Gitalk({
+    clientID: 'you github Client ID',
+    clientSecret: 'you github Client Secret',
+    repo: 'you github repository',
+    owner: 'you github repository owner',
+    admin: ['you github repository owner'],
+    id: md5("2021/03/21/C++/STL/容器/"),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: true  // Facebook-like distraction free mode
+})
+gitalk.render('comment_container')</script></div></div></div></main><aside class="r_box"><div class="card box"><h2>我的名片</h2><div class="box_con"><h3>JeremyYv</h3>
+<p>C++/Python/Web</p>
+<p>Email：JeremyYv@foxmal.com</p>
+</div></div><div class="category box"><h2>文章分类</h2><div class="box_con"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STL/">STL</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a><span class="category-list-count">24</span></li></ul></div></div><div class="wechat box"><h2>我的微信</h2><div class="box_con"><img src="/images/wechat.png"></div></div></aside></article><footer><section class="footer_bottom"><div class="footer_container"><p class="copyright"></p><ul class="social_network"></ul></div></section></footer><div class="cd-top"><i class="iconfont icon-top"></i></div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scrollreveal.js"></script>
+<script src="/js/hc-sticky.js"></script>
+<script src="/js/canvas-nest.js" type="text/javascript" color="47,135,193" opacity="0.7" zIndex="-2" count="199"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/java.min.js"></script><script src="https://cdn.bootcss.com/highlight.js/9.15.9/languages/javascript.min.js"></script><script type="text/javascript">hljs.initHighlightingOnLoad();</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="/js/common.js?v=202103212058.js"></script>
+<script src="/js/index.js?v=202103212058.js"></script>
+</body></html>
