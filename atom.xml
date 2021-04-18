@@ -3,11 +3,11 @@
   <title>JeremyYv&#39;s Blog</title>
   
   
-  <link href="https://jeremyyvv.github.io/atom.xml" rel="self"/>
+  <link href="https://jeremyyv.cn/atom.xml" rel="self"/>
   
-  <link href="https://jeremyyvv.github.io/"/>
-  <updated>2021-03-21T14:47:54.651Z</updated>
-  <id>https://jeremyyvv.github.io/</id>
+  <link href="https://jeremyyv.cn/"/>
+  <updated>2021-04-18T15:21:10.127Z</updated>
+  <id>https://jeremyyv.cn/</id>
   
   <author>
     <name>JeremyYv</name>
@@ -18,10 +18,10 @@
   
   <entry>
     <title>默认构造函数</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/C++/ObjectModel/default-constructor/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/C++/ObjectModel/default-constructor/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/C++/ObjectModel/default-constructor/"/>
+    <id>https://jeremyyv.cn/2021/03/21/C++/ObjectModel/default-constructor/</id>
     <published>2021-03-21T12:11:00.000Z</published>
-    <updated>2021-03-21T14:47:54.651Z</updated>
+    <updated>2021-04-18T15:21:10.127Z</updated>
     
     <content type="html"><![CDATA[<p><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1804.pdf">C++05标准文档</a> 中 Section 12.1.5 关于默认构造函数的说明</p><blockquote><p>A default constructor for a class X is a constructor of class X that can be called without an argument. If there is no user- declared constructor for class X, a default constructor is implicitly declared<br />类X的默认构造函数是一个无参构造函数，在类X中没有用户声明的构造函数时，被隐式声明。</p></blockquote><hr /><h2 id="q1用户未定义构造函数时默认构造函数一定会被生成吗"><a class="markdownIt-Anchor" href="#q1用户未定义构造函数时默认构造函数一定会被生成吗"></a> Q1：用户未定义构造函数时，默认构造函数一定会被生成吗？</h2><h2 id="a1不一定"><a class="markdownIt-Anchor" href="#a1不一定"></a> A1：不一定。</h2><p>在上一段Section 12.1.5 的说明后，还有一段额外的说明</p><blockquote><p>A default constructor is trivial if it is implicitly-declared and if:<br />its class has no virtual functions and no virtual base classes, and<br />all the direct base classes of its class have trivial default constructors, and<br />for all the non-static data members of its class that are of class type (or array thereof), each such class has a trivial default constructor.<br />一个隐式声明的默认构造函数将是无价值（trivial）的，如果<br />类里没有虚函数和虚基类，并且<br />类的直接基类都有无价值的默认构造函数，并且<br />类中所有非静态成员变量都有无价值的默认构造函数<br />可见，即使是默认构造函数，也被分为了有价值（non-trivial）和无价值（trivial）两种。<br />而对于无价值的默认构造函数，实际上并不会被生成。</p></blockquote><h3 id="求证"><a class="markdownIt-Anchor" href="#求证"></a> 求证</h3><p>通过反汇编，对比用户定义无参构造和默认构造，查看在类的实例过程中是否被调用。</p><h3 id="1-类内定义无参构造函数"><a class="markdownIt-Anchor" href="#1-类内定义无参构造函数"></a> 1. 类内定义无参构造函数</h3><pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span><span class="hljs-keyword">public</span>:    Demo()&#123;&#125;&#125;;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;    Demo a;    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;</code></pre><p>编译完成后查看反汇编（截取text段中相关的一段）:</p><pre class="highlight"><code class="cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;  <span class="hljs-number">400546</span>:   <span class="hljs-number">55</span>                      push   %rbp  <span class="hljs-number">400547</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp  <span class="hljs-number">40054</span>a:   <span class="hljs-number">48</span> <span class="hljs-number">83</span> ec <span class="hljs-number">10</span>             sub    $<span class="hljs-number">0x10</span>,%rsp  <span class="hljs-number">40054</span>e:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">04</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    mov    %fs:<span class="hljs-number">0x28</span>,%rax  <span class="hljs-number">400555</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span>   <span class="hljs-number">400557</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">45</span> f8             mov    %rax,<span class="hljs-number">-0x8</span>(%rbp)  <span class="hljs-number">40055b</span>:   <span class="hljs-number">31</span> c0                   <span class="hljs-keyword">xor</span>    %eax,%eax    Demo a;   <span class="hljs-number">40055</span>d:   <span class="hljs-number">48</span> <span class="hljs-number">8</span>d <span class="hljs-number">45</span> f7             lea    <span class="hljs-number">-0x9</span>(%rbp),%rax  <span class="hljs-number">400561</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi  <span class="hljs-number">400564</span>:   e8 <span class="hljs-number">1b</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          callq  <span class="hljs-number">400584</span> &lt;_ZN4DemoC1Ev&gt;    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <span class="hljs-number">400569</span>:   b8 <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x0</span>,%eax&#125;  <span class="hljs-number">40056</span>e:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">55</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rdx  <span class="hljs-number">400572</span>:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">33</span> <span class="hljs-number">14</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    <span class="hljs-keyword">xor</span>    %fs:<span class="hljs-number">0x28</span>,%rdx  <span class="hljs-number">400579</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span>   <span class="hljs-number">40057b</span>:   <span class="hljs-number">74</span> <span class="hljs-number">05</span>                   je     <span class="hljs-number">400582</span> &lt;main+<span class="hljs-number">0x3c</span>&gt;  <span class="hljs-number">40057</span>d:   e8 <span class="hljs-number">9</span>e fe ff ff          callq  <span class="hljs-number">400420</span> &lt;__stack_chk_fail@plt&gt;  <span class="hljs-number">400582</span>:   c9                      leaveq  <span class="hljs-number">400583</span>:   c3                      retq<span class="hljs-number">0000000000400584</span> &lt;_ZN4DemoC1Ev&gt;:<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span><span class="hljs-keyword">public</span>:    Demo()&#123;&#125;  <span class="hljs-number">400584</span>:   <span class="hljs-number">55</span>                      push   %rbp  <span class="hljs-number">400585</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp  <span class="hljs-number">400588</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)  <span class="hljs-number">40058</span>c:   <span class="hljs-number">90</span>                      nop  <span class="hljs-number">40058</span>d:   <span class="hljs-number">5</span>d                      pop    %rbp  <span class="hljs-number">40058</span>e:   c3                      retq  <span class="hljs-number">40058f</span>:   <span class="hljs-number">90</span>                      nop</code></pre><p>Line13 main函数中，<strong>Demo a;</strong> 调用了Demo类的无参构造函数 <strong>_ZN4DemoC1Ev</strong>.</p><h3 id="2-类内不定义无参构造函数查看是否会调用默认构造函数"><a class="markdownIt-Anchor" href="#2-类内不定义无参构造函数查看是否会调用默认构造函数"></a> 2. 类内不定义无参构造函数，查看是否会调用默认构造函数</h3><pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Derived</span> &#123;</span>&#125;;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;    Derived a;    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;编译完成后查看反汇编（截取text段中相关的一段）:<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>&#125;;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;  <span class="hljs-number">4004</span>d6:   <span class="hljs-number">55</span>                      push   %rbp  <span class="hljs-number">4004</span>d7:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp    Demo a;    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <span class="hljs-number">4004</span>da:   b8 <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x0</span>,%eax&#125;  <span class="hljs-number">4004</span>df:   <span class="hljs-number">5</span>d                      pop    %rbp  <span class="hljs-number">4004e0</span>:   c3                      retq     <span class="hljs-number">4004e1</span>:   <span class="hljs-number">66</span> <span class="hljs-number">2</span>e <span class="hljs-number">0f</span> <span class="hljs-number">1f</span> <span class="hljs-number">84</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>    nopw   %cs:<span class="hljs-number">0x0</span>(%rax,%rax,<span class="hljs-number">1</span>)  <span class="hljs-number">4004e8</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>   <span class="hljs-number">4004</span>eb:   <span class="hljs-number">0f</span> <span class="hljs-number">1f</span> <span class="hljs-number">44</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          nopl   <span class="hljs-number">0x0</span>(%rax,%rax,<span class="hljs-number">1</span>)<span class="hljs-number">00000000004004f</span>0 &lt;__libc_csu_init&gt;:</code></pre><p>可见，并没有生成或调用默认构造函数，因为类Demo中没有虚函数/虚基类，且所有成员变量和直接基类都没有non-trivial默认构造或用户声明构造函数。</p><h3 id="3-作为对比只在空类中写个虚函数看看是否会按照标准中说的那样生成一个有价值的默认构造函数"><a class="markdownIt-Anchor" href="#3-作为对比只在空类中写个虚函数看看是否会按照标准中说的那样生成一个有价值的默认构造函数"></a> 3. 作为对比，只在空类中写个虚函数，看看是否会按照标准中说的那样，生成一个有价值的默认构造函数</h3><pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;&#125;&#125;;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;    Demo a;    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;编译完成后查看反汇编：<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;  <span class="hljs-number">400676</span>:   <span class="hljs-number">55</span>                      push   %rbp  <span class="hljs-number">400677</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp  <span class="hljs-number">40067</span>a:   <span class="hljs-number">48</span> <span class="hljs-number">83</span> ec <span class="hljs-number">10</span>             sub    $<span class="hljs-number">0x10</span>,%rsp  <span class="hljs-number">40067</span>e:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">04</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    mov    %fs:<span class="hljs-number">0x28</span>,%rax  <span class="hljs-number">400685</span>:   <span class="hljs-number">00</span> <span class="hljs-number">00</span>   <span class="hljs-number">400687</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">45</span> f8             mov    %rax,<span class="hljs-number">-0x8</span>(%rbp)  <span class="hljs-number">40068b</span>:   <span class="hljs-number">31</span> c0                   <span class="hljs-keyword">xor</span>    %eax,%eax    Demo a;   <span class="hljs-number">40068</span>d:   <span class="hljs-number">48</span> <span class="hljs-number">8</span>d <span class="hljs-number">45</span> f0             lea    <span class="hljs-number">-0x10</span>(%rbp),%rax  <span class="hljs-number">400691</span>:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi  <span class="hljs-number">400694</span>:   e8 <span class="hljs-number">27</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          callq  <span class="hljs-number">4006</span>c0 &lt;_ZN4DemoC1Ev&gt;    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <span class="hljs-number">400699</span>:   b8 <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x0</span>,%eax&#125;  <span class="hljs-number">40069</span>e:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">55</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rdx  <span class="hljs-number">4006</span>a2:   <span class="hljs-number">64</span> <span class="hljs-number">48</span> <span class="hljs-number">33</span> <span class="hljs-number">14</span> <span class="hljs-number">25</span> <span class="hljs-number">28</span> <span class="hljs-number">00</span>    <span class="hljs-keyword">xor</span>    %fs:<span class="hljs-number">0x28</span>,%rdx  <span class="hljs-number">4006</span>a9:   <span class="hljs-number">00</span> <span class="hljs-number">00</span>   <span class="hljs-number">4006</span>ab:   <span class="hljs-number">74</span> <span class="hljs-number">05</span>                   je     <span class="hljs-number">4006b</span>2 &lt;main+<span class="hljs-number">0x3c</span>&gt;  <span class="hljs-number">4006</span>ad:   e8 ae fe ff ff          callq  <span class="hljs-number">400560</span> &lt;__stack_chk_fail@plt&gt;  <span class="hljs-number">4006b</span>2:   c9                      leaveq   <span class="hljs-number">4006b</span>3:   c3                      retq   <span class="hljs-number">00000000004006b</span>4 &lt;_ZN4Demo4funcEv&gt;:<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;&#125;  <span class="hljs-number">4006b</span>4:   <span class="hljs-number">55</span>                      push   %rbp  <span class="hljs-number">4006b</span>5:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp  <span class="hljs-number">4006b</span>8:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)  <span class="hljs-number">4006b</span>c:   <span class="hljs-number">90</span>                      nop  <span class="hljs-number">4006b</span>d:   <span class="hljs-number">5</span>d                      pop    %rbp  <span class="hljs-number">4006b</span>e:   c3                      retq     <span class="hljs-number">4006b</span>f:   <span class="hljs-number">90</span>                      nop<span class="hljs-number">00000000004006</span>c0 &lt;_ZN4DemoC1Ev&gt;:<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> &#123;</span>  <span class="hljs-number">4006</span>c0:   <span class="hljs-number">55</span>                      push   %rbp  <span class="hljs-number">4006</span>c1:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp  <span class="hljs-number">4006</span>c4:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)  <span class="hljs-number">4006</span>c8:   ba <span class="hljs-number">78</span> <span class="hljs-number">07</span> <span class="hljs-number">40</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x400778</span>,%edx  <span class="hljs-number">4006</span>cd:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">45</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rax</code></pre><p>可见，在类中有虚函数的时候，的确会生成默认构造函数并在<strong>main中Line 13</strong>进行了调用。<br />至于其他几种情况，如类有虚基类、非静态成员变量或直接基类生成了构造函数，才会生成默认构造函数。</p><hr /><h2 id="q2默认构造函数会初始化成员变量吗"><a class="markdownIt-Anchor" href="#q2默认构造函数会初始化成员变量吗"></a> Q2：默认构造函数会初始化成员变量吗？</h2><h2 id="a2不一定"><a class="markdownIt-Anchor" href="#a2不一定"></a> A2：不一定</h2><p>在C++05标准文档 Section 12.1.8 中有说明</p><blockquote><p>Default constructors are called implicitly to create class objects of static or automatic storage duration defined without an initialize.<br />默认构造函数，会在静态或自动存储期间被隐式调用，来创建类对象，没有初始化。</p></blockquote><p>默认构造不一定会设定每一个成员变量的默认值<br />默认构造函数只是为了满足编译器的需要，将类中需要构造的成员变量按声明的顺序依次构造出来，使程序能够运行，但未必会进行初始化！<br />在C++的设计中，对成员变量进行初始化这种，为了满足程序的需要，是程序员的责任。</p><h3 id="求证-2"><a class="markdownIt-Anchor" href="#求证-2"></a> 求证</h3><pre class="highlight"><code class="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span> &#123;</span><span class="hljs-keyword">public</span>:    <span class="hljs-keyword">int</span> m_a;    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> </span>&#123;        <span class="hljs-built_in">cout</span> &lt;&lt; m_a &lt;&lt; <span class="hljs-built_in">endl</span>;    &#125;   &#125;;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;    Base A;    A.func();    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;</code></pre><p>这段代码可以保证使用默认构造函数构造了对象A，然后调用func方法输出成员变量的值</p><pre class="highlight"><code class="c">jeremynancy@ubuntu:~/cpp/constructor$ g++ --versiong++ (Ubuntu <span class="hljs-number">5.4</span><span class="hljs-number">.0</span><span class="hljs-number">-6u</span>buntu1~<span class="hljs-number">16.04</span><span class="hljs-number">.1</span>) <span class="hljs-number">5.4</span><span class="hljs-number">.0</span> <span class="hljs-number">20160609</span>Copyright (C) <span class="hljs-number">2015</span> Free Software Foundation, Inc.This is <span class="hljs-built_in">free</span> software; see the source <span class="hljs-keyword">for</span> copying conditions.  There is NOwarranty; <span class="hljs-keyword">not</span> even <span class="hljs-keyword">for</span> MERCHANTABILITY <span class="hljs-keyword">or</span> FITNESS FOR A PARTICULAR PURPOSE.jeremynancy@ubuntu:~/cpp/constructor$ ./<span class="hljs-keyword">default</span>-value <span class="hljs-number">4196368</span></code></pre><p>编译运行之后发现是一个随机值，并没有初始化成零值，至少在图示中的这个版本g<ins>编译器中是这样的。<br />经过尝试，的确有些环境或版本下的某种编译器会自动把成员变量初始化成零值，但是这并不是C</ins>标准中要求编译器做的事情，所以应该这个初始化的职责应该由程序员来承担。</p><hr /><h2 id="q3一个类的构造过程中基类-成员变量和类本身构造函数调用的顺序编译器是如何实现的"><a class="markdownIt-Anchor" href="#q3一个类的构造过程中基类-成员变量和类本身构造函数调用的顺序编译器是如何实现的"></a> Q3：一个类的构造过程中，基类、成员变量和类本身构造函数调用的顺序？编译器是如何实现的？</h2><h2 id="a3"><a class="markdownIt-Anchor" href="#a3"></a> A3：</h2><ul><li><h3 id="调用顺序基类构造函数-成员变量构造函数-类本身构造函数"><a class="markdownIt-Anchor" href="#调用顺序基类构造函数-成员变量构造函数-类本身构造函数"></a> 调用顺序：基类构造函数 =&gt; 成员变量构造函数 =&gt; 类本身构造函数。</h3></li><li><h3 id="实现方式编译器通过在类的每个构造函数顶部进行填充以实现这个构造顺序"><a class="markdownIt-Anchor" href="#实现方式编译器通过在类的每个构造函数顶部进行填充以实现这个构造顺序"></a> 实现方式：编译器通过在类的每个构造函数顶部进行填充，以实现这个构造顺序。</h3></li></ul><p>对于下列类代码</p><pre class="highlight"><code class="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span> &#123;</span><span class="hljs-keyword">public</span>:    Base() &#123;        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Base"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;    &#125;   &#125;;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Member</span> &#123;</span><span class="hljs-keyword">public</span>:    Member() &#123;        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Member"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;    &#125;   &#125;;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> :</span> <span class="hljs-keyword">public</span> Base &#123;<span class="hljs-keyword">public</span>:    Member m;    Demo() &#123;        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;    &#125;       Demo(<span class="hljs-keyword">int</span> x) &#123;        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo 1"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;    &#125;   &#125;;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;    Demo A;    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;</code></pre><p><strong>Demo</strong> 类的每个构造函数在编译时会被扩张成如下</p><pre class="highlight"><code class="cpp">Demo::Demo() &#123;    <span class="hljs-comment">// 插入父类构造</span>    Base::Base()    <span class="hljs-comment">// 插入成员变量构造</span>    Member::Member()    <span class="hljs-comment">// 继续本身的处理</span>    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;&#125;</code></pre><h2 id="求证-3"><a class="markdownIt-Anchor" href="#求证-3"></a> 求证</h2><p>编译后反汇编查看无参构造函数</p><pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span> :</span> <span class="hljs-keyword">public</span> Base &#123;<span class="hljs-keyword">public</span>:    Member m;    Demo() &#123;  <span class="hljs-number">4009</span>a0:   <span class="hljs-number">55</span>                      push   %rbp  <span class="hljs-number">4009</span>a1:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> e5                mov    %rsp,%rbp  <span class="hljs-number">4009</span>a4:   <span class="hljs-number">48</span> <span class="hljs-number">83</span> ec <span class="hljs-number">10</span>             sub    $<span class="hljs-number">0x10</span>,%rsp  <span class="hljs-number">4009</span>a8:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> <span class="hljs-number">7</span>d f8             mov    %rdi,<span class="hljs-number">-0x8</span>(%rbp)  <span class="hljs-number">4009</span>ac:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">45</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rax  <span class="hljs-number">4009b</span>0:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi  <span class="hljs-number">4009b</span>3:   e8 <span class="hljs-number">90</span> ff ff ff          callq  <span class="hljs-number">400948</span> &lt;_ZN4BaseC1Ev&gt;  <span class="hljs-number">4009b</span>8:   <span class="hljs-number">48</span> <span class="hljs-number">8b</span> <span class="hljs-number">45</span> f8             mov    <span class="hljs-number">-0x8</span>(%rbp),%rax  <span class="hljs-number">4009b</span>c:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi  <span class="hljs-number">4009b</span>f:   e8 b0 ff ff ff          callq  <span class="hljs-number">400974</span> &lt;_ZN6MemberC1Ev&gt;        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Demo"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;  <span class="hljs-number">4009</span>c4:   be <span class="hljs-number">80</span> <span class="hljs-number">0</span>a <span class="hljs-number">40</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x400a80</span>,%esi  <span class="hljs-number">4009</span>c9:   bf <span class="hljs-number">80</span> <span class="hljs-number">10</span> <span class="hljs-number">60</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x601080</span>,%edi  <span class="hljs-number">4009</span>ce:   e8 <span class="hljs-number">9</span>d fd ff ff          callq  <span class="hljs-number">400770</span> &lt;_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt&gt;  <span class="hljs-number">4009</span>d3:   be a0 <span class="hljs-number">07</span> <span class="hljs-number">40</span> <span class="hljs-number">00</span>          mov    $<span class="hljs-number">0x4007a0</span>,%esi  <span class="hljs-number">4009</span>d8:   <span class="hljs-number">48</span> <span class="hljs-number">89</span> c7                mov    %rax,%rdi  <span class="hljs-number">4009</span>db:   e8 b0 fd ff ff          callq  <span class="hljs-number">400790</span> &lt;_ZNSolsEPFRSoS_E@plt&gt;    &#125;</code></pre><p>可见，在<strong>Demo::Demo</strong>构造函数原本的函数体之前，依次插入了Base类的构造函数 <strong>_ZN4BaseC1Ev</strong>，和Member类的构造函数 <strong>_ZN6MemberC1Ev</strong>.</p>]]></content>
     
@@ -35,19 +35,19 @@
     
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/categories/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/categories/C/"/>
     
     
-    <category term="C++语法" scheme="https://jeremyyvv.github.io/tags/C-%E8%AF%AD%E6%B3%95/"/>
+    <category term="C++语法" scheme="https://jeremyyv.cn/tags/C-%E8%AF%AD%E6%B3%95/"/>
     
-    <category term="C++对象模型" scheme="https://jeremyyvv.github.io/tags/C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/"/>
+    <category term="C++对象模型" scheme="https://jeremyyv.cn/tags/C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>算法</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/C++/STL/%E7%AE%97%E6%B3%95/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/C++/STL/%E7%AE%97%E6%B3%95/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/C++/STL/%E7%AE%97%E6%B3%95/"/>
+    <id>https://jeremyyv.cn/2021/03/21/C++/STL/%E7%AE%97%E6%B3%95/</id>
     <published>2021-03-21T12:04:00.000Z</published>
     <updated>2021-03-21T12:46:31.310Z</updated>
     
@@ -63,19 +63,19 @@
     
     
     
-    <category term="STL" scheme="https://jeremyyvv.github.io/categories/STL/"/>
+    <category term="STL" scheme="https://jeremyyv.cn/categories/STL/"/>
     
     
-    <category term="C++库" scheme="https://jeremyyvv.github.io/tags/C-%E5%BA%93/"/>
+    <category term="C++库" scheme="https://jeremyyv.cn/tags/C-%E5%BA%93/"/>
     
-    <category term="语法" scheme="https://jeremyyvv.github.io/tags/%E8%AF%AD%E6%B3%95/"/>
+    <category term="语法" scheme="https://jeremyyv.cn/tags/%E8%AF%AD%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>迭代器</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/C++/STL/%E8%BF%AD%E4%BB%A3%E5%99%A8/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/C++/STL/%E8%BF%AD%E4%BB%A3%E5%99%A8/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/C++/STL/%E8%BF%AD%E4%BB%A3%E5%99%A8/"/>
+    <id>https://jeremyyv.cn/2021/03/21/C++/STL/%E8%BF%AD%E4%BB%A3%E5%99%A8/</id>
     <published>2021-03-21T12:03:00.000Z</published>
     <updated>2021-03-21T12:46:24.076Z</updated>
     
@@ -89,19 +89,19 @@
     
     
     
-    <category term="STL" scheme="https://jeremyyvv.github.io/categories/STL/"/>
+    <category term="STL" scheme="https://jeremyyv.cn/categories/STL/"/>
     
     
-    <category term="C++库" scheme="https://jeremyyvv.github.io/tags/C-%E5%BA%93/"/>
+    <category term="C++库" scheme="https://jeremyyv.cn/tags/C-%E5%BA%93/"/>
     
-    <category term="语法" scheme="https://jeremyyvv.github.io/tags/%E8%AF%AD%E6%B3%95/"/>
+    <category term="语法" scheme="https://jeremyyv.cn/tags/%E8%AF%AD%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>关联容器</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/C++/STL/%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/C++/STL/%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/C++/STL/%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8/"/>
+    <id>https://jeremyyv.cn/2021/03/21/C++/STL/%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8/</id>
     <published>2021-03-21T12:02:00.000Z</published>
     <updated>2021-03-21T12:46:16.451Z</updated>
     
@@ -115,19 +115,19 @@
     
     
     
-    <category term="STL" scheme="https://jeremyyvv.github.io/categories/STL/"/>
+    <category term="STL" scheme="https://jeremyyv.cn/categories/STL/"/>
     
     
-    <category term="C++库" scheme="https://jeremyyvv.github.io/tags/C-%E5%BA%93/"/>
+    <category term="C++库" scheme="https://jeremyyv.cn/tags/C-%E5%BA%93/"/>
     
-    <category term="语法" scheme="https://jeremyyvv.github.io/tags/%E8%AF%AD%E6%B3%95/"/>
+    <category term="语法" scheme="https://jeremyyv.cn/tags/%E8%AF%AD%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>vector和string</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/C++/STL/vector%E5%92%8Cstring/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/C++/STL/vector%E5%92%8Cstring/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/C++/STL/vector%E5%92%8Cstring/"/>
+    <id>https://jeremyyv.cn/2021/03/21/C++/STL/vector%E5%92%8Cstring/</id>
     <published>2021-03-21T12:01:00.000Z</published>
     <updated>2021-03-21T12:46:08.650Z</updated>
     
@@ -141,19 +141,19 @@
     
     
     
-    <category term="STL" scheme="https://jeremyyvv.github.io/categories/STL/"/>
+    <category term="STL" scheme="https://jeremyyv.cn/categories/STL/"/>
     
     
-    <category term="C++库" scheme="https://jeremyyvv.github.io/tags/C-%E5%BA%93/"/>
+    <category term="C++库" scheme="https://jeremyyv.cn/tags/C-%E5%BA%93/"/>
     
-    <category term="语法" scheme="https://jeremyyvv.github.io/tags/%E8%AF%AD%E6%B3%95/"/>
+    <category term="语法" scheme="https://jeremyyv.cn/tags/%E8%AF%AD%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>容器</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/C++/STL/%E5%AE%B9%E5%99%A8/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/C++/STL/%E5%AE%B9%E5%99%A8/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/C++/STL/%E5%AE%B9%E5%99%A8/"/>
+    <id>https://jeremyyv.cn/2021/03/21/C++/STL/%E5%AE%B9%E5%99%A8/</id>
     <published>2021-03-21T12:00:00.000Z</published>
     <updated>2021-03-21T12:45:58.359Z</updated>
     
@@ -168,19 +168,19 @@
     
     
     
-    <category term="STL" scheme="https://jeremyyvv.github.io/categories/STL/"/>
+    <category term="STL" scheme="https://jeremyyv.cn/categories/STL/"/>
     
     
-    <category term="C++库" scheme="https://jeremyyvv.github.io/tags/C-%E5%BA%93/"/>
+    <category term="C++库" scheme="https://jeremyyv.cn/tags/C-%E5%BA%93/"/>
     
-    <category term="语法" scheme="https://jeremyyvv.github.io/tags/%E8%AF%AD%E6%B3%95/"/>
+    <category term="语法" scheme="https://jeremyyv.cn/tags/%E8%AF%AD%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>状态模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:59:32.000Z</published>
     <updated>2021-03-21T12:46:43.046Z</updated>
     
@@ -197,19 +197,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>中介者模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:58:32.000Z</published>
     <updated>2021-03-21T12:46:47.970Z</updated>
     
@@ -226,19 +226,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>职责链模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:57:32.000Z</published>
     <updated>2021-03-21T12:46:51.794Z</updated>
     
@@ -255,19 +255,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>模板方法模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:56:32.000Z</published>
     <updated>2021-03-21T12:46:54.768Z</updated>
     
@@ -284,19 +284,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>命令模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:55:32.000Z</published>
     <updated>2021-03-21T12:46:58.213Z</updated>
     
@@ -313,19 +313,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>解释器模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:54:32.000Z</published>
     <updated>2021-03-21T12:47:01.833Z</updated>
     
@@ -343,19 +343,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>观察者模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:52:32.000Z</published>
     <updated>2021-03-21T12:50:49.671Z</updated>
     
@@ -372,19 +372,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>访问者模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:51:32.000Z</published>
     <updated>2021-03-21T12:47:09.587Z</updated>
     
@@ -401,19 +401,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>迭代器模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:50:32.000Z</published>
     <updated>2021-03-21T12:47:13.566Z</updated>
     
@@ -430,19 +430,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>策略模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:49:00.000Z</published>
     <updated>2021-03-21T12:47:17.519Z</updated>
     
@@ -459,19 +459,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>备忘录模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B/%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:48:00.000Z</published>
     <updated>2021-03-21T12:47:20.850Z</updated>
     
@@ -491,19 +491,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="行为型" scheme="https://jeremyyvv.github.io/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
+    <category term="行为型" scheme="https://jeremyyv.cn/tags/%E8%A1%8C%E4%B8%BA%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>组合模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:47:00.000Z</published>
     <updated>2021-03-21T12:47:27.514Z</updated>
     
@@ -520,19 +520,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="结构型" scheme="https://jeremyyvv.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/"/>
+    <category term="结构型" scheme="https://jeremyyv.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>装饰模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:46:00.000Z</published>
     <updated>2021-03-21T12:47:30.580Z</updated>
     
@@ -549,19 +549,19 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="结构型" scheme="https://jeremyyvv.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/"/>
+    <category term="结构型" scheme="https://jeremyyv.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/"/>
     
   </entry>
   
   <entry>
     <title>享元模式</title>
-    <link href="https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://jeremyyvv.github.io/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/</id>
+    <link href="https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://jeremyyv.cn/2021/03/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E7%BB%93%E6%9E%84%E5%9E%8B/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-03-21T11:45:00.000Z</published>
     <updated>2021-03-21T12:47:33.447Z</updated>
     
@@ -578,12 +578,12 @@
     
     
     
-    <category term="设计模式" scheme="https://jeremyyvv.github.io/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <category term="设计模式" scheme="https://jeremyyv.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-    <category term="C++" scheme="https://jeremyyvv.github.io/tags/C/"/>
+    <category term="C++" scheme="https://jeremyyv.cn/tags/C/"/>
     
-    <category term="结构型" scheme="https://jeremyyvv.github.io/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/"/>
+    <category term="结构型" scheme="https://jeremyyv.cn/tags/%E7%BB%93%E6%9E%84%E5%9E%8B/"/>
     
   </entry>
   
